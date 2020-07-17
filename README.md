@@ -1,2 +1,2 @@
 # statisticalConsultancyUSJ
-Statistical Consultancy Unit Web Site: University of Sri Jayewardenepura
+Statistical Consultancy Unit Website: University of Sri Jayewardenepura

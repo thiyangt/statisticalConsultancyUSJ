@@ -1,7 +1,7 @@
 # default configuration
 baseURL = "https://scs-fas-sjp.netlify.app"
 languageCode = "en-us"
-summaryLength = "10"
+summaryLength = "3"
 theme = "kross-hugo"
 title = "SCS"
 
@@ -54,7 +54,7 @@ weight = 4
 home = "Home"
 logo = ""
 # theme color
-theme_color = "#41228e"
+theme_color = "#08306b"
 # contact info
 phone = "ttalagala@sjp.ac.lk"
 email = "Dr Thiyanga S. Talagala"

@@ -3,7 +3,7 @@ baseURL = "http://examplesite.com"
 languageCode = "en-us"
 summaryLength = "10"
 theme = "kross-hugo"
-title = "SCS"
+title = ""
 
 # css plugins
 [[params.plugins.css]]
@@ -56,8 +56,8 @@ logo = ""
 # theme color
 theme_color = "#41228e"
 # contact info
-Phone = "Dr Thiyanga S. Talagala"
-email = "ttalagala@sjp.ac.lk"
+Phone = "ttalagala@sjp.ac.lk"
+email = "Dr Thiyanga S. Talagala"
 address = "Department of Statistics, Faculty of Applied Sciences, University of Sri Jayewardenepura, Nugegoda, Sri Lanka"
 # meta description
 author = "Thiyanga S. Talagala"

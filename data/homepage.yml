@@ -1,7 +1,6 @@
 # banner
 banner:
-  title : "Hi! I’m <br> Christoher <br> UX designer"
-
+  title : "Statistical Consultancy Service"
 # about
 about:
   enable : true
@@ -16,20 +15,20 @@ skill:
   enable : true
   title : "Skills"
   item:
-    - title : "Web Design"
-      progress : "90%"
+    - title : "R"
+      progress : "100%"
       color : "#fdb157"
       
-    - title : "Logo Design"
-      progress : "60%"
+    - title : "Python"
+      progress : "100%"
       color : "#9473e6"
       
-    - title : "After Effects"
-      progress : "80%"
+    - title : "MINITAB"
+      progress : "100%"
       color : "#bdecf6"
       
-    - title : "Web App"
-      progress : "70%"
+    - title : "SPSS"
+      progress : "100%"
       color : "#ffbcaa"
 
 # experience

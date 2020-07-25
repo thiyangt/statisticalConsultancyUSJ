@@ -1,28 +1,14 @@
-# Production context:
-# All deploys from the main repository branch
-# will inherit these settings.
-[context.production]
-  command = "make production"
-  [context.production.environment]
-    ACCESS_TOKEN = "super secret"
+[build] 
+  publish = "public"
+  command = "hugo"
 
-# Deploy Preview context:
-# All deploys generated from a pull/merge request
-# will inherit these settings.
+[context.production.environment]
+  HUGO_VERSION = "0.62.2" # if older, use format: 0.53 (no trailing zero)
+  HUGO_ENV = "production"
+  HUGO_ENABLEGITINFO = "true"
+  
+[context.branch-deploy.environment]
+  HUGO_VERSION = "0.62.2" # if older, use format: 0.53 (no trailing zero)
+
 [context.deploy-preview.environment]
-  ACCESS_TOKEN = "not so secret"
-
-# Branch deploy context:
-# All deploys that are not from a pull/merge request
-# or from the production branch will inherit these settings.
-[context.branch-deploy]
-  command = "make staging"
-
-# Specific branch context:
-# Deploys from this branch will take these settings
-# and override their current ones.
-[context.feature]
-  command = "make feature"
-
-[context."features/branch"]
-  command = "gulp"
+  HUGO_VERSION = "0.62.2"

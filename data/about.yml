@@ -19,7 +19,7 @@ work_process:
 # team
 team:
   enable: true
-  title : "My Team"
+  title : " Team"
   team_member:
     - title : "Jack Schenziwe"
       image : "images/team/member-1.png"
@@ -37,5 +37,5 @@ team:
 # client logo slider
 clients_logo_slider:
   enable : true
-  title : "My Clients"
+  title : "Our Clients"
   # clients logo comes from 'data/homepage.yml' file

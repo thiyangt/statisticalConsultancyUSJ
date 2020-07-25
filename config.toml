@@ -60,7 +60,7 @@ phone = "ttalagala@sjp.ac.lk"
 email = "Dr Thiyanga S. Talagala"
 address = "Department of Statistics, Faculty of Applied Sciences, University of Sri Jayewardenepura, Nugegoda, 10250, Sri Lanka"
 # meta description
-author = "Johnathan Smith"
+author = ""
 description = "This is meta description"
 # google analytics
 google_analytics_id = "" # Your ID

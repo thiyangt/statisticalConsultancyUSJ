@@ -1,9 +1,9 @@
 # default configuration
-baseURL = "http://scs-fas-sjp-ac-lk.netlify.app"
+baseURL = "http://examplesite.com"
 languageCode = "en-us"
 summaryLength = "10"
 theme = "kross-hugo"
-title = ""
+title = "Kross"
 
 # css plugins
 [[params.plugins.css]]
@@ -56,16 +56,16 @@ logo = ""
 # theme color
 theme_color = "#41228e"
 # contact info
-Phone = "ttalagala@sjp.ac.lk"
-email = "Dr Thiyanga S. Talagala"
-address = "Department of Statistics, Faculty of Applied Sciences, University of Sri Jayewardenepura, Nugegoda, Sri Lanka"
+phone = "+880 2544 658 256"
+email = "steve.fruits@email.com"
+address = "125/A, CA Commercial Area, California, USA"
 # meta description
-author = "Thiyanga S. Talagala"
+author = "Johnathan Smith"
 description = "This is meta description"
 # google analytics
 google_analytics_id = "" # Your ID
 # copyright
-copyright = "Copyright &copy; 2020 Thiyanga S. Talagala"
+copyright = "Copyright &copy; 2020 a theme by [gethugothemes](https://gethugothemes.com)"
 
 
 # preloader

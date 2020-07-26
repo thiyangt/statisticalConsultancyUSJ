@@ -1,9 +1,9 @@
 # default configuration
 baseURL = "https://scs-fas-sjp.netlify.app"
-languageCode = "en-us"
+languageCode = "en-uk"
 summaryLength = "3"
 theme = "kross-hugo"
-title = "SCS"
+title = "SCS-SJP"
 
 # css plugins
 [[params.plugins.css]]
@@ -75,12 +75,12 @@ preloader = "images/preloader.gif" # use png, jpg, svg or gif format
 
 # contact
 [params.contact]
-enable = true
+enable = false
 form_action = "#" # contact form works with : https://formspree.io
 
 # google map
 [params.map]
-enable = true
+enable = false
 gmap_api = "https://www.google.lk/maps/place/Faculty+of+Applied+Sciences/@6.8539836,79.9034718,17z/data=!4m12!1m6!3m5!1s0x3ae25a8936886579:0xa8c769f4b86d85b5!2sUniversity+of+Sri+Jayewardenepura!8m2!3d6.8539836!4d79.9056658!3m4!1s0x3ae25a89acf0dc8b:0xbcdcf18ae90044ff!8m2!3d6.8549064!4d79.9034277"
 map_latitude = "6.931970"
 map_longitude = "79.857750"
@@ -88,17 +88,17 @@ map_marker = "images/marker.png"
 
 # social site
 [[params.social]]
-icon = "ti-facebook"
+icon = ""
 URL = "#"
 
 [[params.social]]
-icon = "ti-instagram"
+icon = ""
 URL = "#"
 
 [[params.social]]
-icon = "ti-dribbble"
+icon = ""
 URL = "#"
 
 [[params.social]]
-icon = "ti-twitter-alt"
+icon = ""
 URL = "#"

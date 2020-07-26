@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>design on SCS</title>
+    <title>design on SCS-SJP</title>
     <link>/categories/design/</link>
-    <description>Recent content in design on SCS</description>
+    <description>Recent content in design on SCS-SJP</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Sun, 12 May 2019 12:14:34 +0600</lastBuildDate>
+    <language>en-uk</language>
+    <lastBuildDate>Tue, 12 May 2020 12:14:34 +0600</lastBuildDate>
     
 	<atom:link href="/categories/design/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Artwork Design</title>
+      <title>Our projects</title>
       <link>/portfolio/project-1/</link>
-      <pubDate>Sun, 12 May 2019 12:14:34 +0600</pubDate>
+      <pubDate>Tue, 12 May 2020 12:14:34 +0600</pubDate>
       
       <guid>/portfolio/project-1/</guid>
-      <description>Project Requirements Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</description>
+      <description>Project Requirements Project Details </description>
     </item>
     
     <item>

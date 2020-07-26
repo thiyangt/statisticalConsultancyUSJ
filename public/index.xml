@@ -1,77 +1,50 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>SCS</title>
+    <title>SCS-SJP</title>
     <link>/</link>
-    <description>Recent content on SCS</description>
+    <description>Recent content on SCS-SJP</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Sun, 12 May 2019 12:14:34 +0600</lastBuildDate>
+    <language>en-uk</language>
+    <lastBuildDate>Fri, 26 Jun 2020 12:14:34 +0600</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Amazon increase income 1.5 Million</title>
+      <title>What is P-value?</title>
       <link>/blog/post-1/</link>
-      <pubDate>Sun, 12 May 2019 12:14:34 +0600</pubDate>
+      <pubDate>Fri, 26 Jun 2020 12:14:34 +0600</pubDate>
       
       <guid>/blog/post-1/</guid>
-      <description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</description>
+      <description>To be added</description>
     </item>
     
     <item>
-      <title>Amazon increase income 1.5 Million</title>
-      <link>/blog/post-2/</link>
-      <pubDate>Sun, 12 May 2019 12:14:34 +0600</pubDate>
+      <title>R</title>
+      <link>/portfolio/project-9/</link>
+      <pubDate>Thu, 25 Jun 2020 12:14:34 +0600</pubDate>
       
-      <guid>/blog/post-2/</guid>
-      <description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</description>
+      <guid>/portfolio/project-9/</guid>
+      <description>Project Requirements Project Details </description>
     </item>
     
     <item>
-      <title>Amazon increase income 1.5 Million</title>
-      <link>/blog/post-3/</link>
-      <pubDate>Sun, 12 May 2019 12:14:34 +0600</pubDate>
+      <title>Our projects</title>
+      <link>/portfolio/project-1/</link>
+      <pubDate>Tue, 12 May 2020 12:14:34 +0600</pubDate>
       
-      <guid>/blog/post-3/</guid>
-      <description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</description>
+      <guid>/portfolio/project-1/</guid>
+      <description>Project Requirements Project Details </description>
     </item>
     
     <item>
-      <title>Amazon increase income 1.5 Million</title>
+      <title>ANOVA</title>
       <link>/blog/post-4/</link>
       <pubDate>Sun, 12 May 2019 12:14:34 +0600</pubDate>
       
       <guid>/blog/post-4/</guid>
-      <description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</description>
-    </item>
-    
-    <item>
-      <title>Amazon increase income 1.5 Million</title>
-      <link>/blog/post-5/</link>
-      <pubDate>Sun, 12 May 2019 12:14:34 +0600</pubDate>
-      
-      <guid>/blog/post-5/</guid>
-      <description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</description>
-    </item>
-    
-    <item>
-      <title>Amazon increase income 1.5 Million</title>
-      <link>/blog/post-6/</link>
-      <pubDate>Sun, 12 May 2019 12:14:34 +0600</pubDate>
-      
-      <guid>/blog/post-6/</guid>
-      <description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</description>
-    </item>
-    
-    <item>
-      <title>Artwork Design</title>
-      <link>/portfolio/project-1/</link>
-      <pubDate>Sun, 12 May 2019 12:14:34 +0600</pubDate>
-      
-      <guid>/portfolio/project-1/</guid>
-      <description>Project Requirements Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</description>
+      <description>To be added</description>
     </item>
     
     <item>
@@ -138,21 +111,39 @@
     </item>
     
     <item>
-      <title>Artwork Design</title>
-      <link>/portfolio/project-9/</link>
+      <title>Exploratory Data Analysis</title>
+      <link>/blog/post-6/</link>
       <pubDate>Sun, 12 May 2019 12:14:34 +0600</pubDate>
       
-      <guid>/portfolio/project-9/</guid>
-      <description>Project Requirements Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</description>
+      <guid>/blog/post-6/</guid>
+      <description>To be added</description>
     </item>
     
     <item>
-      <title>Hello R Markdown</title>
-      <link>/blog/2015-07-23-r-rmarkdown/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
+      <title>One Sample Hypothesis Testing - Mean</title>
+      <link>/blog/post-2/</link>
+      <pubDate>Sun, 12 May 2019 12:14:34 +0600</pubDate>
       
-      <guid>/blog/2015-07-23-r-rmarkdown/</guid>
-      <description>R Markdown This is an R Markdown document.</description>
+      <guid>/blog/post-2/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Regression Analysis</title>
+      <link>/blog/post-5/</link>
+      <pubDate>Sun, 12 May 2019 12:14:34 +0600</pubDate>
+      
+      <guid>/blog/post-5/</guid>
+      <description>To be added</description>
+    </item>
+    
+    <item>
+      <title>Two Sample Hypothesis Testing - Mean</title>
+      <link>/blog/post-3/</link>
+      <pubDate>Sun, 12 May 2019 12:14:34 +0600</pubDate>
+      
+      <guid>/blog/post-3/</guid>
+      <description>To be added</description>
     </item>
     
   </channel>

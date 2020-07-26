@@ -3,37 +3,57 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/blog/</loc>
+    <lastmod>2020-06-26T12:14:34+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/</loc>
+    <lastmod>2020-06-26T12:14:34+06:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/blog/post-1/</loc>
-    <lastmod>2019-05-12T12:14:34+06:00</lastmod>
+    <lastmod>2020-06-26T12:14:34+06:00</lastmod>
   </url>
   
   <url>
-    <loc>/blog/post-2/</loc>
-    <lastmod>2019-05-12T12:14:34+06:00</lastmod>
+    <loc>/categories/branding/</loc>
+    <lastmod>2020-06-25T12:14:34+06:00</lastmod>
   </url>
   
   <url>
-    <loc>/blog/post-3/</loc>
-    <lastmod>2019-05-12T12:14:34+06:00</lastmod>
+    <loc>/categories/</loc>
+    <lastmod>2020-06-25T12:14:34+06:00</lastmod>
   </url>
   
   <url>
-    <loc>/blog/post-4/</loc>
-    <lastmod>2019-05-12T12:14:34+06:00</lastmod>
+    <loc>/portfolio/</loc>
+    <lastmod>2020-06-25T12:14:34+06:00</lastmod>
   </url>
   
   <url>
-    <loc>/blog/post-5/</loc>
-    <lastmod>2019-05-12T12:14:34+06:00</lastmod>
+    <loc>/portfolio/project-9/</loc>
+    <lastmod>2020-06-25T12:14:34+06:00</lastmod>
   </url>
   
   <url>
-    <loc>/blog/post-6/</loc>
-    <lastmod>2019-05-12T12:14:34+06:00</lastmod>
+    <loc>/categories/design/</loc>
+    <lastmod>2020-05-12T12:14:34+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/development/</loc>
+    <lastmod>2020-05-12T12:14:34+06:00</lastmod>
   </url>
   
   <url>
     <loc>/portfolio/project-1/</loc>
+    <lastmod>2020-05-12T12:14:34+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/post-4/</loc>
     <lastmod>2019-05-12T12:14:34+06:00</lastmod>
   </url>
   
@@ -73,32 +93,7 @@
   </url>
   
   <url>
-    <loc>/portfolio/project-9/</loc>
-    <lastmod>2019-05-12T12:14:34+06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/blog/</loc>
-    <lastmod>2019-05-12T12:14:34+06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/branding/</loc>
-    <lastmod>2019-05-12T12:14:34+06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/</loc>
-    <lastmod>2019-05-12T12:14:34+06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/design/</loc>
-    <lastmod>2019-05-12T12:14:34+06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/development/</loc>
+    <loc>/blog/post-6/</loc>
     <lastmod>2019-05-12T12:14:34+06:00</lastmod>
   </url>
   
@@ -108,43 +103,18 @@
   </url>
   
   <url>
-    <loc>/portfolio/</loc>
+    <loc>/blog/post-2/</loc>
     <lastmod>2019-05-12T12:14:34+06:00</lastmod>
   </url>
   
   <url>
-    <loc>/</loc>
+    <loc>/blog/post-5/</loc>
     <lastmod>2019-05-12T12:14:34+06:00</lastmod>
   </url>
   
   <url>
-    <loc>/blog/2015-07-23-r-rmarkdown/</loc>
-    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/plot/</loc>
-    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/r/</loc>
-    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/r-markdown/</loc>
-    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/regression/</loc>
-    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
-    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
+    <loc>/blog/post-3/</loc>
+    <lastmod>2019-05-12T12:14:34+06:00</lastmod>
   </url>
   
   <url>
@@ -153,6 +123,10 @@
   
   <url>
     <loc>/contact/</loc>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
   </url>
   
 </urlset>

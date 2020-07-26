@@ -1,23 +1,32 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Portfolio on SCS</title>
+    <title>Portfolio on SCS-SJP</title>
     <link>/portfolio/</link>
-    <description>Recent content in Portfolio on SCS</description>
+    <description>Recent content in Portfolio on SCS-SJP</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Sun, 12 May 2019 12:14:34 +0600</lastBuildDate>
+    <language>en-uk</language>
+    <lastBuildDate>Thu, 25 Jun 2020 12:14:34 +0600</lastBuildDate>
     
 	<atom:link href="/portfolio/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Artwork Design</title>
+      <title>R</title>
+      <link>/portfolio/project-9/</link>
+      <pubDate>Thu, 25 Jun 2020 12:14:34 +0600</pubDate>
+      
+      <guid>/portfolio/project-9/</guid>
+      <description>Project Requirements Project Details </description>
+    </item>
+    
+    <item>
+      <title>Our projects</title>
       <link>/portfolio/project-1/</link>
-      <pubDate>Sun, 12 May 2019 12:14:34 +0600</pubDate>
+      <pubDate>Tue, 12 May 2020 12:14:34 +0600</pubDate>
       
       <guid>/portfolio/project-1/</guid>
-      <description>Project Requirements Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</description>
+      <description>Project Requirements Project Details </description>
     </item>
     
     <item>
@@ -80,15 +89,6 @@
       <pubDate>Sun, 12 May 2019 12:14:34 +0600</pubDate>
       
       <guid>/portfolio/project-8/</guid>
-      <description>Project Requirements Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</description>
-    </item>
-    
-    <item>
-      <title>Artwork Design</title>
-      <link>/portfolio/project-9/</link>
-      <pubDate>Sun, 12 May 2019 12:14:34 +0600</pubDate>
-      
-      <guid>/portfolio/project-9/</guid>
       <description>Project Requirements Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</description>
     </item>
     

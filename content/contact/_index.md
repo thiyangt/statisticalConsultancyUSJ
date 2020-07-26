@@ -5,3 +5,8 @@ title: Contact
 ---
 
 # Contact
+
+Dr Thiyanga S Talagala
+
+Email: ttalagala@sjp.ac.lk
+

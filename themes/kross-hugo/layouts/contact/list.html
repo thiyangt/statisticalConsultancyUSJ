@@ -7,7 +7,7 @@
   <div class="container">
     <div class="row">
       <div class="col-12 text-center">
-        <h2 class="section-title">Find me on Google Map</h2>
+        <h2 class="section-title"></h2>
       </div>
       <div class="col-12">
         {{ with site.Params.map }}
@@ -21,21 +21,5 @@
 </section>
 {{ end }}
 
-<section class="section">
-  <div class="container">
-    <div class="row">
-      <div class="col-12 text-center">
-        <h2 class="section-title">Follow me on Social</h2>
-      </div>
-      <div class="col-12">
-        <ul class="list-inline social-icons text-center">
-          {{ range site.Params.social }}
-          <li class="list-inline-item"><a href="{{.link}}"><i class="{{.icon}}"></i></a></li>
-          {{ end }}
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
 
 {{ end }}

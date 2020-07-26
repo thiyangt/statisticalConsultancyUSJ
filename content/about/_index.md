@@ -12,5 +12,4 @@ Due to COVID 19 outbreak, we will conduct our consulting sessions over zoom.
 
 **Resource Type:** Service
 
-**Target Audience:** All are well come!
-
+**Target Audience:** Undergraduates, Research students, Academics, Industry 

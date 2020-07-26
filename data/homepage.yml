@@ -5,7 +5,7 @@ banner:
 # about
 about:
   enable : true
-  content : "The **Department of Statistics**, Faculty of Applied Sciences, University of Sri Jayewardenepura provides a statistical consulting service to support all <br> **Target Audience:** Undergraduates, Research students, Academics, Industry "
+  content : "The **Department of Statistics**, Faculty of Applied Sciences, University of Sri Jayewardenepura provides a statistical consulting service to support all Undergraduates, Research students, Academics, Industry. The statistical consulting service provides one-to-one statistical support. "
   button:
     enable : true
     label : "Click here to apply"
@@ -20,11 +20,11 @@ skill:
       progress : "100%"
       color : "#fdb157"
       
-    - title : "Phython"
+    - title : "Python"
       progress : "100%"
       color : "#9473e6"
       
-    - title : "MINITAB"
+    - title : "Minitab"
       progress : "100%"
       color : "#bdecf6"
       

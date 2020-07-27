@@ -5,10 +5,10 @@ banner:
 # about
 about:
   enable : true
-  content : "The **Department of Statistics**, Faculty of Applied Sciences, University of Sri Jayewardenepura provides a statistical consulting service to support all Undergraduates, Research students, Academics, Industry. The statistical consulting service provides one-to-one statistical support. "
+  content : "The **Department of Statistics**, Faculty of Applied Sciences, University of Sri Jayewardenepura provides a free statistical consulting service to all university researchers and industrial organizations. We can assist clients in a diverse range of statistical issues. The statistical consulting service provides one-to-one statistical support. "
   button:
     enable : true
-    label : "Click here to apply"
+    label : "Find out more"
     URL : "About"
 
 # skill
@@ -24,11 +24,11 @@ skill:
       progress : "100%"
       color : "#9473e6"
       
-    - title : "Minitab"
+    - title : "R Commander/ Minitab"
       progress : "100%"
       color : "#bdecf6"
       
-    - title : "SPSS"
+    - title : "R Commander/ SPSS"
       progress : "100%"
       color : "#ffbcaa"
 
@@ -78,19 +78,19 @@ service:
   enable : true
   title : "Services"
   item:
-    - title : "UI Design"
+    - title : "Advice on study design"
       icon : "ti-palette"
-      content : "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      content : "Experimental design, Questionnaire design, Sampling design, Data Management, Data wrangling"
       highlighted : false
 
-    - title : "UX Design"
+    - title : "Data Analysis and Interpretation of results"
       icon : "ti-vector"
-      content : "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      content : "Data Visualization, Choice and application of statistical methods, Advanced statistical analysis and interpretation, Statistical modelling, Feedback and advice on statistical methods."
       highlighted : true
 
-    - title : "Interaction Design"
+    - title : "Assistance with statistical software and programming"
       icon : "ti-panel"
-      content : "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      content : "Mainly open source software (R and Python) and R Commander graphical user interfaces (alternative to SPSS and Minitab)."
       highlighted : false
 
 # portfolio

@@ -6,12 +6,11 @@ draft: false
 title: About
 ---
 
-The Department of Statistics offers a free consulting service to members of the research community. Under the supervision of a faculty member in the Department of Statistics, BSc (Hons) Statistics degree students provide assistance.
+The Department of Statistics offers a free consulting service to students, academics, researchers, businesses and industry. Under the supervision of lecturers, final year BSc (Hons) Statistics degree students provide assistance. You are encouraged to get-in-touch with SCS-SJP early in your research. Early engagement with a statistician can help you make the best decisions about design and methodology. It would be wise to talk to a consultant before you collect any data.
 
 
 #### Terms and conditions
 
-- It is strongly recommended that clients contact the consultancy at the onset of their project.  
 
 - Consultations are scheduled on a first-come-first-served basis. 
 
@@ -21,30 +20,25 @@ The Department of Statistics offers a free consulting service to members of the 
 
 - **Students are required to obtain approval from their supervisors before requesting consultancy services.** 
 
-- We reserve the right to discontinue any assistance, analysis
-
 - It is the responsibility of the client to provide ample time for statistical consulting, and to inform the consultant of any deadlines.
 
-- A summary report of the statistical findings will be supplied to the client. The SCS-SJP team are not responsible for writing final reports/ sections in dissertations/ theses of research findings/ results.
+- The SCS-SJP team members are not responsible for writing final chapters/ sections in dissertations/ theses of research findings/ results.
 
 
-
-#### Guidelines for the use of the SCS-SJP during COVID-19 pandemic
+#### Guidelines for the use of SCS-SJP during COVID-19 pandemic
 
 The following measures are in place regarding consultations:
 
 - All consultations will be scheduled via Google Hangouts and/or Zoom with the assigned SCS-SJP team member. 
 
-- No contact meetings or consultations will be conducted until further notice.
-
-
+- No face-to-face meetings or events are being promoted during the COVID-19 pandemic.
 
 #### How to apply
 
- - Please read the Guidelines and Terms and Conditions for the use of the SCS-SJP carefully.
- 
- - Please send the completed applications ttalagala@sjp.ac.lk
+ - Please carefully read and review the terms and conditions before using the Service.
 
-> Click here to download the application.
+ - Fill in an application and send to ttalagala@sjp.ac.lk
+
+> [Click here to download the application.](/application/application.pdf)
 
 

@@ -3,17 +3,17 @@ work_process:
   enable : true
   title : "Work Process"
   item:
-  - title : "Research and Plan"
+  - title : "Research, Plan, Design"
     icon : "images/icons/plan.png"
-    content : "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+    content : ""
     
-  - title : "Design and Develop"
+  - title : "Analyse"
     icon : "images/icons/design.png"
-    content : "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+    content : ""
     
   - title : "Deliver"
     icon : "images/icons/print.png"
-    content : "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+    content : ""
 
 
 # team

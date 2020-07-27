@@ -1,7 +1,7 @@
 ---
 categories:
 - branding
-client: J
+client: 
 date: "2020-06-25T12:14:34+06:00"
 description: This is meta description.
 draft: false

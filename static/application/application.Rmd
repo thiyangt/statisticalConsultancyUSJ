@@ -1,0 +1,16 @@
+---
+title: "Statistical Consulting Service"
+author: "Department of Statistics,  Faculty of Applied Sciences"
+date: "University of Sri Jayewardenepura"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Name: _______________________________________________________________________
+
+Client category: Staff/ Student/ Industry
+
+To be added

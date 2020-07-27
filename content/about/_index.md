@@ -35,9 +35,9 @@ The following measures are in place regarding consultations:
 
 #### How to apply
 
- - Please carefully read and review the terms and conditions before using the Service.
+ - Please carefully read and review the terms and conditions before using the service.
 
- - Fill in an application and send to ttalagala@sjp.ac.lk
+ - Fill in an application and send it to ttalagala@sjp.ac.lk
 
 > [Click here to download the application.](/application/application.pdf)
 

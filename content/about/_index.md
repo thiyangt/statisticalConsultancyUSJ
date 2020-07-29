@@ -16,6 +16,8 @@ The Department of Statistics offers a free consulting service to students, acade
 
 - Consultations are conducted by appointment only.
 
+- The service is provided subject to the availability of consultants. The SCS-SJP reserves the right to terminate or refuse service.
+
 - The consultant team does not act as the supervisor of any student.
 
 - **Students are required to obtain approval from their supervisors before requesting consultancy services.** 

@@ -5,7 +5,7 @@ banner:
 # about
 about:
   enable : true
-  content : "The **Department of Statistics**, Faculty of Applied Sciences, University of Sri Jayewardenepura provides a free statistical consulting service to all university researchers and industrial organizations. We can assist clients in a diverse range of statistical issues. The statistical consulting service provides one-to-one statistical support. "
+  content : "The **Department of Statistics**, Faculty of Applied Sciences, University of Sri Jayewardenepura provides a free statistical consulting service to university researchers and industrial organizations. We can assist clients in a diverse range of statistical issues. The statistical consulting service provides one-to-one statistical support. "
   button:
     enable : true
     label : "Find out more"

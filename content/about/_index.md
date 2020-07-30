@@ -16,11 +16,13 @@ The Department of Statistics offers a free consulting service to students, acade
 
 - Consultations are conducted by appointment only.
 
-- The service is provided subject to the availability of consultants. The SCS-SJP reserves the right to terminate or refuse service.
+- The service is provided subject to the availability of consultants. The SCS-SJP reserves the right to refuse service.
 
 - The consultant team does not act as the supervisor of any student.
 
 - **Students are required to obtain approval from their supervisors before requesting consultancy services.** 
+
+- SCS-SJP reserves the right to discontinue any assistance, analysis, or meetings of student applicants without the input and regular contact and meetings with the research project supervisor(s).
 
 - It is the responsibility of the client to provide ample time for statistical consulting, and to inform the consultant of any deadlines.
 
@@ -40,7 +42,9 @@ The following measures are in place regarding consultations:
  - Please carefully read and review the terms and conditions before using the service.
 
  - Fill in an application and send it to ttalagala@sjp.ac.lk
+ 
+ - Choose the application that's right for you.
 
-> [Click here to download the application.](/application/application.pdf)
+> [University staff and students](/application/scs_application_university_staff_students.pdf)
 
-
+> [Industry](/application/scs_application_industry.pdf)

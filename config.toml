@@ -3,7 +3,7 @@ baseURL = "https://scs-fas-sjp.netlify.app"
 languageCode = "en-uk"
 summaryLength = "3"
 theme = "kross-hugo"
-title = "SCS-SJP"
+title = "SCS-USJ"
 
 # css plugins
 [[params.plugins.css]]

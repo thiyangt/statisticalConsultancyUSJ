@@ -1,0 +1,386 @@
+---
+title: "Data Visualisation"
+author: "Rajitha Wijesuriya"
+date: FALSE
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+```{r,include=FALSE}
+library(tidyverse)
+library(treemapify)
+library(readxl)
+library(ggplot2)
+library(reshape2)
+library(plyr)
+DataSc<-read_excel("DataScientistQualificationSkills (1).xlsx")
+
+```
+### Figure 01: Job Title Bar Chart ###
+
+```{r,include=FALSE}
+DataSc$Job_title<-str_to_lower(DataSc$Job_title)
+DataSc$Job_title<-str_replace_all(DataSc$Job_title,"-", " ")
+DataSc$Job_title<-str_replace_all(DataSc$Job_title,",", " ")
+DataSc$Job_title<-str_replace_all(DataSc$Job_title,"/", " ")
+DataSc$Job_title %>% head()
+DataSc<-DataSc[!is.na(DataSc$Job_title),]
+DataScience<-DataSc$Job_title[str_detect(DataSc$Job_title,"([data]{4})\\s*([scientist]{7,10})")]%>%unique()
+DataAnalyst<-DataSc$Job_title[str_detect(DataSc$Job_title,"([data]{4})\\s*([analyst]{6,10})")]%>%unique()
+DataEngineer<-DataSc$Job_title[str_detect(DataSc$Job_title,"([data]{4})\\s*([Engineer]{8,10})")]%>%unique()
+Acturial<-DataSc$Job_title[str_detect(DataSc$Job_title,"([acturial]{8})")]%>%unique()
+Other<-DataSc$Job_title[!(DataSc$Job_title%in%c(DataScience,DataAnalyst,DataEngineer,Acturial))]
+sum(DataSc$Job_title%in%DataScience)
+sum(DataSc$Job_title%in%DataAnalyst)
+sum(DataSc$Job_title%in%DataEngineer)
+sum(DataSc$Job_title%in%Acturial)
+sum(DataSc$Job_title%in%Other)
+```
+```{r,comment=NA}
+library(knitr)
+Job<-data.frame(Job_type=c("DataScience","DataEngineer","DataAnalyst","Acturial","Other"),No_advertisement=c(215,21,107,8,84))
+kable(Job)
+ggplot(Job, aes(x=reorder(Job_type,-No_advertisement), y=No_advertisement, fill=Job_type))+
+  geom_bar(stat="identity", color="black")+
+  scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9", "#999999","#56B4E9"))+
+  theme_minimal()
+```
+
+```
+According to this Job title bar chart we can see that most of the advertisements are Data Scientist field. Second highest advertisements are about Data Analyst field. There is a few advertisements about the Actuarial category 
+```
+
+
+### Figure 02: Statistical Programming Language Chart
+
+```{r,include=FALSE}
+DataSc<-read_excel("DataScientistQualificationSkills (1).xlsx")
+DataSc<-DataSc[!is.na(DataSc$Python),]
+DataSc$Python<-str_replace_all(DataSc$Python,"1","Yes")
+DataSc$Python<-str_replace_all(DataSc$Python,"0","No")
+Python<-count(DataSc$Python)
+DataSc$Python
+
+DataSc<-DataSc[!is.na(DataSc$R),]
+DataSc$R<-str_replace_all(DataSc$R,"1","Yes")
+DataSc$R<-str_replace_all(DataSc$R,"0","No")
+R<-count(DataSc$R)
+DataSc$R
+
+DataSc<-DataSc[!is.na(DataSc$SQL),]
+DataSc$SQL<-str_replace_all(DataSc$SQL,"1","Yes")
+DataSc$SQL<-str_replace_all(DataSc$SQL,"0","No")
+SQL<-count(DataSc$SQL)
+DataSc$SQL
+
+DataSc<-DataSc[!is.na(DataSc$`C++`),]
+DataSc$`C++`<-str_replace_all(DataSc$`C++`,"1","Yes")
+DataSc$`C++`<-str_replace_all(DataSc$`C++`,"0","No")
+`C++`<-count(DataSc$`C++`)
+DataSc$`C++`
+
+
+DataSc<-DataSc[!is.na(DataSc$Java),]
+DataSc$Java<-str_replace_all(DataSc$Java,"1","Yes")
+DataSc$Java<-str_replace_all(DataSc$Java,"0","No")
+Java<-count(DataSc$Java)
+DataSc$Java
+```
+```{r,comment=NA}
+library(knitr)
+P<-bind_rows(Python,R,SQL,`C++`,Java)
+Programme<-c("Python","Python","R","R","SQL","SQL","`C++`","`C++`","Java","Java")
+Stat_Pro_Lan<-cbind(Programme,P)
+colnames(Stat_Pro_Lan)<-c("Programme","Requirment","count")
+Stat_Pro_Lan<-data.frame(Stat_Pro_Lan)
+kable(Stat_Pro_Lan)
+ggplot(Stat_Pro_Lan, aes(fill=Requirment, y=count, x=Programme)) + 
+  geom_bar(position="dodge", stat="identity")
+```
+
+```
+In this secion describe about the statistical programming languages that considered by companies. mainly consider Python,R,SQL,`C++` and Java languages. Accoding to the chart most of the companies consider about the Python, R and SQL language knowledge of job candidates.only few compaies ask about Java and `C++`.
+```
+
+
+### Figure 03: Statistical Tools chart ###
+```{r,include=FALSE}
+DataSc<-DataSc[!is.na(DataSc$SPSS),]
+DataSc$SPSS<-str_replace_all(DataSc$SPSS,"1","Yes")
+DataSc$SPSS<-str_replace_all(DataSc$SPSS,"0","No")
+SPSS<-count(DataSc$SPSS)
+SPSS
+
+DataSc<-DataSc[!is.na(DataSc$R),]
+DataSc$R<-str_replace_all(DataSc$R,"1","Yes")
+DataSc$R<-str_replace_all(DataSc$R,"0","No")
+R<-count(DataSc$R)
+R
+
+DataSc<-DataSc[!is.na(DataSc$MAtlab),]
+DataSc$MAtlab<-str_replace_all(DataSc$MAtlab,"1","Yes")
+DataSc$MAtlab<-str_replace_all(DataSc$MAtlab,"0","No")
+MAtlab<-count(DataSc$MAtlab)
+MAtlab
+
+DataSc<-DataSc[!is.na(DataSc$`Ms Excel`),]
+DataSc$`Ms Excel`<-str_replace_all(DataSc$`Ms Excel`,"1","Yes")
+DataSc$`Ms Excel`<-str_replace_all(DataSc$`Ms Excel`,"0","No")
+`Ms Excel`<-count(DataSc$`Ms Excel`)
+`Ms Excel`
+
+DataSc<-DataSc[!is.na(DataSc$SAS),]
+DataSc$SAS<-str_replace_all(DataSc$SAS,"1","Yes")
+DataSc$SAS<-str_replace_all(DataSc$SAS,"0","No")
+SAS<-count(DataSc$SAS)
+SAS
+```
+
+```{r,comment=NA}
+library(knitr)
+K<-bind_rows(SPSS,R,MAtlab,`Ms Excel`,SAS)
+Tool<-c("SPSS","SPSS","R","R","MAtlab","MAtlab","`Ms Excel`","`Ms Excel`","SAS","SAS")
+Stat_tools<-cbind(Tool,K)
+colnames(Stat_tools)<-c("Tool","Requirment","count")
+Stat_tools<-data.frame(Stat_tools)
+kable(Stat_tools)
+
+ggplot(Stat_tools, aes(fill=Requirment, y=count, x=Tool)) + 
+  geom_bar(position="stack", stat="identity")
+```
+
+```
+According to the Figure 03 it describe about the statistical tools.Mainly consider SPSS,R,MAtlab,`Ms Excel`and SAS statistical tools.among this tools most advertisement consider about R statistical tools. other tools are consider nearly less than 50 advertisements
+```
+
+
+
+
+### Figure 04: Location Chart
+
+```{r,include=FALSE}
+DataSc<-DataSc[!is.na(DataSc$Location),]
+DataSc$Location<-str_replace_all(DataSc$Location,"SL","Sri Lanka")
+DataSc$Location<-str_replace_all(DataSc$Location,"Singaore","Singapore")
+DataSc$Location<-str_replace_all(DataSc$Location,"Colombo","Sri Lanka")
+DataSc$Location<-str_replace_all(DataSc$Location,"US","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"USAA","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"ES","Spain")
+DataSc$Location<-str_replace_all(DataSc$Location,"IE","Ireland")
+DataSc$Location<-str_replace_all(DataSc$Location,"RO","Romania")
+DataSc$Location<-str_replace_all(DataSc$Location,"California","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"NC","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Washington","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"New York","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Colorado","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Boston","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"San Fransico","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Arlington","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Austin","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Chicago","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"San Mateo","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Salt Lake City","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Cambridge","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Montgomery Country","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Boise","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Chevy Chase","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Mclean","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Minneapolis","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"OR","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Mountain View","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Seattle","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"England","UK")
+DataSc$Location<-str_replace_all(DataSc$Location,"London","UK")
+DataSc$Location<-str_replace_all(DataSc$Location,"Carfiff","UK")
+DataSc$Location<-str_replace_all(DataSc$Location,"New Kensington","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"United Arab Emirates","UAE")
+DataSc$Location<-str_replace_all(DataSc$Location,"NA","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"NY","USA")
+unique(DataSc$Location)
+Location<-count(DataSc,'Location')
+Location<-data.frame(Location)
+```
+
+```{r,comment=NA}
+library(knitr)
+kable(Location)
+ggplot(Location, aes(x=reorder(Location, -freq), y=freq)) + 
+  geom_bar(stat = "identity") +
+  coord_flip()
+```
+
+### Figure 05: Location Distribution Map
+```{r,include=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(readr)
+library(maps)
+library(viridis)
+library(treemapify)
+library(readxl)
+library(plyr)
+DataSc<-read_excel("DataScientistQualificationSkills (1).xlsx")
+unique(DataSc$Location)
+DataSc<-DataSc[!is.na(DataSc$Location),]
+DataSc$Location<-str_replace_all(DataSc$Location,"SL","Sri Lanka")
+DataSc$Location<-str_replace_all(DataSc$Location,"Singaore","Singapore")
+DataSc$Location<-str_replace_all(DataSc$Location,"Colombo","Sri Lanka")
+DataSc$Location<-str_replace_all(DataSc$Location,"US","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"USAA","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"ES","Spain")
+DataSc$Location<-str_replace_all(DataSc$Location,"IE","Ireland")
+DataSc$Location<-str_replace_all(DataSc$Location,"RO","Romania")
+DataSc$Location<-str_replace_all(DataSc$Location,"California","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"NC","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Washington","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"New York","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Colorado","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Boston","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"San Fransico","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Arlington","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Austin","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Chicago","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"San Mateo","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Salt Lake City","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Cambridge","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Montgomery Country","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Boise","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Chevy Chase","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Mclean","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Minneapolis","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"OR","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Mountain View","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"Seattle","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"England","UK")
+DataSc$Location<-str_replace_all(DataSc$Location,"London","UK")
+DataSc$Location<-str_replace_all(DataSc$Location,"Carfiff","UK")
+DataSc$Location<-str_replace_all(DataSc$Location,"New Kensington","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"United Arab Emirates","UAE")
+DataSc$Location<-str_replace_all(DataSc$Location,"NA","USA")
+DataSc$Location<-str_replace_all(DataSc$Location,"NY","USA")
+unique(DataSc$Location)
+Location<-count(DataSc,'Location')
+
+Location<-data.frame(Location)
+Direction<-data.frame(long=c(22.9375,149.0124,-51.9253,-116.5765,116.4142,10.451526,19.5033,78.96288,-7.6921,12.56738,138.252924,37.9062,101.975766,174.886,121.774,24.9668,105.31875,-4.114,103.8333,-3.749219,80.771796,53.847818,-5.3536,-100.0),
+                      lat=c(-30.5595,-35.4735,-14.235,53.9333,40.1824,51.16569,47.1625,20.593684,53.1424,41.87194,36.204824,-0.0236,4.21048,-40.9006,12.879721,45.9432,61.52401,56.786,1.2833,40.463667,7.87305,23.424076,36.1408,40.0))
+Location<-cbind(Location,Direction)
+world <- map_data("world")
+world
+mybreaks <- c(1,10, 30, 60,110)
+
+```
+
+```{r,comment=NA}
+
+ggplot() +
+  geom_polygon(data = world, aes(x=long, y = lat, group = group), fill="brown", alpha=0.3) +
+  geom_point(data=Location, aes(x=long, y=lat,size=freq, color=freq),stroke=F, alpha=0.7) +
+  scale_size_continuous(name="freq", trans="log", range=c(1,7),breaks=mybreaks, labels = c("0-10","11-30", "31-60", "61-110","110+")) +
+  # scale_alpha_continuous(name="Cases", trans="log", range=c(0.1, 0.9),breaks=mybreaks) +
+  scale_color_viridis_c(option="inferno",name="freq", trans="log",breaks=mybreaks, labels = c("0-10","11-30", "31-60","61-110","110+")) +
+  theme_void() + 
+  guides( colour = guide_legend()) +
+  labs(caption = "Job Advertistrment distribution in world  ") +
+  theme(
+    legend.position = "bottom",
+    text = element_text(color = "#22211d"),
+    plot.background = element_rect(fill = "#ffffff", color = NA), 
+    panel.background = element_rect(fill = "#ffffff", color = NA), 
+    legend.background = element_rect(fill = "#ffffff", color = NA)
+  )
+
+
+
+
+
+
+
+
+```
+
+```
+Both Figure 04 and Figure 05 describe about the Advertistment distribution in the world.we can see that more than 80 advertisements are from India and more than 50 advertisements from USA. In the map, number of advertisement of each country represent by bubble color and size. 
+
+```
+
+
+
+### Figure 06: Education Qualification Word Cloud ###
+```{r,include=FALSE}
+library(tm)
+library(SnowballC)
+library(wordcloud)
+library(wordcloud2)
+library(RColorBrewer)
+DataSc<-read_excel("DataScientistQualificationSkills (1).xlsx")
+DataSc<-DataSc[!is.na(DataSc$Educational_qualifications),]
+unique(DataSc$Educational_qualifications)
+DataSc$Educational_qualifications<-str_replace_all(DataSc$Educational_qualifications,"not_mentioned", "NA ")
+DataSc$Educational_qualifications<-str_replace_all(DataSc$Educational_qualifications,"Not_mentioned", "NA ")
+DataSc$Educational_qualifications<-str_replace_all(DataSc$Educational_qualifications,"Not_define", "NA ")
+DataSc$Educational_qualifications<-str_replace_all(DataSc$Educational_qualifications,"not mentioned", "NA ")
+DataSc$Educational_qualifications<-str_replace_all(DataSc$Educational_qualifications,"Not mention", "NA ")
+
+DataSc$Educational_qualifications<-str_replace_all(DataSc$Educational_qualifications,",", " ")
+DataSc$Educational_qualifications<-str_replace_all(DataSc$Educational_qualifications,"/", " ")
+DataSc$Educational_qualifications<-str_replace_all(DataSc$Educational_qualifications,"'", " ")
+C<-unique(DataSc$Educational_qualifications)
+cnames<-data.frame(C)
+cnames
+docs<-Corpus(VectorSource(cnames))
+for (j in seq(docs))
+{
+  docs[[j]] = gsub("(RT|via)((?:\\b\\W*@\\w+)+)", "", docs[[j]])
+  docs[[j]] = gsub("@\\w+", "", docs[[j]])
+  docs[[j]] = gsub("http\\w+", "", docs[[j]])
+  docs[[j]] = gsub("[ \t]{2,}", "", docs[[j]])
+  docs[[j]] = gsub("^\\s+|\\s+quot;", "", docs[[j]])
+  docs[[j]] = gsub("[^\x20-\x7E]", "", docs[[j]])
+}
+skipwords = c(stopwords("english"), "system","technology")
+
+kb.tf <- list(weighting = weightTf, stopwords  = skipwords,
+              removePunctuation = TRUE,
+              tolower = TRUE,
+              minWordLength = 4,
+              removeNumbers = TRUE, stripWhitespace = TRUE,
+              stemDocument= TRUE)
+docs <- tm_map(docs, PlainTextDocument) 
+tdm = TermDocumentMatrix(docs, control = kb.tf)
+tdm = as.matrix(tdm)
+word_freqs = sort(rowSums(tdm), decreasing=TRUE)
+dm = data.frame(word=names(word_freqs), freq=word_freqs)
+set.seed(123)
+p <- ggplot(subset(dm, freq>10), aes(word, freq))
+p <-p+ geom_bar(stat="identity")
+p <-p+ theme(axis.text.x=element_text(angle=45, hjust=1))
+p
+```
+```{r,comment=NA}
+wordcloud2(dm, minRotation = -pi/6, maxRotation = -pi/6, minSize = 10,
+           rotateRatio = 1)
+```
+
+
+### Flexdashboard content ###
+
+panel 1: Overview and description
+
+panel 2: Types of Job Title [Figure 01]
+
+panel 3: Statistical Programming Languages [Figure 02]
+
+panel 4: Statistical Analysis Tools [Figure 03]
+
+panel 5: Advertisement Distribution [Figure 04 & 05]
+
+panel 6: Education Qualification [Figure 06]
+
+******

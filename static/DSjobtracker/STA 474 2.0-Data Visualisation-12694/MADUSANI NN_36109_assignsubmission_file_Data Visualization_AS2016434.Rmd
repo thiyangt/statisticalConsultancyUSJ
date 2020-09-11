@@ -1,0 +1,178 @@
+---
+title: "Data Visualization"
+author: "Nimesha Madushani"
+date: "9/1/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: inline
+  fig_caption: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# **<span style="color:darkblue;">1.Exploratory Data Analysis**
+
+### 1.1 Importing dataset into R and loading required packages 
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=TRUE}
+#To load dataset
+library(readxl)
+Data<-read_excel("C:\\Users\\dell\\Desktop\\Jobs.xlsx")
+library(tidyverse)
+library(magrittr)
+library(dplyr)
+library(tidyr)
+```
+###  1.2 Analysis of the job title
+
+#### **<span style="color:blue;"> Method 1**
+```{r, message=FALSE,warning=FALSE,echo=FALSE}
+Tbl1<-table(Data$Job_title)%>% as.data.frame()%>% top_n(10,Freq)
+Tbl1
+```
+```{r, message=FALSE,warning=FALSE,echo=FALSE}
+attach(Tbl1)
+suppressWarnings(require(RColorBrewer))
+mycolors1<-brewer.pal(10,"Set2")
+Tbl1<-transform(Tbl1,Var1=reorder(Var1,-Freq))
+ggplot(Tbl1,aes(x=Var1 ,y=Freq,fill=Var1))+geom_bar(stat="identity")+labs(title="Figure 1.1:A bar chart for the Job titles that have highest frequency",x="Job Title",y="Freq")+scale_colour_manual(values =mycolors1)+theme(legend.position = "none")+coord_flip()
+```
+
+
+
+The most included job title is the Data Scientist.
+
+#### **<span style="color:blue;">Method 2**
+```{r, message=FALSE,warning=FALSE,echo=FALSE}
+Job_Titles <- str_to_lower(Data$Job_title) 
+Job_Titles <- str_replace_all(Job_Titles,",", " ") 
+DS <- Job_Titles[str_detect(Job_Titles, "([data]{4})\\s*([scientist]{7,9})")] %>% unique()
+DE <- Job_Titles[str_detect(Job_Titles, "([data]{4})\\s*([engineer]{8})")] %>% unique()
+DA <- Job_Titles[str_detect(Job_Titles, "([data]{4})\\s*([analyst]{7}|[analytics]{8,9})")] %>% unique() 
+Others<-Job_Titles[!(Job_Titles%in%c(DS,DE,DA))]
+```
+
+
+
+```{r, message=FALSE,warning=FALSE,echo=FALSE}
+Tbl2<-data.frame(Job_Category=c("DS","DE","DA","Others"),Count=c(sum(Job_Titles%in%DS),sum(Job_Titles%in%DE),sum(Job_Titles%in%DA),length(Others)))
+Tbl2
+```
+```{r, message=FALSE,warning=FALSE,echo=FALSE}
+attach(Tbl2)
+suppressWarnings(require(RColorBrewer))
+mycolors<-brewer.pal(4,"Dark2")
+names(mycolors)<-Job_Category
+ggplot(Tbl2,aes(x=Job_Category,y=Count,fill=Job_Category))+geom_bar(stat="identity",width = 0.5)+labs(title ="Figure 1.2:Bar chart for the Job Categories",x="Job Category",y="Count")+scale_colour_manual(values =mycolors)
+```
+
+Most of the job advertisements fall into the Data Scientist category.
+
+### 1.3 Analysis of the required Software packages for jobs
+```{r, message=FALSE,warning=FALSE,echo=FALSE}
+Data1<-pivot_longer(Data,c(7:19,25,26,31:33,35,36,38:40,53,56:58,62,63,65,66,70:74),"RequiredSoftwares","Status")
+Tbl3<-filter(Data1,value=="1")%>% select(Job_title,RequiredSoftwares)
+Tbl3
+```
+
+```{r, message=FALSE,warning=FALSE}
+Tbl4<-table(Tbl3$RequiredSoftwares)%>% as.data.frame()
+colnames(Tbl4)<-c("Required Software","Freq")
+Tbl4
+```
+#### **<span style="color:blue;">Creating a word cloud for the required software packages**
+
+```{r, message=FALSE,warning=FALSE,echo=FALSE}
+library(readr)
+library(dplyr)
+library(RColorBrewer)
+library(wordcloud)
+set.seed(1234)
+wordcloud(words=Tbl4$`Required Software`,freq=Tbl4$Freq,random.order = FALSE,colors = brewer.pal(8,"Set1"),rot.per = 0.3)
+```
+
+#### **<span style="color:blue;">Obtaining a bar chart for the most frequent 10 software packages**
+
+```{r, message=FALSE,warning=FALSE}
+Tbl5<-Tbl4%>%top_n(10,Freq)
+Tbl5
+```
+
+
+```{r, message=FALSE,warning=FALSE,echo=FALSE}
+ggplot(Tbl5,aes(x=Tbl5$`Required Software`,y=Freq))+geom_bar(stat="identity",fill="green")+labs(title="Figure 1.3:Most requested software packages for jobs", x="Required Softwares",y="Frequency")+geom_text(aes(label=Freq))
+```
+
+Most of the jobs have required the knowledge about Python software as a data visualization tool.Equal number of jobs have required Hadoop and MySQL software packages.
+
+
+
+### 1.4 Analysis of locations where the job vacancies are available in
+
+```{r, message=FALSE,warning=FALSE}
+Tbl6<-table(Data$Country)%>% as.data.frame()
+colnames(Tbl6)<-c("region","freq")
+Tbl6
+```
+
+
+```{r, message=FALSE,warning=FALSE}
+library(rworldmap)
+library(ggthemes)
+map.world<-map_data(map="world")
+new<-inner_join(map.world,Tbl6,by="region")
+
+gg<-ggplot()+geom_map(data=map.world,map=map.world,aes(map_id=region,x=long,y=lat),fill="light blue",colour="white",size=0.25)
+gg
+```
+
+
+
+# **<span style="color:darkblue;">2.Flexdashboard Design**
+
+
+### <span style="color:red;">panel 1:
+## Overview
+
+### Number of Jobs
+429
+
+### Number of countries
+30 
+
+### Description of Data
+
+The data was collected from the job advertisements around the world related to the data science for the purpose of finding "what skills and qualifications should be focused on to become a data scientist".
+\
+\
+\
+\
+Created by .......... \
+(Done as a project of [STA 474 2.0 Statistical Consultancy])
+
+
+### <span style="color:red;">panel 2:
+## world map
+
+Figure 1.4: World map for the locations 
+
+### <span style="color:red;">panel 3:
+## Analysis of Jobs
+
+Figure 1.1:Bar chart for the most frequent Job titles
+        or
+        
+figure 1.2:Bar chart for the Job Categories
+
+### <span style="color:red;">panel 4:
+## Software Analysis
+
+Figure 1.3:Bar chart for the Most requested software packages for jobs
+                   or  
+ Word cloud for the software packages
+
+
+
+

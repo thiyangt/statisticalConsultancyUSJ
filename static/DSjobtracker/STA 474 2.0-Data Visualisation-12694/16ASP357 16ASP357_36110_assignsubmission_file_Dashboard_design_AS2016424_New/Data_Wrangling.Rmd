@@ -1,0 +1,1248 @@
+---
+title: "Data_Wrangling"
+author: "Jayani Lakshika"
+date: "August 22, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<!--To import necessary packages-->
+```{r, message=FALSE, warning=FALSE}
+library(packrat)
+library(tidyverse)
+library(magrittr)
+library(dplyr)
+library(here)
+library(readxl)
+library(scales)
+library(stringr)
+library(tidyr)
+```
+
+```{r}
+here::here()
+```
+
+```{r, comment = NA}
+df <- read_excel("dataset.xlsx")
+
+df %>% head(5)
+
+df %>% class()
+
+df %>% ncol()
+
+df %>% colnames()
+
+df %>% nrow()
+
+df %>% tail(20)
+
+```
+
+Before go for the further data wrangling techniques, first of all I have to remove the rows which contains null values in all columns. That is to find complete null cases.
+
+```{r, comment= NA}
+
+df_new11 <- df[complete.cases(df),]
+
+df_new11 %>% head(5)
+
+df_new11 %>% tail(5)
+
+df_new11 %>% nrow()
+```
+
+You can see that by using the complete.cases function it removes all uncomplete rows. Since in data collecting some of consultants enter data in properway, this problem is occurred. Therefore I have try another method. Since all consultants names must be there. I decided to use the consultant column to remove null values. It removes the rows which has no entry also.
+
+```{r, comment= NA}
+unique(df[,2])
+
+df_filtered <- df[!(is.na(df$Consultant)),]
+
+df_filtered %>% head(5)
+
+df_filtered %>% tail(5)
+
+df_filtered %>% nrow()
+```
+
+Then follow the steps to do data wranging by looking at the columns seperately.
+I decided to remove duplicates by using Job title, company, City, Location, and URL.
+
+I planned to clean the Job_title column first.
+```{r, comment= NA}
+unique(df_filtered$Job_title)
+```
+Since I have seen that there are NA values, therefore I decided to remove them.
+
+```{r, comment= NA}
+df_Job_filtered <- df_filtered[!(is.na(df_filtered$Job_title)),]
+
+df_Job_filtered %>% head(5)
+
+df_Job_filtered %>% tail(5)
+
+df_Job_filtered %>% nrow()
+```
+
+I saw that there are simple, capital as well as mix letters. To go further cleaning, I done the procedure like this.
+
+```{r, comment= NA}
+df_Job_filtered$Job_title_New <- str_to_upper(df_Job_filtered$Job_title)
+
+df_Job_filtered %>% head(5)
+
+df_Job_filtered %>% tail(5)
+
+df_Job_filtered %>% nrow()
+
+df_Job_filtered$Job_title_New
+```
+I also saw that there are ",","-","/".
+```{r, comment= NA}
+df_Job_filtered$Job_title_New <- str_replace_all(df_Job_filtered$Job_title_New,","," ")
+
+df_Job_filtered$Job_title_New <- str_replace_all(df_Job_filtered$Job_title_New,"-"," ")
+
+df_Job_filtered$Job_title_New <- str_replace_all(df_Job_filtered$Job_title_New,"/"," ")
+
+df_Job_filtered %>% head(5)
+
+df_Job_filtered %>% tail(5)
+
+df_Job_filtered %>% nrow()
+
+df_Job_filtered$Job_title_New
+```
+
+Since our objective is to identify data scientists' qualification, I planned to filter the job titles with the words DATA SCIENTISTS. 
+
+```{r, comment= NA}
+Data_Science_Jobs <- df_Job_filtered$Job_title_New[str_detect(df_Job_filtered$Job_title_New, "([DATA]{4})\\s*([SCIENTISTS]{7,10})")] %>% unique()
+
+Data_Science_Jobs
+
+length(Data_Science_Jobs)
+
+No_Data_Science_Jobs <- df_Job_filtered$Job_title_New[!str_detect(df_Job_filtered$Job_title_New, "([DATA]{4})\\s*([SCIENTISTS]{7,10})")] %>% unique()
+No_Data_Science_Jobs
+```
+
+I planned to filter the job titles with the words DATA ANALYST and DATA ANALYTICS. 
+
+```{r, comment= NA}
+Data_ANALYTICS_Jobs <- No_Data_Science_Jobs[str_detect(No_Data_Science_Jobs, "([DATA]{4}|[STATISTICAL]{6,11})\\s*(.*?)\\s*([ANALYTICS]{7,11}|[ANALYST]{7}|[ANALYZT]{7})")] %>% unique()
+
+Data_ANALYTICS_Jobs
+
+length(Data_ANALYTICS_Jobs)
+
+NO_Data_ANALYTICS_Jobs <- No_Data_Science_Jobs[!str_detect(No_Data_Science_Jobs, "([DATA]{4}|[STATISTICAL]{6,11})\\s*(.*?)\\s*([ANALYTICS]{7,11}|[ANALYST]{7}|[ANALYZT]{7})")] %>% unique()
+NO_Data_ANALYTICS_Jobs
+```
+
+
+I planned to filter the job titles with the words DATA ENGINEER.
+
+```{r, comment= NA}
+Data_ENGINEER_Jobs <- NO_Data_ANALYTICS_Jobs[str_detect(NO_Data_ANALYTICS_Jobs, "([DATA]{4})\\s*([ENGINEER]{7,11})")] %>% unique()
+
+Data_ENGINEER_Jobs
+
+length(Data_ENGINEER_Jobs)
+
+NO_Data_ENGINEER_Jobs <- NO_Data_ANALYTICS_Jobs[!str_detect(NO_Data_ANALYTICS_Jobs, "([DATA]{4})\\s*([ENGINEER]{7,11})")] %>% unique()
+NO_Data_ENGINEER_Jobs
+```
+
+I planned to filter the job titles with the words ACTUARIAL ANALYST.
+
+```{r, comment= NA}
+ACTUARIAL_ANALYST_Jobs <- NO_Data_ENGINEER_Jobs[str_detect(NO_Data_ENGINEER_Jobs, "([ACTUARIAL]{8,9})\\s*")] %>% unique()
+
+ACTUARIAL_ANALYST_Jobs
+
+length(ACTUARIAL_ANALYST_Jobs)
+
+NO_ACTUARIAL_ANALYST_Jobs <- NO_Data_ENGINEER_Jobs[!str_detect(NO_Data_ENGINEER_Jobs, "([ACTUARIAL]{8,9})\\s*")] %>% unique()
+NO_ACTUARIAL_ANALYST_Jobs
+```
+
+I planned to filter the job titles with the words STATISTICAL PROGRAMMERS.
+```{r, comment= NA}
+STATISTICAL_PROGRAMMERS_Jobs <- NO_ACTUARIAL_ANALYST_Jobs[str_detect(NO_ACTUARIAL_ANALYST_Jobs, "([STATISTICAL]{8,9})\\s*[PROGRAMMERS]{10,11}|[PRGRAMMER]{9}")] %>% unique()
+
+STATISTICAL_PROGRAMMERS_Jobs
+
+length(STATISTICAL_PROGRAMMERS_Jobs)
+
+NO_STATISTICAL_PROGRAMMERS_Jobs <- NO_ACTUARIAL_ANALYST_Jobs[!str_detect(NO_ACTUARIAL_ANALYST_Jobs, "([STATISTICAL]{8,9})\\s*[PROGRAMMERS]{10,11}|[PRGRAMMER]{9}")] %>% unique()
+NO_STATISTICAL_PROGRAMMERS_Jobs
+```
+
+I planned to filter the job titles with the words ANALYST.
+```{r, comment= NA}
+ANALYST_Jobs <- NO_STATISTICAL_PROGRAMMERS_Jobs[str_detect(NO_STATISTICAL_PROGRAMMERS_Jobs, "([ANALYST]{7})\\s*")] %>% unique()
+
+ANALYST_Jobs
+
+length(ANALYST_Jobs)
+
+NO_ANALYST_Jobs <- NO_STATISTICAL_PROGRAMMERS_Jobs[!str_detect(NO_STATISTICAL_PROGRAMMERS_Jobs, "([ANALYST]{7})\\s*")] %>% unique()
+NO_ANALYST_Jobs
+```
+
+I planned to filter the job titles with the words SCIENTIST.
+```{r, comment= NA}
+SCIENTIST_Jobs <- NO_ANALYST_Jobs[str_detect(NO_ANALYST_Jobs, "([SCIENTIST]{9})\\s*")] %>% unique()
+
+SCIENTIST_Jobs
+
+length(SCIENTIST_Jobs)
+
+NO_SCIENTIST_Jobs <- NO_ANALYST_Jobs[!str_detect(NO_ANALYST_Jobs, "([SCIENTIST]{9})\\s*")] %>% unique()
+NO_SCIENTIST_Jobs
+```
+
+I planned to filter the job titles with the words STATICIAN.
+```{r, comment= NA}
+STATICIAN_Jobs <- NO_ANALYST_Jobs[str_detect(NO_ANALYST_Jobs, "([STATISTICIAN]{12}|[BIOSTATISTICIAN]{15}|[APPLIED]{7}\\s*[STATICIAN]{9})\\s*")] %>% unique()
+
+STATICIAN_Jobs
+
+length(STATICIAN_Jobs)
+
+NO_STATICIAN_Jobs <- NO_SCIENTIST_Jobs[!str_detect(NO_SCIENTIST_Jobs, "([STATISTICIAN]{12}|[BIOSTATISTICIAN]{15})\\s*")] %>% unique()
+NO_STATICIAN_Jobs
+```
+
+I decided to add other job titles to the other category.
+
+I planned to clean the company column next.
+```{r, comment= NA}
+unique(df_Job_filtered$Company)
+```
+
+
+```{r, comment= NA}
+df_company_filtered <- df_Job_filtered[!(is.na(df_Job_filtered$Company)),]
+
+df_company_filtered %>% head(5)
+
+df_company_filtered %>% tail(5)
+
+df_company_filtered %>% nrow()
+```
+
+I planned to clean the City column next.
+```{r, comment= NA}
+unique(df_company_filtered$City)
+unique(df_company_filtered$Location)
+```
+
+For this case I want the countries or cities which is null.
+```{r, comment= NA}
+df_company_filtered_New <- df_company_filtered[!(is.na(df_company_filtered$City) & is.na(df_company_filtered$Location)),]
+
+df_company_filtered_New %>% head(5)
+
+df_company_filtered_New %>% tail(5)
+
+df_company_filtered_New %>% nrow()
+```
+
+Since there are rows which has entries that is not define as a specific city or Location.
+
+```{r, comment= NA}
+df_company_filtered_New$Country <- str_to_lower(df_company_filtered_New$Location)
+
+df_company_filtered_New$Country <- str_replace_all(df_company_filtered_New$Country,"sl","sri lanka")
+
+unique(df_company_filtered_New$Country)
+```
+
+Then I decided to remove duplicates by using the url.
+```{r, comment= NA}
+df_URL_filtered <- df_company_filtered_New[!(is.na(df_company_filtered_New$URL)),]
+
+df_URL_filtered %>% head(5)
+
+df_URL_filtered %>% tail(5)
+
+df_URL_filtered %>% nrow()
+```
+
+
+```{r, comment= NA}
+df_URL_filtered$URL %>% unique() %>% length()
+```
+
+```{r, comment= NA}
+d12 <- df_URL_filtered$URL %>% table() %>% as.data.frame()
+names(d12) <- c('URL', 'Frequency')
+
+df13 <- d12 %>% filter(Frequency>1)
+df13 <- df13[order(df13$Frequency, decreasing = T),]
+df13 %>% head(5)
+df13 %>% nrow()
+
+df14 <- d12 %>% filter(Frequency==1) 
+df14 %>% head(5)
+df14 %>% nrow()
+```
+
+Now I can extract partially cleaned dataset by using Job_title, company and URL
+```{r, comment= NA}
+df_new <- df_URL_filtered[df_URL_filtered$URL%in%df14$URL,]
+df_new %>% head(5)
+df_new %>% nrow()
+```
+
+```{r, comment= NA}
+df_new_1 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL,]
+df_new_1 %>% head(5)
+df_new_1 %>% nrow()
+```
+
+```{r, comment= NA}
+df_new_2 <- df_new_1[,c(5,6,107,109)] %>% group_by(Job_title_New,Company,URL)
+df_new_2 %>% head(5)
+df_new_2 %>% nrow()
+```
+
+Then I planned to look at the dataset which has the unique URLs seperately.
+```{r, comment= NA}
+dff1 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[1],]
+dff1
+dff1 %>% nrow()
+```
+
+Since this dataset is for the same consultant and you can see that there is no duplicate rows.
+
+```{r, comment= NA}
+df_new <- rbind(df_new, dff1)
+df_new %>% nrow()
+dff2 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[2],]
+dff2
+dff2 %>% nrow()
+```
+
+Since this dataset is for the same consultant and you can see that there is no duplicate rows.
+
+```{r, comment= NA}
+df_new <- rbind(df_new, dff2)
+df_new %>% nrow()
+dff3 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[3],]
+dff3
+dff3 %>% nrow()
+```
+
+Since this dataset is for the same consultant and you can see that there is no duplicate rows.
+
+```{r, comment= NA}
+df_new <- rbind(df_new, dff3)
+df_new %>% nrow()
+dff4 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[4],]
+dff4
+dff4 %>% nrow()
+```
+
+Since this dataset is for the same consultant and you can see that there is no duplicate rows.
+
+```{r, comment= NA}
+df_new <- rbind(df_new, dff4)
+df_new %>% nrow()
+dff5 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[5],]
+dff5
+dff5 %>% nrow()
+```
+
+Since this dataset is for the same consultant and you can see that there is no duplicate rows.
+
+```{r, comment= NA}
+df_new <- rbind(df_new, dff5)
+df_new %>% nrow()
+dff6 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[6],]
+dff6
+dff6 %>% nrow()
+```
+
+Since this dataset is for the same consultant and you can see that there is no duplicate rows.
+
+```{r, comment= NA}
+df_new <- rbind(df_new, dff6)
+df_new %>% nrow()
+dff7 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[7],]
+dff7
+dff7 %>% nrow()
+```
+
+Since this dataset is for the same consultant and you can see that there is no duplicate rows.
+
+```{r, comment= NA}
+df_new <- rbind(df_new, dff7)
+df_new %>% nrow()
+dff8 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[8],]
+dff8
+dff8 %>% nrow()
+```
+
+Since this dataset is for the same consultant and you can see that there is no duplicate rows.
+
+```{r, comment= NA}
+df_new <- rbind(df_new, dff8)
+df_new %>% nrow()
+dff9 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[9],]
+dff9
+dff9 %>% nrow()
+```
+
+Since this dataset is for the same consultant and you can see that there is no duplicate rows.
+
+```{r, comment= NA}
+df_new <- rbind(df_new, dff9)
+df_new %>% nrow()
+dff10 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[10],]
+dff10
+dff10 %>% nrow()
+```
+
+Since this dataset is for the same consultant and you can see that there is no duplicate rows.
+
+```{r, comment= NA}
+df_new <- rbind(df_new, dff10)
+df_new %>% nrow()
+dff11 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[11],]
+dff11
+dff11 %>% nrow()
+```
+
+Since this dataset is for the same consultant and you can see that there is no duplicate rows.
+
+```{r, comment= NA}
+df_new <- rbind(df_new, dff11)
+df_new %>% nrow()
+dff12 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[12],]
+dff12
+dff12 %>% nrow()
+```
+
+Since this dataset is for the same consultant and you can see that there is no duplicate rows.
+
+```{r, comment= NA}
+df_new <- rbind(df_new, dff12)
+df_new %>% nrow()
+dff13 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[13],]
+dff13
+dff13 %>% nrow()
+```
+
+You can see that Shashini & Rajitha has same entries in the dataset. For this case I will not consider the publish date because I consider it is biased.
+
+```{r, comment= NA, warning= FALSE}
+if(dff13[1,5:110] == dff13[2,5:110]){
+  print("Duplicate column is detected.")
+}
+```
+
+I will only add one of these rows since these two are duplicates.
+```{r, comment= NA}
+df_new <- rbind(df_new, dff13[1,])
+df_new %>% nrow()
+```
+
+```{r, comment= NA}
+dff14 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[14],]
+dff14
+dff14 %>% nrow()
+```
+
+You can see that Primesh & Rajitha has same entries in the dataset. For this case I will not consider the publish date because I consider it is biased.
+
+```{r, comment= NA, warning= FALSE}
+if(dff14[1,5:110] == dff14[2,5:110]){
+  print("Duplicate column is detected.")
+}
+```
+
+In here you can see that these entries almost same. But some missing entries in Primesh's entries which is needed like softwares. Therefore I decided to neglect Primesh's row.
+
+```{r, comment= NA}
+df_new <- rbind(df_new, dff14[1,])
+df_new %>% nrow()
+```
+
+```{r, comment= NA}
+dff15 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[15],]
+dff15
+dff15 %>% nrow()
+```
+
+Since this dataset is for the same consultant and you can see that there is no duplicate rows.
+
+```{r, comment= NA}
+df_new <- rbind(df_new, dff15)
+df_new %>% nrow()
+dff16 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[16],]
+dff16
+dff16 %>% nrow()
+```
+
+Since this dataset is for the same consultant and you can see that there is no duplicate rows.
+
+```{r, comment= NA}
+df_new <- rbind(df_new, dff16)
+df_new %>% nrow()
+dff17 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[17],]
+dff17
+dff17 %>% nrow()
+```
+
+Since this dataset is for the same consultant and you can see that there is no duplicate rows.
+
+```{r, comment= NA}
+df_new <- rbind(df_new, dff17)
+df_new %>% nrow()
+dff18 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[18],]
+dff18
+dff18 %>% nrow()
+```
+
+Since this dataset is for the same consultant and you can see that there is no duplicate rows.
+
+```{r, comment= NA}
+df_new <- rbind(df_new, dff18)
+df_new %>% nrow()
+dff19 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[19],]
+dff19
+dff19 %>% nrow()
+```
+
+Since this dataset is for the same consultant and you can see that there is no duplicate rows.
+
+```{r, comment= NA}
+df_new <- rbind(df_new, dff19)
+df_new %>% nrow()
+dff20 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[20],]
+dff20
+dff20 %>% nrow()
+```
+
+Since this dataset is for the same consultant and you can see that there is no duplicate rows.
+
+```{r, comment= NA}
+df_new <- rbind(df_new, dff20)
+df_new %>% nrow()
+dff21 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[21],]
+dff21
+dff21 %>% nrow()
+```
+
+Since this dataset is for the same consultant and you can see that there is no duplicate rows.
+
+```{r, comment= NA}
+df_new <- rbind(df_new, dff21)
+df_new %>% nrow()
+dff22 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[22],]
+dff22
+dff22 %>% nrow()
+```
+
+You can see that Nimesha & Rajitha has same entries in the dataset. For this case I will not consider the publish date because I consider it is biased.
+
+```{r, comment= NA, warning= FALSE}
+if(dff22[1,5:110] == dff22[2,5:110]){
+  print("Duplicate column is detected.")
+}
+```
+
+I will only add one of these rows since these two are duplicates.
+```{r, comment= NA}
+df_new <- rbind(df_new, dff22[1,])
+df_new %>% nrow()
+```
+
+```{r, comment= NA}
+dff23 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[23],]
+dff23
+dff23 %>% nrow()
+```
+
+Since this dataset is for the same consultant and you can see that there is no duplicate rows.
+
+```{r, comment= NA}
+df_new <- rbind(df_new, dff23)
+df_new %>% nrow()
+dff24 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[24],]
+dff24
+dff24 %>% nrow()
+```
+
+You can see that Malshan & Rajitha has same entries in the dataset. For this case I will not consider the publish date because I consider it is biased.
+
+```{r, comment= NA, warning= FALSE}
+if(dff24[1,5:110] == dff24[2,5:110]){
+  print("Duplicate column is detected.")
+}
+```
+
+I will only add one of these rows since these two are duplicates.
+```{r, comment= NA}
+df_new <- rbind(df_new, dff24[1,])
+df_new %>% nrow()
+```
+
+```{r, comment= NA}
+dff25 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[25],]
+dff25
+dff25 %>% nrow()
+```
+
+You can see that Malshan & Rajitha has same entries in the dataset. For this case I will not consider the publish date because I consider it is biased.
+
+```{r, comment= NA, warning= FALSE}
+if(dff25[1,5:110] == dff25[2,5:110]){
+  print("Duplicate column is detected.")
+}
+```
+
+I will only add one of these rows since these two are duplicates.
+```{r, comment= NA}
+df_new <- rbind(df_new, dff25[1,])
+df_new %>% nrow()
+```
+
+```{r, comment= NA}
+dff26 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[26],]
+dff26
+dff26 %>% nrow()
+```
+
+You can see that Malshan & Rajitha has same entries in the dataset. For this case I will not consider the publish date because I consider it is biased.
+
+```{r, comment= NA, warning= FALSE}
+if(dff26[1,5:110] == dff26[2,5:110]){
+  print("Duplicate column is detected.")
+}
+```
+
+```{r, comment= NA, warning= FALSE}
+if(dff25[1,5:110] == dff25[2,5:110]){
+  print("Duplicate column is detected.")
+}
+```
+
+I will only add one of these rows since these two are duplicates.
+```{r, comment= NA}
+df_new <- rbind(df_new, dff26[1,])
+df_new %>% nrow()
+```
+
+```{r, comment= NA}
+dff27 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[27],]
+dff27
+dff27 %>% nrow()
+```
+
+Since this dataset is for the same consultant and you can see that there is no duplicate rows.
+
+```{r, comment= NA}
+df_new <- rbind(df_new, dff27)
+df_new %>% nrow()
+dff28 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[28],]
+dff28
+dff28 %>% nrow()
+```
+
+You can see that Primesh & Rajitha has same entries in the dataset. For this case I will not consider the publish date because I consider it is biased.
+
+```{r, comment= NA, warning= FALSE}
+if(dff28[1,5:110] == dff28[2,5:110]){
+  print("Duplicate column is detected.")
+}
+```
+
+I will only add one of these rows since these two are duplicates.
+```{r, comment= NA}
+df_new <- rbind(df_new, dff28[1,])
+df_new %>% nrow()
+```
+
+```{r, comment= NA}
+dff29 <- df_URL_filtered[df_URL_filtered$URL%in%df13$URL[29],]
+dff29
+dff29 %>% nrow()
+```
+
+You can see that Sanduni & Oshadi has same entries in the dataset. For this case I will not consider the publish date because I consider it is biased.
+
+```{r, comment= NA, warning= FALSE}
+if(dff29[1,5:110] == dff29[2,5:110]){
+  print("Duplicate column is detected.")
+}
+```
+
+I will only add one of these rows since these two are duplicates.
+```{r, comment= NA}
+df_new <- rbind(df_new, dff29[1,])
+df_new %>% nrow()
+```
+
+This dataset is partially cleaned.
+To check whether is there any cleaning is needed.
+
+```{r, comment= NA}
+unique(df_new$Location)
+unique(df_new$City)
+unique(df_new$Knowledge_in)
+```
+
+I decided to replace all Not_define, Not_mentioned, Not-mentioned, not mentioned, 0, NA with NA in Knowledge_in column. I replaced with NA because some are type NA manually.
+```{r, comment= NA}
+df_new$Knowledge_in[df_new$Knowledge_in=="Not_define"|df_new$Knowledge_in=="Not_mentioned"|df_new$Knowledge_in=="Not-mentioned"|df_new$Knowledge_in=="not mentioned"|df_new$Knowledge_in=="0"|df_new$Knowledge_in=="NA"] <- NA
+
+unique(df_new$Knowledge_in)
+```
+
+I decided to replace all Not_define, Not_mentioned, Not-mentioned, not mentioned, not mention, NA with NA in Educational_qualifications column.I replaced with NA because some are type NA manually.
+```{r, comment= NA}
+df_new$Educational_qualifications[df_new$Educational_qualifications=="Not_define"|df_new$Educational_qualifications=="Not_mentioned"|df_new$Educational_qualifications=="Not-mentioned"|df_new$Educational_qualifications=="not mentioned"|df_new$Educational_qualifications=="not mention"|df_new$Educational_qualifications=="NA"] <- NA
+
+unique(df_new$Educational_qualifications)
+```
+
+```{r, comment= NA}
+unique(df_new$Salary)
+```
+
+I decided to replace all Not_define, Na,Not_mentioned,Negotiable,not mentioned,Competitive, NA with NA in Salary column.I replaced with NA because some are type NA manually.
+```{r, comment= NA}
+df_new$Salary[df_new$Salary=="Not_define"|df_new$Salary=="Not_mentioned"|df_new$Salary=="Na"|df_new$Salary=="not mentioned"|df_new$Salary=="Negotiable"|df_new$Salary=="Competitive"|df_new$Salary=="NA"] <- NA
+
+unique(df_new$Salary)
+```
+
+
+```{r, comment= NA}
+Salary_dollar <- df_new$Salary[str_detect(df_new$Salary, "([$]{1})\\s*")] %>% unique()
+
+Salary_dollar
+
+length(Salary_dollar)
+
+No_Salary_dollar <- df_new$Salary[!str_detect(df_new$Salary, "([$]{1})\\s*")] %>% unique()
+No_Salary_dollar
+```
+
+
+```{r, comment= NA}
+Salary_INR <- df_new$Salary[str_detect(df_new$Salary, "([INR]{3})\\s*")] %>% unique()
+
+Salary_INR
+
+length(Salary_INR)
+
+No_Salary_INR <- No_Salary_dollar[!str_detect(No_Salary_dollar, "([INR]{1})\\s*")] %>% unique()
+No_Salary_INR
+```
+
+```{r, comment= NA}
+Salary_p_a <- df_new$Salary[str_detect(df_new$Salary, "([P.A.]{4})\\s*")] %>% unique()
+
+Salary_p_a
+
+length(Salary_p_a)
+
+No_Salary_Salary_p_a <- No_Salary_INR[!str_detect(No_Salary_INR, "([P.A.]{4})\\s*")] %>% unique()
+No_Salary_Salary_p_a
+```
+
+I found the cases with only values and no the currency type. As well as  the NAs in there. I decided to replace them with NA because there is no currency type exactly I can't decide what should be.
+
+```{r, comment= NA}
+df_new$Salary[df_new$Salary=="3500"|df_new$Salary=="78500"|df_new$Salary=="3300"|df_new$Salary=="600000-1200000"|df_new$Salary=="91289"] <- NA
+
+unique(df_new$Salary)
+```
+
+```{r, comment= NA}
+Salary_rs <- df_new$Salary[str_detect(df_new$Salary, "([Rs]{2})\\s*")] %>% unique()
+
+Salary_rs 
+
+length(Salary_rs)
+
+No_Salary_Salary_rs <- No_Salary_Salary_p_a[!str_detect(No_Salary_Salary_p_a, "([Rs]{2})\\s*")] %>% unique()
+No_Salary_Salary_rs
+```
+
+
+
+
+Then I decided to create a new columns for salaries with different currency types.
+
+```{r, comment= NA}
+df_new$Salary_Currency <- df_new$Salary
+
+df_new$Salary_Currency[df_new$Salary%in%Salary_dollar] <- "Dollars"
+df_new$Salary_Currency[df_new$Salary%in%Salary_INR] <- "INR"
+df_new$Salary_Currency[df_new$Salary%in%Salary_p_a] <- "P.A."
+df_new$Salary_Currency[df_new$Salary%in%Salary_rs] <- "Rs"
+df_new$Salary_Currency[df_new$Salary%in%No_Salary_Salary_rs] <- "Pounds"
+
+unique(df_new$Salary_Currency)
+```
+
+
+```{r, comment= NA}
+unique(df_new$Experience)
+```
+
+I decided to replace all Not_define, Not_mentioned,Not-mentioned,not mentioned,not needed,-,not required,Numerical degree or equivalent work experience, Requires Working Knowledge of data science, analytics, or data engineering,MOBILE/VIDEO GAMING EXPERIENCE REQUIRED,Experience working with both unstructured as well as structured data analytics, NA with NA in Experience column.I replaced with NA because some are type NA manually.
+
+```{r, comment= NA}
+df_new$Experience[df_new$Experience=="Not_define"|df_new$Experience=="Not_mentioned"|df_new$Experience=="Not-mentioned"|df_new$Experience=="not needed"|df_new$Experience=="-"|df_new$Experience=="not required"|df_new$Experience=="not mentioned"|df_new$Experience=="Numerical degree or equivalent work experience"|df_new$Experience=="Requires Working Knowledge of data science, analytics, or data engineering"|df_new$Experience=="MOBILE/VIDEO GAMING EXPERIENCE REQUIRED"|df_new$Experience=="Experience working with both unstructured as well as structured data analytics"|df_new$Experience=="43864"|df_new$Experience=="43865"|df_new$Experience=="43959"|df_new$Experience=="43896"|df_new$Experience=="44056"|df_new$Experience=="43868"|df_new$Experience=="43832"|df_new$Experience=="44053"|df_new$Experience=="43866"|df_new$Experience=="43895"|df_new$Experience=="43927"|df_new$Experience=="44022"|df_new$Experience=="43833"|df_new$Experience=="43958"|df_new$Experience=="NA"|df_new$Experience=="0"] <- NA
+
+df_new$Experience[df_new$Experience=="Intren"] <-"Intern"
+
+unique(df_new$Experience)
+
+df_new$Experience <- str_replace_all(df_new$Experience,c("to"="-","Years" = "", "years"="","yeras"=""))
+
+unique(df_new$Experience)
+
+df_new$Experience <- str_replace_all(df_new$Experience,c("year"="","yrs" = "", "of relevant experience in industry focused on payment, advertising or marketing"="",","=" "))
+
+df_new$Experience <- trimws(df_new$Experience)
+
+unique(df_new$Experience)[66]
+
+unique(df_new$Experience)
+
+```
+
+
+I decided to include the minimum experience that each Job_title need.
+```{r, comment= NA}
+d11 <- df_new$Experience %>% table() %>% as.data.frame()
+names(d11) <- c('Experience', 'Frequency')
+
+df_13 <- d11 %>% filter(Frequency==1)
+df_13
+df_13 %>% nrow()
+
+df113 <- d11 %>% filter(Frequency>1)
+df113 <- df113[order(df113$Frequency, decreasing = T),]
+df113
+df113 %>% head(5)
+df113 %>% tail(5)
+df113 %>% nrow()
+
+
+df_new %>% colnames()
+```
+
+
+```{r, comment= NA}
+df_new$Min_Experience <- df_new$Experience
+df_new$Min_Experience <- str_replace_all(df_new$Min_Experience,c("\\+"=""))
+Experience_2 <- df_new$Min_Experience[str_detect(df_new$Min_Experience, "([2]{1})\\s*")] %>% unique()
+
+Experience_2
+
+length(Experience_2)
+
+No_Experience_2 <- df_new$Min_Experience[!str_detect(df_new$Min_Experience, "([2]{1})\\s*")] %>% unique()
+No_Experience_2
+
+ 
+```
+
+Then consider the statistical softwares as R, SPSS,Python, SAS, Matlab
+
+```{r, comment= NA}
+unique(df_new$R)
+
+typeof(df_new$R)
+
+df_new$R[is.na(df_new$R)] <-0
+df_new$SAS[is.na(df_new$SAS)] <-0
+df_new$SPSS[is.na(df_new$SPSS)] <-0
+df_new$Python[is.na(df_new$Python)] <-0
+df_new$MAtlab[is.na(df_new$MAtlab)] <-0
+
+unique(df_new$R)
+
+d_11 <- df_new$R %>% table() %>% as.data.frame()
+names(d_11) <- c('R', 'Frequency')
+
+d_11
+
+```
+
+```{r, comment= NA}
+df_new$Statistical_software <- paste(df_new$R,df_new$SAS,df_new$SPSS,df_new$Python,df_new$MAtlab,sep = "::")
+
+unique(df_new$Statistical_software)
+
+d_12 <- df_new$Statistical_software %>% table() %>% as.data.frame()
+names(d_12) <- c('Statistical_software', 'Frequency')
+d_12 <- d_12[order(d_12$Frequency, decreasing = T),]
+
+d_12
+
+```
+
+```{r, comment= NA}
+df_new$Statistical_software[df_new$Statistical_software=="1::0::0::1::0"] <-"R & Python"
+df_new$Statistical_software[df_new$Statistical_software=="0::0::0::0::0"] <-"No Statistical softwares"
+df_new$Statistical_software[df_new$Statistical_software=="0::0::0::1::0"] <-"Python"
+df_new$Statistical_software[df_new$Statistical_software=="1::1::0::1::0"] <-"R, SAS & Python"
+df_new$Statistical_software[df_new$Statistical_software=="0::1::0::0::0" | df_new$Statistical_software=="1::0::0::0::0"| df_new$Statistical_software=="1::0::0::1::1" | df_new$Statistical_software=="0::1::1::0::0"| df_new$Statistical_software=="1::1::1::1::0"| df_new$Statistical_software=="1::1::1::1::1"| df_new$Statistical_software=="1::1::0::0::0"| df_new$Statistical_software=="1::0::1::0::0"| df_new$Statistical_software=="0::1::0::1::0"| df_new$Statistical_software=="1::1::1::0::1"| df_new$Statistical_software=="1::0::1::1::1"| df_new$Statistical_software=="1::0::1::1::0"| df_new$Statistical_software=="1::1::1::0::0"| df_new$Statistical_software=="1::1::0::1::1"| df_new$Statistical_software=="1::1::0::0::1"| df_new$Statistical_software=="0::1::0::1::1"| df_new$Statistical_software=="0::0::1::0::0"| df_new$Statistical_software=="1::0::0::0::1"| df_new$Statistical_software=="0::0::0::1::1"] <-"Other"
+
+unique(df_new$Statistical_software)
+
+d_12 <- df_new$Statistical_software %>% table() %>% as.data.frame()
+names(d_12) <- c('Statistical_software', 'Frequency')
+d_12 <- d_12[order(d_12$Frequency, decreasing = T),]
+
+d_12
+```
+
+
+Then consider the Programming softwares as Scala, Spark,Java, c_sharp, c_plus_plus,pyspark
+
+```{r, comment= NA}
+colnames(df_new) <- colnames(df_new) %>% str_replace_all(c("\\#" = "_sharp","\\++"="_plus_plus"))
+
+df_new$Spark[is.na(df_new$Spark)] <-0
+df_new$Scala[is.na(df_new$Scala)] <-0
+df_new$Java[is.na(df_new$Java)] <-0
+df_new$C_sharp[is.na(df_new$C_sharp)] <-0
+df_new$C_plus_plus[is.na(df_new$C_plus_plus)] <-0
+df_new$pyspark[is.na(df_new$pyspark)] <-0
+```
+
+```{r, comment= NA}
+df_new$Programming_software <- paste(df_new$Spark,df_new$Scala,df_new$Java,df_new$C_sharp,df_new$C_plus_plus,df_new$pyspark,sep = "::")
+
+unique(df_new$Programming_software)
+
+d_112 <- df_new$Programming_software%>% table() %>% as.data.frame()
+names(d_112) <- c('Programming_software', 'Frequency')
+d_112 <- d_112[order(d_112$Frequency, decreasing = T),]
+
+d_112
+
+```
+
+```{r,comment= NA}
+df_new$Programming_software[df_new$Programming_software=="0::0::0::0::0::0"] <-"No programming software"
+df_new$Programming_software[df_new$Programming_software=="1::0::0::0::0::0"] <-"Spark only"
+df_new$Programming_software[df_new$Programming_software=="0::0::1::0::0::0"] <-"Java only"
+df_new$Programming_software[df_new$Programming_software=="0::1::0::0::0::0" | df_new$Programming_software=="0::0::0::0::1::0"| df_new$Programming_software=="0::0::1::0::1::0" | df_new$Programming_software=="0::1::1::0::1::0"| df_new$Programming_software=="1::0::1::0::0::0"| df_new$Programming_software=="1::1::1::0::0::0"| df_new$Programming_software=="0::1::1::0::0::0"| df_new$Programming_software=="1::0::1::0::1::0"| df_new$Programming_software=="1::1::0::0::0::0"| df_new$Programming_software=="0::0::1::1::0::0"| df_new$Programming_software=="0::1::0::0::1::0"| df_new$Programming_software=="1::1::1::0::1::0"| df_new$Programming_software=="1::1::1::1::0::0"|df_new$Programming_software=="0::0::0::0::0::1"|df_new$Programming_software=="0::0::0::1::0::0"] <-"Other"
+
+unique(df_new$Programming_software)
+
+d_121 <- df_new$Programming_software %>% table() %>% as.data.frame()
+names(d_121) <- c('Programming_software', 'Frequency')
+d_121 <- d_121[order(d_121$Frequency, decreasing = T),]
+
+d_121
+```
+
+Also can add a column for database softwares and query languages by using the following columns.
+
+OLE/DB
+
+SQL
+
+NoSQL
+
+Oracle
+
+MySQL
+
+RDBMS
+
+MongoDB
+
+Hadoop
+
+```{r, comment= NA}
+colnames(df_new) <- colnames(df_new) %>% str_replace_all(c("\\/" = "_"))
+
+df_new$OLE_DB[is.na(df_new$OLE_DB)] <-0
+df_new$SQL[is.na(df_new$SQL)] <-0
+df_new$NoSQL[is.na(df_new$NoSQL)] <-0
+df_new$MySQL[is.na(df_new$MySQL)] <-0
+df_new$RDBMS[is.na(df_new$RDBMS)] <-0
+df_new$MongoDB[is.na(df_new$MongoDB)] <-0
+df_new$Hadoop[is.na(df_new$Hadoop)] <-0
+
+```
+
+```{r, comment= NA}
+df_new$database_softwares_and_query_languages <- paste(df_new$OLE_DB,df_new$SQL,df_new$NoSQL,df_new$MySQL,df_new$RDBMS,df_new$MongoDB,df_new$Hadoop,sep = "::")
+
+unique(df_new$database_softwares_and_query_languages)
+
+d_118 <- df_new$database_softwares_and_query_languages%>% table() %>% as.data.frame()
+names(d_118) <- c('database_softwares_and_query_languages', 'Frequency')
+d_118 <- d_118[order(d_118$Frequency, decreasing = T),]
+
+d_118
+```
+
+
+
+```{r, comment= NA}
+df_new$database_softwares_and_query_languages[df_new$database_softwares_and_query_languages=="0::0::0::0::0::0::0"] <-"No database software and/or query language"
+df_new$database_softwares_and_query_languages[df_new$database_softwares_and_query_languages=="0::1::0::0::0::0::0"] <-"SQL only"
+df_new$database_softwares_and_query_languages[df_new$database_softwares_and_query_languages=="0::1::0::1::0::0::0"] <-"SQL & MySQL only"
+df_new$database_softwares_and_query_languages[df_new$database_softwares_and_query_languages=="0::1::0::0::0::0::1"] <-"SQL & Handoop only"
+df_new$database_softwares_and_query_languages[df_new$database_softwares_and_query_languages=="0::1::1::0::0::0::0"] <-"SQL & NoSQL only"
+
+df_new$database_softwares_and_query_languages[df_new$database_softwares_and_query_languages=="0::0::0::1::0::0::0" | df_new$database_softwares_and_query_languages=="0::0::0::0::0::0::1"| df_new$database_softwares_and_query_languages=="0::1::0::1::0::0::1" | df_new$database_softwares_and_query_languages=="0::0::0::0::1::0::0"| df_new$database_softwares_and_query_languages=="0::1::0::0::0::1::0"| df_new$database_softwares_and_query_languages=="0::1::0::0::0::1::1"| df_new$database_softwares_and_query_languages=="0::1::0::0::1::0::1"| df_new$database_softwares_and_query_languages=="1::1::0::0::0::0::0"| df_new$database_softwares_and_query_languages=="0::0::1::0::0::0::0"| df_new$database_softwares_and_query_languages=="0::0::1::0::1::0::1"| df_new$database_softwares_and_query_languages=="0::1::0::0::1::0::0"| df_new$database_softwares_and_query_languages=="0::1::1::0::0::0::1"| df_new$database_softwares_and_query_languages=="0::1::1::0::1::0::0"|df_new$database_softwares_and_query_languages=="0::1::1::0::1::0::1"|df_new$database_softwares_and_query_languages=="0::1::1::1::0::0::0"] <-"Other"
+
+unique(df_new$database_softwares_and_query_languages)
+
+d_1211 <- df_new$database_softwares_and_query_languages %>% table() %>% as.data.frame()
+names(d_1211) <- c('database_softwares_and_query_languages', 'Frequency')
+d_1211 <- d_1211[order(d_1211$Frequency, decreasing = T),]
+
+d_1211
+```
+
+I Finally decided to add column with type of Job_title that I extracted before.
+
+```{r, comment=NA}
+df_new$Job_title_New[df_new$Job_title_New%in%Data_Science_Jobs] <- "DS"
+df_new$Job_title_New[df_new$Job_title_New%in%Data_ANALYTICS_Jobs] <- "DA"
+df_new$Job_title_New[df_new$Job_title_New%in%Data_ENGINEER_Jobs] <- "DE"
+df_new$Job_title_New[df_new$Job_title_New%in%ACTUARIAL_ANALYST_Jobs] <- "Actuarial"
+df_new$Job_title_New[df_new$Job_title_New%in%STATICIAN_Jobs] <- "Statician"
+df_new$Job_title_New[df_new$Job_title_New%in%SCIENTIST_Jobs] <- "Scientist"
+df_new$Job_title_New[df_new$Job_title_New%in%STATISTICAL_PROGRAMMERS_Jobs] <- "SP"
+df_new$Job_title_New[df_new$Job_title_New%in%ANALYST_Jobs] <- "Analyst"
+
+unique(df_new$Job_title_New)
+
+df_new$Job_title_New[df_new$Job_title_New!="DS"&df_new$Job_title_New!="DA"&df_new$Job_title_New!="DE"&df_new$Job_title_New!="Actuarial"&df_new$Job_title_New!="Statician"&df_new$Job_title_New!="Scientist"&df_new$Job_title_New!="SP"&df_new$Job_title_New!="Analyst"] <- "Other"
+
+unique(df_new$Job_title_New)
+```
+
+
+```{r, comment=NA}
+unique(df_new$Min_Experience)
+
+df_new$Min_Experience <- str_replace_all(df_new$Min_Experience,c("or"="/","0r"="/","yers" = ""))
+
+unique(df_new$Min_Experience)
+dddf <- data.frame(df_new$Min_Experience)
+
+dddf <- dddf %>% separate(df_new.Min_Experience,c("Exp1","Exp2","Exp3","Exp4","Exp5"))
+dddf <- as_tibble(dddf) 
+dddf
+
+unique(dddf$Exp1)
+
+dddf$Exp1 <- str_replace_all(dddf$Exp1,c("Bachel"="0","Intern"="0","18"="1.5"))
+unique(dddf$Exp1)
+
+unique(dddf$Exp2)
+dddf$Exp2 <- str_replace_all(dddf$Exp2,c("months"="NA","s"="NA"))
+unique(dddf$Exp2)
+
+unique(dddf$Exp3)
+dddf$Exp3 <- str_replace_all(dddf$Exp2,c("Degree"="NA"))
+
+unique(dddf$Exp4)
+dddf$Exp4 <- str_replace_all(dddf$Exp2,c("plus"="NA"))
+
+unique(dddf$Exp5)
+
+dddf
+
+dddf$Exp <- paste(dddf$Exp1,dddf$Exp2,dddf$Exp3,dddf$Exp4,dddf$Exp5,sep = "::")
+
+unique(dddf$Exp1)
+
+dddf$Exp1[dddf$Exp=="0::5::5::5::NA"] <- "5"
+dddf$Exp1[dddf$Exp=="0::3::3::3::NA"] <- "3"
+dddf$Exp1[dddf$Exp=="0::NA::NA::NA::9"] <- "9"
+
+unique(dddf$Exp1)
+
+dddf$Exp_New <- paste(dddf$Exp1,dddf$Exp2,dddf$Exp3,dddf$Exp4,dddf$Exp5,sep = "::")
+unique(dddf$Exp_New)
+
+df_new <- cbind(df_new,dddf[,1])
+colnames(df_new)
+```
+
+```{r, comment=NA}
+unique(df_new$Country)
+dddf1 <- data.frame(df_new$Country)
+dddf1 <- dddf1 %>% separate(df_new.Country,c("col1","col2","col3","col4","col5","col6"))
+dddf1 <- as_tibble(dddf1) 
+dddf1
+
+unique(dddf1$col1)
+unique(dddf1$col2)
+unique(dddf1$col3)
+unique(dddf1$col4)
+unique(dddf1$col5)
+unique(dddf1$col6)
+
+df_new$Country[df_new$Country=="singaore"|df_new$Country=="singapore,sg"] <- "singapore"
+df_new$Country[df_new$Country=="western sri lanka"|df_new$Country=="western, sri lanka"|df_new$Country=="rathmalana-sri lanka"] <- "sri lanka"
+df_new$Country[df_new$Country=="delhi"|df_new$Country=="kakinada, rajahmundry, visakhapatnam(gajuwaka)"|df_new$Country=="chennai(anna nagar)"|df_new$Country=="chennai(adambakkam , anna nagar, ashok nagar , besant nagar , chromepet )"|df_new$Country=="kolkata , mumbai"|df_new$Country=="bengaluru / bangalore , mumbai"|df_new$Country=="bengaluru / bangalore"|df_new$Country=="bengaluru / bangalore , hyderabad / secunderabad"|df_new$Country=="hyderabad / secunderabad"|df_new$Country=="bengaluru"|df_new$Country=="chennai,delhi,bengaluru"|df_new$Country=="pune"|df_new$Country=="mumbai, maharashtra, india"|df_new$Country=="hyderabad"|df_new$Country=="pune,maharashtra,india"|df_new$Country=="mumbai"|df_new$Country=="chennai"|df_new$Country=="bengaluru,karnataka"|df_new$Country=="bengaluru,ka"|df_new$Country=="indore"|df_new$Country=="noida"] <- "india"
+
+df_new$Country[df_new$Country=="charlotte, nc, usa"|df_new$Country=="fremont,us"|df_new$Country=="beaverton,us"|df_new$Country=="pleasanton,ca,us"|df_new$Country=="new york ciry,us"|df_new$Country=="madison,us"|df_new$Country=="lafayette,la,us"|df_new$Country=="new york,united status"|df_new$Country=="denver,co,us"|df_new$Country=="newyork"|df_new$Country=="new york"|df_new$Country=="united states"|df_new$Country=="new york ciry,us"|df_new$Country=="new york ciry,us"|df_new$Country=="washington"|df_new$Country=="na"|df_new$Country=="or"] <- "usa"
+
+df_new$Country[df_new$Country=="uk - hertfordshire - stevenage"|df_new$Country=="manchester,uk"|df_new$Country=="norwich, uk"|df_new$Country=="scotland,uk"|df_new$Country=="city of london"|df_new$Country=="london"|df_new$Country=="carfiff"|df_new$Country=="central london"|df_new$Country=="cambridge"] <-  "uk"
+
+df_new$Country[df_new$Country=="barcelona"|df_new$Country=="barcelona,es"] <- "spain"
+
+df_new$Country[df_new$Country=="cork,ie"] <- "ireland"
+
+df_new$Country[df_new$Country=="budapest,hungary"] <- "hungary"
+
+df_new$Country[df_new$Country=="newsouth wales,australia"|df_new$Country=="melbourne"|df_new$Country=="brisbane"|df_new$Country=="canberra"|df_new$Country=="sydney"] <- "australia"
+
+df_new$Country[df_new$Country=="moscow,ru"] <- "russia"
+
+df_new$Country[df_new$Country=="san francisco"|df_new$Country=="los angeles, ca"|df_new$Country=="san mateo"|df_new$Country=="mountain view"|df_new$Country=="san diego, ca"|df_new$Country=="san fransico"] <- "california"
+
+df_new$Country[df_new$Country=="denver,co"] <- "colorado"
+
+df_new$Country[df_new$Country=="harrisburg, pa"] <- "harrisburg"
+
+df_new$Country[df_new$Country=="columbus"] <- "ohio"
+
+df_new$Country[df_new$Country=="bucharest,ro"] <- "romania"
+
+df_new$Country[df_new$Country=="pasig,philippines"] <- "philippines"
+
+df_new$Country[df_new$Country=="chicago"|df_new$Country=="springfield or chicago"] <- "llinois"
+
+df_new$Country[df_new$Country=="wake country,nc"] <- "north carolina"
+
+df_new$Country[df_new$Country=="waterbury"] <- "connecticut"
+
+df_new$Country[df_new$Country=="edmond"] <- "oklahoma"
+
+df_new$Country[df_new$Country=="ann arbor, mi"|df_new$Country=="detroit, mi"] <- "michigan"
+
+df_new$Country[df_new$Country=="boston, ma"|df_new$Country=="boston"] <- "massachusetts"
+
+df_new$Country[df_new$Country=="new kensington"] <- "pennsylvania"
+
+df_new$Country[df_new$Country=="salt lake city"] <- "utah"
+
+df_new$Country[df_new$Country=="boise"] <- "idaho"
+
+df_new$Country[df_new$Country=="mclean"|df_new$Country=="norfolk"] <- "virginia"
+
+df_new$Country[df_new$Country=="seattle"] <- "Washington State"
+
+df_new$Country[df_new$Country=="minneapolis"] <- "minnesota"
+
+df_new$Country[df_new$Country=="arlington"|df_new$Country=="austin"] <- "texas"
+
+df_new$Country[df_new$Country=="montgomery country"|df_new$Country=="bethesda, md"|df_new$Country=="chevy chase"] <- "maryland"
+
+df_new$Country[df_new$Country=="berlin,germany"|df_new$Country=="cologne,germany"] <-  "germany"
+
+df_new$Country[df_new$Country=="kuala lumpur,malaysia"|df_new$Country=="selangor"] <-  "malaysia"
+
+df_new$Country[df_new$Country=="ottawa, on, canada"|df_new$Country=="north york, on, canada"|df_new$Country=="canada,ky"] <-  "canada"
+
+unique(df_new$Country)
+```
+
+```{r, comment= NA}
+unique(df_new$City)
+
+df_new$Location_New <- paste(df_new$Country,df_new$City,sep = "::")
+
+unique(df_new$Location_New)
+```
+
+```{r, comment= NA}
+unique(df_new$Educational_qualifications)
+
+df_new$Educational_qualifications[is.na(df_new$Educational_qualifications)] <-"Not_mention"
+
+df_new$Educational_qualifications[df_new$Educational_qualifications=="not specified"|df_new$Educational_qualifications=="Not mention"] <-  "Not_mention"
+
+Diploma_Jobs <- df_new$Educational_qualifications[str_detect(df_new$Educational_qualifications, "([Diploma]{7})\\s*")] %>% unique()
+
+Diploma_Jobs
+
+NO_Diploma_Jobs <- df_new$Educational_qualifications[!str_detect(df_new$Educational_qualifications, "([Diploma]{7})\\s*")] %>% unique()
+NO_Diploma_Jobs
+
+MSC_Jobs <- NO_Diploma_Jobs[str_detect(NO_Diploma_Jobs, "([Master's]{6,10}|[M.Sc.]{5}|[MSc]{3}|[Masters]{7}|[Msc]{3}|[MS]{2})\\s*")] %>% unique()
+
+MSC_Jobs
+
+No_MSC_Jobs <- NO_Diploma_Jobs[!str_detect(NO_Diploma_Jobs, "([Master's]{6,10}|[M.Sc.]{5}|[MSc]{3}|[Masters]{7}|[Msc]{3}|[MS]{2})\\s*")] %>% unique()
+
+No_MSC_Jobs
+
+PHD_Jobs <- No_MSC_Jobs[str_detect(No_MSC_Jobs, "([Ph.D.]{3,4}|[Postgraduate]{12}|[PhD.]{3,4}|[postgraduate]{12}|[Post]{4}|[post]{4})\\s*")] %>% unique()
+
+PHD_Jobs
+
+No_PHD_Jobs <- No_MSC_Jobs[!str_detect(No_MSC_Jobs, "([Ph.D.]{3,4}|[Postgraduate]{12}|[PhD.]{3,4}|[postgraduate]{12}|[Post]{4})\\s*")] %>% unique()
+
+No_PHD_Jobs
+
+BT_Jobs <- No_PHD_Jobs[str_detect(No_PHD_Jobs, "([B.Tech]{6})\\s*")] %>% unique()
+
+BT_Jobs
+
+NO_BT_Jobs <- No_PHD_Jobs[!str_detect(No_PHD_Jobs, "([B.Tech]{6})\\s*")] %>% unique()
+
+NO_BT_Jobs
+
+BSC_Jobs <- NO_BT_Jobs[NO_BT_Jobs!="Not_mention"]
+
+BSC_Jobs
+```
+
+```{r, comment=NA}
+df_new$Min_Educational_qualifications[df_new$Educational_qualifications%in%Diploma_Jobs] <- "Diploma"
+df_new$Min_Educational_qualifications[df_new$Educational_qualifications%in%MSC_Jobs] <- "MSc"
+df_new$Min_Educational_qualifications[df_new$Educational_qualifications%in%PHD_Jobs] <- "PhD"
+df_new$Min_Educational_qualifications[df_new$Educational_qualifications%in%BT_Jobs] <- "B.Tech"
+df_new$Min_Educational_qualifications[df_new$Educational_qualifications%in%BSC_Jobs] <- "BSc"
+
+unique(df_new$Min_Educational_qualifications)
+```
+
+```{r, comment=NA}
+unique(df_new$Knowledge_in)
+
+df_new$Knowledge_in <- str_replace_all(df_new$Knowledge_in,c("\\/"=" ","," = " ", "&"=" ","\\-"=" ","\\."=" ","\\(|\\)"=" ","/:"=" "))
+
+unique(df_new$Knowledge_in)
+```
+
+The dataset after data wrangling.
+```{r, comment=NA}
+df_new %>% select(Job_title_New,Company,URL,Salary,Salary_Currency,Experience,Educational_qualifications,Statistical_software,Programming_software,database_softwares_and_query_languages,Country,Min_Educational_qualifications,Exp1)
+
+df_new %>% nrow()
+
+write.csv(df_new,"C:/Users/j/Desktop/Final_year_lec_notes/Statistical_consultancy/Project 2/data_original.csv", row.names = FALSE)
+```
+
+<!--write.csv(df_new,"C:/Users/j/Desktop/Final_year_lec_notes/Statistical_consultancy/Project 2/data_original.csv", row.names = FALSE)-->

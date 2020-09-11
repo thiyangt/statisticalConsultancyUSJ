@@ -1,0 +1,77 @@
+---
+title: "World_cloud1"
+author: "Jayani Lakshika"
+date: "September 4, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+<!--To import necessary packages-->
+```{r, message=FALSE, warning=FALSE}
+library(packrat)
+library(tidyverse)
+library(magrittr)
+library(dplyr)
+library(here)
+library(ggplot2)
+library(wordcloud)
+library(wordcloud2)
+library(RColorBrewer)
+library(tm)
+library(tidytext)
+library(mapproj)
+library(corpus)
+library(ggmap)
+library(maps)
+library(ggrepel)
+library(viridis)
+```
+
+```{r}
+here::here()
+```
+
+```{r, comment = NA}
+df <- read.csv("data_original.csv")
+
+df <- as_tibble(df) 
+
+df %>% head(5)
+
+df %>% class()
+
+df %>% ncol()
+
+df %>% colnames()
+
+df %>% nrow()
+
+df %>% tail(20)
+
+```
+
+
+
+```{r}
+unique(df$Search_Term)
+
+text1 <- df$Search_Term
+
+docs <- Corpus(VectorSource(text1))
+docs <- docs%>% tm_map(stripWhitespace)
+
+dtm <- TermDocumentMatrix(docs)
+matrix <- as.matrix(dtm)
+
+words <- sort(rowSums(matrix), decreasing = TRUE)
+
+df <- data.frame(word = names(words), freq = words)
+
+p1 <- wordcloud2(data = df, size = 0.9,color = 'random-dark', shape = 'pentagon')
+
+p1
+```

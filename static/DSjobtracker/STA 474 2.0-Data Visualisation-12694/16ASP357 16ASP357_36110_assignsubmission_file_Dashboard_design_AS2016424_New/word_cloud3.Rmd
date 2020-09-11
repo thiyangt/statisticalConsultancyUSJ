@@ -1,0 +1,73 @@
+---
+title: "Word_cloud4"
+author: "Jayani Lakshika"
+date: "September 4, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<!--To import necessary packages-->
+```{r, message=FALSE, warning=FALSE}
+library(packrat)
+library(tidyverse)
+library(magrittr)
+library(dplyr)
+library(here)
+library(ggplot2)
+library(wordcloud)
+library(wordcloud2)
+library(RColorBrewer)
+library(tm)
+library(tidytext)
+library(mapproj)
+library(corpus)
+library(ggmap)
+library(maps)
+library(ggrepel)
+library(viridis)
+library(readxl)
+```
+
+```{r}
+here::here()
+```
+
+```{r, comment = NA}
+df <- read_excel("dataset.xlsx")
+
+df %>% head(5)
+
+df %>% class()
+
+df %>% ncol()
+
+df %>% colnames()
+
+df %>% nrow()
+
+df %>% tail(20)
+
+```
+
+
+
+```{r}
+text4 <- df$Knowledge_in
+
+docs3 <- Corpus(VectorSource(text4))
+docs3 <- docs3 %>% tm_map(content_transformer(tolower))%>%tm_map(stripWhitespace) %>% tm_map(removePunctuation) %>% tm_map(removeNumbers) %>% tm_map(removeWords,c("and","with")) 
+
+
+dtm3 <- TermDocumentMatrix(docs3)
+matrix3 <- as.matrix(dtm3)
+
+words3 <- sort(rowSums(matrix3), decreasing = TRUE)
+
+df3 <- data.frame(word = names(words3), freq = words3)
+
+p11 <- wordcloud2(data = df3, size = 0.9,color = 'random-dark', shape = 'pentagon')
+p11
+```

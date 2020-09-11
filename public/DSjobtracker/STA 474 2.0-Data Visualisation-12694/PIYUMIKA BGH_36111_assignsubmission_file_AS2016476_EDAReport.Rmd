@@ -1,0 +1,243 @@
+---
+title: "Exploratory Data Analysis"
+author: "B.G.H.Piyumika"
+date: "9/4/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,comment = NA)
+
+```
+
+### **Loading Required Packages**
+
+In order to do the Exploratory Data Analysis first of all it has to be loaded some packages.
+Some packages were required for further data wrangling part and some packages needed for obtain plots.
+
+Following are some packaged that have been loaded. The rest of packages were loaded where necessary.
+
+
+```{r }
+
+library(tidyverse)
+library(magrittr)
+library(sf)
+library(raster)
+library(dplyr)
+library(spData)
+library(tmap)
+library(leaflet)
+library(ggplot2)
+library(rworldmap)
+
+
+```
+
+### **Loading the the cleaned data set**
+
+Here it has been loaded the cleaned data set which was cleaned by last session Data Wrangling.
+The cleaned data set has assigned to a data frame called "MyDataSet"
+
+
+```{r }
+library(readxl)
+MyDataSet<-read_excel("MyOutput1.xlsx")
+#MyDataSet
+
+```
+
+```{r }
+MyDataSet<-MyDataSet[!(is.na(MyDataSet$Job_title)),]
+#MyDataSet
+
+```
+
+```{r}
+MyDataSet<-MyDataSet%>%dplyr::na_if("Not_define")
+MyDataSet<-MyDataSet%>%dplyr::na_if("Not_mentioned")
+MyDataSet<-MyDataSet%>%dplyr::na_if("Not-mentioned")
+MyDataSet<-MyDataSet%>%dplyr::na_if("not mentioned")
+MyDataSet<-MyDataSet%>%dplyr::na_if("Competitive")
+MyDataSet<-MyDataSet%>%dplyr::na_if("NA")
+#MyDataSet
+
+```
+
+```{r}
+MyDataSet<-MyDataSet%>%mutate(Job_title=tolower(Job_title))
+#MyDataSet
+
+```
+
+```{r}
+MyDataSet$Job_title<-gsub('&',"and",MyDataSet$Job_title)
+MyDataSet<-distinct(MyDataSet,Job_title,Company,URL,.keep_all = TRUE)
+#MyDataSet
+
+```
+
+### **World Map**
+
+```{r}
+worldmap<-getMap(resolution = "coarse")
+plot(worldmap,xlim=c(-180,180),ylim=c(-50,100),asp=1,bg="lightblue",col="yellow")
+```
+
+### **Required Softwares**
+
+There are 36 softwares in our data set. They were distributed in 36 columns. Those softwares have assigned into one column by using the followin code. 
+```{r}
+sw1<-pivot_longer(MyDataSet,c(7:19,25,26,31:33,35,36,38:40,53,56:58,62,63,65,66,70:74),"RequiredSoftwares","Status")
+sw2<-filter(sw1,value=="1")
+#sw2
+```
+
+To obtain a plot of required softwares for statistic based jobs, checked the frequencies of each softwares. Then  consider the softwares which have highest frequencies, as major softwares needed by statistical jobs and kept rest of the softwares as other.
+
+```{r}
+unique(sw2$RequiredSoftwares)
+table(sw2$RequiredSoftwares)
+```
+### Figure 1
+```{r}
+attach(sw2)
+counts<-sw2%>%group_by(RequiredSoftwares)%>%summarise(no_rows=length(RequiredSoftwares))
+counts
+arrange(counts,desc(counts$no_rows))
+sum(counts$no_rows)
+barsoft<-tibble(Software=c("Python","SQL","R","Ms Excel","SAS","Other"),No_jobs=c(282,239,210,83,81,648))
+barsoft
+ggplot(data =barsoft,aes(x=reorder(Software,No_jobs),y=No_jobs))+geom_bar(stat = "identity",fill="red")+geom_text(aes(label=No_jobs))+theme_minimal()
+
+```
+<br />
+
+**Interpretation**
+
+
+The Figure 1 illustrates that what are the softwares mostly required by a statistic based job. According to the figure it can be seen Python is highly required but when consider other softwares it has the highest bar since in "other" category, there are 31 softwares.
+
+Minimum number of jobs required the softwares SAS and Ms Excel, and the number of jobs required the software SAS is approximately equal to that of Ms Excel.
+
+
+```{r}
+detach(sw2)
+
+```
+
+
+
+
+```{r}
+
+library(readr)
+library(e1071)
+library(mlbench)
+library(tm)
+library(SnowballC)
+library(wordcloud)
+library(RColorBrewer)
+```
+
+### Figure 2
+
+Then the number of jobs(frequencies) of the softwares in other category have explorated by a **"wordcloud"**.
+```{r}
+sw3<-filter(counts,no_rows<80)
+sw3
+set.seed(100)
+wordcloud(words = sw3$RequiredSoftwares,freq = sw3$no_rows,random.order = FALSE,rot.per = 0.35,colors = brewer.pal(10,"Dark2"))
+```
+<br />
+
+
+**Interpretation**
+
+The Figure 2 shows the word cloud of other softwares required by statistical jobs. According to the figure it can be seen MY SQL, Java,Ms Power Point, SPSS are some mostly required softwares and least number of jobs required Linux, Unix, Spotfire tec.
+
+### **Job Titles**
+
+There are many types of job titles it is harder to plot all job titles. Therefore it has been categorized jobs into three main categories, and other job titles keep as other.
+```{r}
+Job_Titles<-str_to_lower(MyDataSet$Job_title)
+Job_Titles<-str_replace_all(Job_Titles,","," ")
+Job_Titles%>%head()
+DS<-Job_Titles[str_detect(Job_Titles,"([data]{4}\\s*[scientist]{7,9})")] %>% unique()
+DE<-Job_Titles[str_detect(Job_Titles,"([data]{4}\\s*[engineer]{8})")]%>%unique()
+DA<-Job_Titles[str_detect(Job_Titles,"([data]{4}\\s*[analyst]{7}|[analytics]{8,9})")]%>%unique()
+Others<-Job_Titles[!(Job_Titles%in%c(DS,DE,DA))]
+#MyDataSet
+```
+Then the Job titles are categorized into 3 main categories such as DS(Data Scientist), DE(Data Engineer) and DA(Data Analyst) and remaining titles are kept as other.
+```{r}
+Tbl<-data.frame(Job_Title=c("DS","DE","DA","Others"),Count=c(sum(Job_Titles%in%DS),sum(Job_Titles%in%DE),sum(Job_Titles%in%DA),sum(Job_Titles%in%Others)))
+Tbl
+```
+### Figure 3
+
+```{r}
+barsoft2<-tibble(Job_Title=c("DS","DE","DA","Others"),No_jobs=c(213,21,155,56))
+barsoft2
+ggplot(data =barsoft2,aes(x=reorder(Job_Title,No_jobs),y=No_jobs))+geom_bar(stat = "identity",fill="green")+geom_text(aes(label=No_jobs))+theme_minimal()
+```
+<br />
+
+**Interpretation**
+
+According to the Figure 3 most of jobs titles are in Data Scientist Category and least number of jobs are in category Data engineering category.
+
+
+```{r}
+MyDataSet1<-pivot_longer(MyDataSet,c(21:24,27:30,34,41:52,54,55,59:61,64,67:69,75:93,100:105),"KnowledgeAndSkills","Status")
+MyDataSet2<-filter(MyDataSet1,value=="1")
+#MyDataSet2
+```
+
+```{r}
+unique(MyDataSet2$KnowledgeAndSkills)
+
+```
+
+```{r}
+attach(MyDataSet2)
+counts2<-MyDataSet2%>%group_by(KnowledgeAndSkills)%>%summarise(no_rows2=length(KnowledgeAndSkills))
+counts2
+arrange(counts2,desc(counts2$no_rows2))
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,41 @@
+---
+title: "Flexdashboard Design"
+author: "B.G.H.Piyumika"
+date: "9/4/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
+```
+
+## **Panel 1: Overview**
+
+Data Scientist Qualification and Skills, dataset explains that what are qualifications and skills required by statistical based jobs all over the world. There are much of softwares, edcucation qualifications, knwoledge and experience that required by statistical jobs. 
+
+The dataset has been created and gathered by the 4th year undergraduates(Special part II) of, Department of Statistics, Faculty of Applied Sciences, University of Sri Jayewardenepura Sri Lanka.
+<br />
+
+## **Panel 2: World map**
+
+The world map should show that where the statistical based jobs are located. As well as which countries have more jobs.<br /><br />
+
+In order to explore that, we can create a world map with points which represent the locations of jobs and by the points and points get larger with respect to the frequency of the jobs.
+
+<br />
+
+
+## **Panel 3: Required Softewares**
+
+There were lots of softwares required by many job based on statistics. According to the our data set there were 36 required softwares . Among them SAS, Ms Excel, R, SQL and Python are the mostly required softwares.
+
+Refer **Figure 1**  EDA report
+
+## **Panel 4: Job Categories**
+
+Since there are more job titles based on statistics Job titles have been categorized mainly three categories such as Data scientist, Data engineer and Data Analyst. Other job titles are categorized under Other category.
+
+Refer **Figure 3**  EDA report
+
+
+

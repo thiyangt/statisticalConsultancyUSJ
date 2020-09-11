@@ -1,0 +1,85 @@
+---
+title: "World_map"
+author: "Jayani Lakshika"
+date: "September 4, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<!--To import necessary packages-->
+```{r, message=FALSE, warning=FALSE}
+library(packrat)
+library(tidyverse)
+library(magrittr)
+library(dplyr)
+library(here)
+library(ggplot2)
+library(wordcloud)
+library(wordcloud2)
+library(RColorBrewer)
+library(tm)
+library(tidytext)
+library(mapproj)
+library(corpus)
+library(ggmap)
+library(maps)
+library(ggrepel)
+library(viridis)
+```
+
+```{r}
+here::here()
+```
+
+```{r, comment = NA}
+df <- read.csv("data_original.csv")
+
+df <- as_tibble(df) 
+
+df %>% head(5)
+
+df %>% class()
+
+df %>% ncol()
+
+df %>% colnames()
+
+df %>% nrow()
+
+df %>% tail(20)
+
+```
+
+
+```{r}
+d12 <- as.data.frame(table(df$Country))
+names(d12) <- c('Country', 'No_of_advertisements')
+world <- map_data("world")
+
+head(world.cities,5)
+world.cities$country.etc <- str_to_lower(world.cities$country.etc)
+
+data <- world.cities %>% filter(country.etc %in% df$Country)
+head(data,5)
+
+names(data)[names(data)=="country.etc"] <- "Country"
+
+data1 <- left_join(data,d12)
+
+head(data1,5)
+
+data1 <- data1[!duplicated(data1[,c("Country")]),]
+
+mybreaks <- c(100,80,60,40,20,5,1)
+
+ggplot() +
+  geom_polygon(data = world, aes(x=long, y = lat, group = group), fill="grey", alpha=0.8) +
+  geom_point(data=data1 %>% arrange(No_of_advertisements), aes(x=long, y=lat, alpha=No_of_advertisements, color =No_of_advertisements),size= 3,shape= 20, stroke=FALSE)+
+  geom_text_repel(data = data1 %>% arrange(No_of_advertisements), aes(x=long, y=lat,label=Country))+
+  scale_size_continuous(name = "No of advertisements",trans = "log",range=c(1,12), breaks = mybreaks) +
+  scale_color_viridis(trans="log", breaks = mybreaks, name = "No of advertisements") + 
+  theme_void() + coord_map()  
+```

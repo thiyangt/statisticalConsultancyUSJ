@@ -1,0 +1,555 @@
+---
+title: "Flex_Dashboard_Design"
+author: "Jayani Lakshika"
+date: "September 3, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<!--To import necessary packages-->
+```{r, message=FALSE, warning=FALSE}
+library(packrat)
+library(tidyverse)
+library(magrittr)
+library(dplyr)
+library(here)
+library(ggplot2)
+library(wordcloud)
+library(wordcloud2)
+library(RColorBrewer)
+library(tm)
+library(tidytext)
+library(mapproj)
+library(corpus)
+library(ggmap)
+library(maps)
+library(ggrepel)
+library(viridis)
+```
+
+```{r}
+here::here()
+```
+
+```{r, comment = NA}
+df <- read.csv("data_original.csv")
+
+df <- as_tibble(df) 
+
+df %>% head(5)
+
+df %>% class()
+
+df %>% ncol()
+
+df %>% colnames()
+
+df %>% nrow()
+
+df %>% tail(20)
+
+```
+
+```{r}
+d_1211 <- df$Job_title_New %>% table() %>% as.data.frame()
+names(d_1211) <- c('Job_title', 'Frequency')
+d_1211 <- d_1211[order(d_1211$Frequency, decreasing = T),]
+
+d_1211 <- d_1211 %>% mutate(Percentage = Frequency*100/sum(Frequency))
+d_1211
+
+ggplot(d_1211, aes(x= reorder(Job_title, Frequency), y=Frequency))+ labs(y="Count of Jobs", x="Job Title") + geom_bar(stat = "identity", width = 0.5, fill="#FC4E07")+ ggtitle("Bar chart of Job Title") + coord_flip()
+```
+
+
+```{r}
+d_1211 <- df$Statistical_software %>% table() %>% as.data.frame()
+names(d_1211) <- c('Statistical_software', 'Frequency')
+d_1211 <- d_1211[order(d_1211$Frequency, decreasing = T),]
+
+d_1211 <- d_1211 %>% mutate(Percentage = Frequency*100/sum(Frequency))
+d_1211
+
+ggplot(d_1211, aes(x= reorder(Statistical_software, Frequency), y=Frequency))+ labs(y="Count of Jobs", x="Statistical software") + geom_bar(stat = "identity", width = 0.5, fill="#CC79A7")+ ggtitle("Bar chart of Statistical software") + coord_flip()
+```
+
+```{r}
+d_1211 <- df$Programming_software %>% table() %>% as.data.frame()
+names(d_1211) <- c('Programming_software', 'Frequency')
+d_1211 <- d_1211[order(d_1211$Frequency, decreasing = T),]
+
+d_1211 <- d_1211 %>% mutate(Percentage = Frequency*100/sum(Frequency))
+d_1211
+
+ggplot(d_1211, aes(x= reorder(Programming_software, Frequency), y=Frequency))+ labs(y="Count of Jobs", x="Programming software") + geom_bar(stat = "identity", width = 0.5, fill="#009E73")+ ggtitle("Bar chart of Programming software") + coord_flip()
+```
+
+
+```{r}
+d_1211 <- df$database_softwares_and_query_languages %>% table() %>% as.data.frame()
+names(d_1211) <- c('database_softwares_and_query_languages', 'Frequency')
+d_1211 <- d_1211[order(d_1211$Frequency, decreasing = T),]
+
+d_1211 <- d_1211 %>% mutate(Percentage = Frequency*100/sum(Frequency))
+d_1211
+
+ggplot(d_1211, aes(x= reorder(database_softwares_and_query_languages, Frequency), y=Frequency))+ labs(y="Count of Jobs", x="database softwares and query languages") + geom_bar(stat = "identity", width = 0.5, fill="#56B4E9")+ ggtitle("database softwares and query languages") + coord_flip()
+```
+
+
+```{r}
+df$Exp1 <- as.factor(df$Exp1)
+d12 <- as.data.frame(table(df$Job_title_New,df$Exp1))
+names(d12) <- c('Job_title','Min_Experience', 'No_of_cases')
+d12 <- d12 %>% mutate(label_ypos = cumsum(No_of_cases)-0.5*No_of_cases)
+df13 <- d12[order(d12$No_of_cases, decreasing = T),]
+
+df14 <- df13
+
+ggplot(df14, aes(y = No_of_cases, x=Job_title, fill = Min_Experience))+ labs(y="Number of Jobs", x="Job_title") + geom_bar(stat = "identity", width = 0.5)+ ggtitle("Bar chart of people by Minimum Experience and Job title") + coord_flip()
+```
+
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="DS") %>% select(Exp1)
+d12 <- as.data.frame(table(dd1$Exp1))
+names(d12) <- c('Min_Experience', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Min_Experience, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Min_Experience") + geom_bar(stat = "identity", width = 0.5,fill="#CC79A7")+ ggtitle("Bar chart of DS people by Experience") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="DA") %>% select(Exp1)
+d12 <- as.data.frame(table(dd1$Exp1))
+names(d12) <- c('Min_Experience', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Min_Experience, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Min_Experience") + geom_bar(stat = "identity", width = 0.5,fill="#56B4E9")+ ggtitle("Bar chart of DA people by Experience") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="DE") %>% select(Exp1)
+d12 <- as.data.frame(table(dd1$Exp1))
+names(d12) <- c('Min_Experience', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Min_Experience, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Min_Experience") + geom_bar(stat = "identity", width = 0.5,fill="#E69F00")+ ggtitle("Bar chart of DE people by Experience") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="Analyst") %>% select(Exp1)
+d12 <- as.data.frame(table(dd1$Exp1))
+names(d12) <- c('Min_Experience', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Min_Experience, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Min_Experience") + geom_bar(stat = "identity", width = 0.5,fill="#999999")+ ggtitle("Bar chart of Analyst people by Experience") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="Statician") %>% select(Exp1)
+d12 <- as.data.frame(table(dd1$Exp1))
+names(d12) <- c('Min_Experience', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Min_Experience, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Min_Experience") + geom_bar(stat = "identity", width = 0.5,fill="#56B4E9")+ ggtitle("Bar chart of Statician people by Experience") + coord_flip()
+```
+
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="Actuarial") %>% select(Exp1)
+d12 <- as.data.frame(table(dd1$Exp1))
+names(d12) <- c('Min_Experience', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Min_Experience, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Min_Experience") + geom_bar(stat = "identity", width = 0.5,fill="black")+ ggtitle("Bar chart of Actuarial people by Experience") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="SP") %>% select(Exp1)
+d12 <- as.data.frame(table(dd1$Exp1))
+names(d12) <- c('Min_Experience', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Min_Experience, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Min_Experience") + geom_bar(stat = "identity", width = 0.5,fill="#E7B800")+ ggtitle("Bar chart of SP people by Experience") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="Scientist") %>% select(Exp1)
+d12 <- as.data.frame(table(dd1$Exp1))
+names(d12) <- c('Min_Experience', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Min_Experience, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Min_Experience") + geom_bar(stat = "identity", width = 0.5,fill="#00AFBB")+ ggtitle("Bar chart of Scientist people by Experience") + coord_flip()
+```
+
+```{r}
+d12 <- as.data.frame(table(df$Job_title_New,df$Statistical_software))
+names(d12) <- c('Job_title','Statistical_software', 'No_of_cases')
+d12 <- d12 %>% mutate(label_ypos = cumsum(No_of_cases)-0.5*No_of_cases)
+df13 <- d12[order(d12$No_of_cases, decreasing = T),]
+
+df14 <- df13
+
+ggplot(df14, aes(y= No_of_cases, x=Job_title, fill = Statistical_software))+ labs(y="Number of Jobs", x="Job_title") + geom_bar(stat = "identity", width = 0.5)+ ggtitle("Bar chart of people by Statistical_software and Job title") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="DA") %>% select(Statistical_software)
+d12 <- as.data.frame(table(dd1$Statistical_software))
+names(d12) <- c('Statistical_software', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Statistical_software, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Statistical_software") + geom_bar(stat = "identity", width = 0.5,fill="#56B4E9")+ ggtitle("Bar chart of DA people by Statistical software") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="DE") %>% select(Statistical_software)
+d12 <- as.data.frame(table(dd1$Statistical_software))
+names(d12) <- c('Statistical_software', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Statistical_software, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Statistical_software") + geom_bar(stat = "identity", width = 0.5,fill="#E69F00")+ ggtitle("Bar chart of DE people by Statistical software") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="Analyst") %>% select(Statistical_software)
+d12 <- as.data.frame(table(dd1$Statistical_software))
+names(d12) <- c('Statistical_software', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Statistical_software, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Statistical_software") + geom_bar(stat = "identity", width = 0.5,fill="#999999")+ ggtitle("Bar chart of Analyst people by Statistical software") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="Statician") %>% select(Statistical_software)
+d12 <- as.data.frame(table(dd1$Statistical_software))
+names(d12) <- c('Statistical_software', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Statistical_software, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Statistical_software") + geom_bar(stat = "identity", width = 0.5,fill="#56B4E9")+ ggtitle("Bar chart of Statician people by Statistical software") + coord_flip()
+```
+
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="Actuarial") %>% select(Statistical_software)
+d12 <- as.data.frame(table(dd1$Statistical_software))
+names(d12) <- c('Statistical_software', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Statistical_software, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Statistical_software") + geom_bar(stat = "identity", width = 0.5,fill="black")+ ggtitle("Bar chart of Actuarial people by Statistical software") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="SP") %>% select(Statistical_software)
+d12 <- as.data.frame(table(dd1$Statistical_software))
+names(d12) <- c('Statistical_software', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Statistical_software, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Statistical_software") + geom_bar(stat = "identity", width = 0.5,fill="#E7B800")+ ggtitle("Bar chart of SP people by Statistical software") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="Scientist") %>% select(Statistical_software)
+d12 <- as.data.frame(table(dd1$Statistical_software))
+names(d12) <- c('Statistical_software', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Statistical_software, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Statistical_software") + geom_bar(stat = "identity", width = 0.5,fill="#00AFBB")+ ggtitle("Bar chart of Scientist people by Statistical software") + coord_flip()
+```
+
+
+
+
+
+
+```{r}
+d12 <- as.data.frame(table(df$Job_title_New,df$Programming_software))
+names(d12) <- c('Job_title','Programming_software', 'No_of_cases')
+d12 <- d12 %>% mutate(label_ypos = cumsum(No_of_cases)-0.5*No_of_cases)
+df13 <- d12[order(d12$No_of_cases, decreasing = T),]
+
+df14 <- df13
+
+ggplot(df14, aes(y= No_of_cases, x=Job_title, fill = Programming_software))+ labs(y="Number of Jobs", x="Job_title") + geom_bar(stat = "identity", width = 0.5)+ ggtitle("Bar chart of people by Programming_software and Job title") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="DA") %>% select(Programming_software)
+d12 <- as.data.frame(table(dd1$Programming_software))
+names(d12) <- c('Programming_software', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Programming_software, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Programming_software") + geom_bar(stat = "identity", width = 0.5,fill="#56B4E9")+ ggtitle("Bar chart of DA people by Programming software") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="DE") %>% select(Programming_software)
+d12 <- as.data.frame(table(dd1$Programming_software))
+names(d12) <- c('Programming_software', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Programming_software, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Programming_software") + geom_bar(stat = "identity", width = 0.5,fill="#E69F00")+ ggtitle("Bar chart of DE people by Programming software") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="Analyst") %>% select(Programming_software)
+d12 <- as.data.frame(table(dd1$Programming_software))
+names(d12) <- c('Programming_software', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Programming_software, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Programming_software") + geom_bar(stat = "identity", width = 0.5,fill="#999999")+ ggtitle("Bar chart of Analyst people by Programming software") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="Statician") %>% select(Programming_software)
+d12 <- as.data.frame(table(dd1$Programming_software))
+names(d12) <- c('Programming_software', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Programming_software, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Programming_software") + geom_bar(stat = "identity", width = 0.5,fill="#56B4E9")+ ggtitle("Bar chart of Statician people by Programming software") + coord_flip()
+```
+
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="Actuarial") %>% select(Programming_software)
+d12 <- as.data.frame(table(dd1$Programming_software))
+names(d12) <- c('Programming_software', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Programming_software, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Programming_software") + geom_bar(stat = "identity", width = 0.5,fill="black")+ ggtitle("Bar chart of Actuarial people by Programming software") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="SP") %>% select(Programming_software)
+d12 <- as.data.frame(table(dd1$Programming_software))
+names(d12) <- c('Programming_software', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Programming_software, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Programming_software") + geom_bar(stat = "identity", width = 0.5,fill="#E7B800")+ ggtitle("Bar chart of SP people by Programming software") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="Scientist") %>% select(Programming_software)
+d12 <- as.data.frame(table(dd1$Programming_software))
+names(d12) <- c('Programming_software', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Programming_software, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Programming_software") + geom_bar(stat = "identity", width = 0.5,fill="#00AFBB")+ ggtitle("Bar chart of Scientist people by Programming software") + coord_flip()
+```
+
+
+
+
+
+```{r}
+d12 <- as.data.frame(table(df$Job_title_New,df$database_softwares_and_query_languages))
+names(d12) <- c('Job_title','database_softwares_and_query_languages', 'No_of_cases')
+d12 <- d12 %>% mutate(label_ypos = cumsum(No_of_cases)-0.5*No_of_cases)
+df13 <- d12[order(d12$No_of_cases, decreasing = T),]
+
+df14 <- df13
+
+ggplot(df14, aes(y= No_of_cases, x=Job_title, fill = database_softwares_and_query_languages))+ labs(y="Number of Jobs", x="Job_title") + geom_bar(stat = "identity", width = 0.5)+ ggtitle("Bar chart of people by database_softwares_and_query_languages and Job title") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="DA") %>% select(database_softwares_and_query_languages)
+d12 <- as.data.frame(table(dd1$database_softwares_and_query_languages))
+names(d12) <- c('database_softwares_and_query_languages', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(database_softwares_and_query_languages, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="database_softwares_and_query_languages") + geom_bar(stat = "identity", width = 0.5,fill="#56B4E9")+ ggtitle("Bar chart of DA people by database_softwares_and_query_languages") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="DE") %>% select(database_softwares_and_query_languages)
+d12 <- as.data.frame(table(dd1$database_softwares_and_query_languages))
+names(d12) <- c('database_softwares_and_query_languages', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(database_softwares_and_query_languages, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="database_softwares_and_query_languages") + geom_bar(stat = "identity", width = 0.5,fill="#E69F00")+ ggtitle("Bar chart of DE people by database_softwares_and_query_languages") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="Analyst") %>% select(database_softwares_and_query_languages)
+d12 <- as.data.frame(table(dd1$database_softwares_and_query_languages))
+names(d12) <- c('database_softwares_and_query_languages', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(database_softwares_and_query_languages, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="database_softwares_and_query_languages") + geom_bar(stat = "identity", width = 0.5,fill="#999999")+ ggtitle("Bar chart of Analyst people by database_softwares_and_query_languages") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="Statician") %>% select(database_softwares_and_query_languages)
+d12 <- as.data.frame(table(dd1$database_softwares_and_query_languages))
+names(d12) <- c('database_softwares_and_query_languages', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(database_softwares_and_query_languages, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="database_softwares_and_query_languages") + geom_bar(stat = "identity", width = 0.5,fill="#56B4E9")+ ggtitle("Bar chart of Statician people by database_softwares_and_query_languages") + coord_flip()
+```
+
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="Actuarial") %>% select(database_softwares_and_query_languages)
+d12 <- as.data.frame(table(dd1$database_softwares_and_query_languages))
+names(d12) <- c('database_softwares_and_query_languages', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(database_softwares_and_query_languages, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="database_softwares_and_query_languages") + geom_bar(stat = "identity", width = 0.5,fill="black")+ ggtitle("Bar chart of Actuarial people by database_softwares_and_query_languages") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="SP") %>% select(database_softwares_and_query_languages)
+d12 <- as.data.frame(table(dd1$database_softwares_and_query_languages))
+names(d12) <- c('database_softwares_and_query_languages', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(database_softwares_and_query_languages, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="database_softwares_and_query_languages") + geom_bar(stat = "identity", width = 0.5,fill="#E7B800")+ ggtitle("Bar chart of SP people by database_softwares_and_query_languages") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="Scientist") %>% select(database_softwares_and_query_languages)
+d12 <- as.data.frame(table(dd1$database_softwares_and_query_languages))
+names(d12) <- c('database_softwares_and_query_languages', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(database_softwares_and_query_languages, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="database_softwares_and_query_languages") + geom_bar(stat = "identity", width = 0.5,fill="#00AFBB")+ ggtitle("Bar chart of Scientist people by database_softwares_and_query_languages") + coord_flip()
+```
+
+
+
+```{r}
+d12 <- as.data.frame(table(df$Job_title_New,df$Min_Educational_qualifications))
+names(d12) <- c('Job_title','Min_Educational_qualifications', 'No_of_cases')
+d12 <- d12 %>% mutate(label_ypos = cumsum(No_of_cases)-0.5*No_of_cases)
+df13 <- d12[order(d12$No_of_cases, decreasing = T),]
+
+df14 <- df13
+
+ggplot(df14, aes(y= No_of_cases, x=Job_title, fill = Min_Educational_qualifications))+ labs(y="Number of Jobs", x="Job_title") + geom_bar(stat = "identity", width = 0.5)+ ggtitle("Bar chart of people by Min_Educational_qualifications and Job title") + coord_flip()
+```
+
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="DA") %>% select(Min_Educational_qualifications)
+d12 <- as.data.frame(table(dd1$Min_Educational_qualifications))
+names(d12) <- c('Min_Educational_qualifications', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Min_Educational_qualifications, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Min_Educational_qualifications") + geom_bar(stat = "identity", width = 0.5,fill="#56B4E9")+ ggtitle("Bar chart of DA people by Min_Educational_qualifications") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="DE") %>% select(Min_Educational_qualifications)
+d12 <- as.data.frame(table(dd1$Min_Educational_qualifications))
+names(d12) <- c('Min_Educational_qualifications', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Min_Educational_qualifications, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Min_Educational_qualifications") + geom_bar(stat = "identity", width = 0.5,fill="#E69F00")+ ggtitle("Bar chart of DE people by Min_Educational_qualifications") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="Analyst") %>% select(Min_Educational_qualifications)
+d12 <- as.data.frame(table(dd1$Min_Educational_qualifications))
+names(d12) <- c('Min_Educational_qualifications', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Min_Educational_qualifications, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Min_Educational_qualifications") + geom_bar(stat = "identity", width = 0.5,fill="#999999")+ ggtitle("Bar chart of Analyst people by Min_Educational_qualifications") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="Statician") %>% select(Min_Educational_qualifications)
+d12 <- as.data.frame(table(dd1$Min_Educational_qualifications))
+names(d12) <- c('Min_Educational_qualifications', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Min_Educational_qualifications, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Min_Educational_qualifications") + geom_bar(stat = "identity", width = 0.5,fill="#56B4E9")+ ggtitle("Bar chart of Statician people by Min_Educational_qualifications") + coord_flip()
+```
+
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="Actuarial") %>% select(Min_Educational_qualifications)
+d12 <- as.data.frame(table(dd1$Min_Educational_qualifications))
+names(d12) <- c('Min_Educational_qualifications', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Min_Educational_qualifications, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Min_Educational_qualifications") + geom_bar(stat = "identity", width = 0.5,fill="black")+ ggtitle("Bar chart of Actuarial people by Min_Educational_qualifications") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="SP") %>% select(Min_Educational_qualifications)
+d12 <- as.data.frame(table(dd1$Min_Educational_qualifications))
+names(d12) <- c('Min_Educational_qualifications', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Min_Educational_qualifications, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Programming_software") + geom_bar(stat = "identity", width = 0.5,fill="#E7B800")+ ggtitle("Bar chart of SP people by Min_Educational_qualifications") + coord_flip()
+```
+
+```{r}
+dd1 <- df %>% filter(Job_title_New =="Scientist") %>% select(Min_Educational_qualifications)
+d12 <- as.data.frame(table(dd1$Min_Educational_qualifications))
+names(d12) <- c('Min_Educational_qualifications', 'Frequency')
+d12 <- d12[order(d12$Frequency, decreasing = T),]
+
+ggplot(d12, aes(x= reorder(Min_Educational_qualifications, Frequency), y=Frequency))+ labs(y="Number of Jobs", x="Min_Educational_qualifications") + geom_bar(stat = "identity", width = 0.5,fill="#00AFBB")+ ggtitle("Bar chart of Scientist people by Min_Educational_qualifications") + coord_flip()
+```
+
+
+```{r}
+d12 <- as.data.frame(table(df$Job_title_New,df$Salary_Currency))
+names(d12) <- c('Job_title','Salary_Currency', 'No_of_cases')
+d12 <- d12 %>% mutate(label_ypos = cumsum(No_of_cases)-0.5*No_of_cases)
+df13 <- d12[order(d12$No_of_cases, decreasing = T),]
+
+df14 <- df13
+
+ggplot(df14, aes(y= No_of_cases, x=Job_title, fill = Salary_Currency))+ labs(y="Number of Jobs", x="Job_title") + geom_bar(stat = "identity", width = 0.5)+ ggtitle("Bar chart of people by Salary_Currency and Job title") + coord_flip()
+```
+
+```{r}
+d12 <- as.data.frame(table(df$Job_title_New,df$Salary))
+names(d12) <- c('Job_title','Salary', 'No_of_cases')
+d12 <- d12 %>% mutate(label_ypos = cumsum(No_of_cases)-0.5*No_of_cases)
+df13 <- d12[order(d12$No_of_cases, decreasing = T),]
+
+df14 <- df13
+
+ggplot(df14, aes(y= No_of_cases, x=Job_title, fill = Salary))+ labs(y="Number of Jobs", x="Job_title") + geom_bar(stat = "identity", width = 0.5)+ ggtitle("Bar chart of people by Salary and Job title") + coord_flip()
+```
+
+```{r}
+d12 <- as.data.frame(table(df$Job_title_New,df$Country))
+names(d12) <- c('Job_title','Country', 'No_of_cases')
+d12 <- d12 %>% mutate(label_ypos = cumsum(No_of_cases)-0.5*No_of_cases)
+df13 <- d12[order(d12$No_of_cases, decreasing = T),]
+
+df14 <- df13
+
+ggplot(df14, aes(y= No_of_cases, x=Job_title, fill = Country))+ labs(y="Number of Jobs", x="Job_title") + geom_bar(stat = "identity", width = 0.5)+ ggtitle("Bar chart of people by Country and Job title") + coord_flip()
+```
+
+
+```{r}
+text3 <- df$URL
+
+docs2 <- Corpus(VectorSource(text3))
+docs2 <- docs2%>% tm_map(stripWhitespace) %>% tm_map(removePunctuation) %>% tm_map(removeNumbers)
+
+dtm2 <- TermDocumentMatrix(docs2)
+matrix2 <- as.matrix(dtm2)
+
+words2 <- sort(rowSums(matrix2), decreasing = TRUE)
+
+df2 <- data.frame(word = names(words2), freq = words2)
+
+p <- wordcloud2(data = df2, size = 0.9,color = 'random-dark', shape = 'pentagon')
+p
+```
+
+
+
+

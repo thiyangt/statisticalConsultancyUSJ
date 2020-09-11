@@ -1,0 +1,395 @@
+---
+title: "Data Visualization"
+author: "R.T. Dananjana"
+date: "9/4/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r,message=FALSE,warning=FALSE}
+library(tidyverse)
+library(readxl)
+library(magrittr)
+library(ggplot2)
+library(tm)
+library(wordcloud)
+```
+
+I called the dataset which is partially cleaned and did further cleaning
+```{r}
+my.data<-read.csv("dataset.csv",header = TRUE)
+```
+
+```{r}
+#Separe Skills and Other information columns in to seperate  dataframes.
+
+skills<-my.data[,c(17:78)]
+other<-my.data[,-c(17:78)]
+
+```
+
+```{r}
+#reordered the skills columns according to colsum
+skills_order<-skills[,order(decreasing=TRUE,colSums(skills))]
+```
+
+```{r}
+#new dataframe
+new.data<-cbind(other,skills_order)
+```
+
+Education Qualification column cleaning
+```{r}
+##Assignning NA's
+new.data[new.data=="Not_define"]<-NA
+new.data[new.data=="Not_mentioned"]<-NA
+new.data[new.data=="NA"]<-NA
+new.data[new.data=="not mention"]<-NA
+new.data[new.data=="not mentioned"]<-NA
+```
+
+```{r,comment=NA}
+#Converting all the Educational qualifications to lower case letters
+Adjusted_Education<-str_to_lower(new.data$Educational_qualifications)
+
+#removing punctuation marks
+punc_removed<-gsub("[[:punct:]]", " ", Adjusted_Education)
+
+
+#Qualification is not metioned.
+
+Not_defined_quali<-punc_removed[str_detect(punc_removed,"(NA)|(not mention)")]
+length(Not_defined_quali)#in 93 rows qualification is not defined 
+
+#Qualification mentioned
+Defined_quali<-punc_removed[!punc_removed%in%Not_defined_quali]
+length(Defined_quali)#in 332 rows qualification is defined.
+
+```
+
+```{r,comment=NA}
+# Minimum education qualification is a Bachelor degree 
+
+
+Bachelor_Jobs<-Defined_quali[str_detect(Defined_quali,"(bsc\\s*|bs\\s*)|(bachelor\\s*|bachelors\\s*|bachelor's\\s*)")]
+length(Bachelor_Jobs)#138
+
+non_bach<-Defined_quali[!str_detect(Defined_quali,"(bsc\\s*|bs\\s*)|(bachelor\\s*|bachelors\\s*|bachelor's\\s*)")]
+length(non_bach)#194
+
+#minimum educational qualification is a MSc
+Master_Jobs<-non_bach[str_detect(non_bach,"(master)|(ms)|(masters)")]
+length(Master_Jobs)#52
+
+non_msc<-non_bach[!str_detect(non_bach,"(master)|(ms)|(masters)")]
+length(non_msc)
+
+#minimum educational qualification is a Phd
+phd_jobs<-non_msc[str_detect(non_msc,"(phd)|(ph.)")]
+length(phd_jobs)#33
+
+#Other Qualification
+other<-non_msc[!str_detect(non_msc,"(phd)|(ph.)")]
+length(other)#109
+
+```
+
+Then, created a new grouping variable for educational qualification named as Edu_Category.
+```{r,comment=NA}
+edu<-data.frame(new.data,punc_removed)#new dataframe with adjusted edu qualifications
+
+
+
+B1 <- edu[edu$punc_removed%in% Not_defined_quali,] %>% mutate(Edu_Category= rep("NA", nrow(.)))
+dim(B1)
+
+B2 <- edu[edu$punc_removed %in% Bachelor_Jobs,] %>% mutate(Edu_Category= rep("Min_Bsc", nrow(.)))
+dim(B2)
+
+B3 <- edu[edu$punc_removed %in% Master_Jobs,] %>% mutate(Edu_Category= rep("min_Master", nrow(.)))
+dim(B3)
+
+B4 <- edu[edu$punc_removed %in% phd_jobs,] %>% mutate(Edu_Category= rep("Phd", nrow(.)))
+dim(B4)
+
+B5 <- edu[edu$punc_removed %in% other,] %>% mutate(Edu_Category= rep("other", nrow(.)))
+dim(B5)
+
+new_edu<-rbind(B1,B2,B3,B4,B5)
+dim(new_edu)
+
+```
+
+Then created a new dataframe.
+```{r,comment=NA}
+drop<-c("punc_removed","Job_Titles")
+Cleaned_data<-new_edu[,!(names(new_edu) %in% drop)]
+dim(Cleaned_data)
+```
+
+```{r}
+write.csv(Cleaned_data,file = "clead data.csv")
+```
+
+Then the country column will be cleaned by using the Cleaned_data file stored before.
+
+```{r,comment=NA}
+Location<-Cleaned_data$Location
+unique(Location)#53 unique locations
+```
+
+```{r,comment=NA}
+# renaming SL to Sri Lanka,England and UK to united kingdom,USA and US to united stated
+Location<-str_replace_all(Location, "SL", "Sri Lanka")
+Location <-str_replace_all(Location, "England","United Kingdom" )
+Location<-str_replace_all(Location, "USA", "United States")
+Location<- str_replace_all(Location, "US", "United States")
+Location<-str_replace_all(Location, "UK", "United Kingdom")
+
+
+ #making all the entries to lower case
+ lower<-str_to_lower(Location)
+ unique(lower)
+```
+
+```{r,comment=NA}
+# Call an external file with countries names in the world
+country_name_data<-read_excel("Countries.xlsx")
+country_name_data<-str_to_lower(country_name_data$Country)
+
+#Extracting the countries in our dataset which match with the country names in the external file
+country_list<-lower[lower%in%country_name_data]
+length(country_list)
+#There are 370 entries with a country in it already
+unique(country_list)#20 unique countries in our dataset are already filled
+
+
+```
+
+
+```{r,comment=NA}
+#Extracting the locations in our dataset which is not a country.
+no_country<-lower[!lower%in%country_name_data]
+length(no_country)#there are 55 entries which are not inside the country list
+unique(no_country)#There are 30 unique locations we havnt still identified
+
+
+```
+
+```{r}
+#Calling an external list of cities and countries
+city_country<-read.csv("worldcities.csv",header = TRUE)
+city<-str_to_lower(city_country$city)
+country<-str_to_lower(city_country$country)
+city_country<-data.frame(city,country)
+
+
+city_country_match<-city_country[city_country$city%in%no_country,]
+
+colnames(city_country_match)<-c("New_location","Country")
+city_country_match<-city_country_match[!duplicated(city_country_match[,c("New_location")]),]
+
+```
+
+```{r,comment=NA,warning=FALSE,message=FALSE}
+
+#Making a new data frame with column lower
+new_data3<-data.frame(Cleaned_data,lower)
+colnames(new_data3)<-c(colnames(Cleaned_data),"New_location")
+
+#Data we do not need to match
+data_not_to_match<-new_data3[new_data3$New_location%in%country_list,]
+dim(data_not_to_match)
+
+#Data we need to match
+new_data_to_match<-new_data3[new_data3$New_location%in%no_country,]
+dim(new_data_to_match)
+
+
+#Joining the country to the data with unidentified location
+left.join<-left_join(new_data_to_match,city_country_match)
+dim(left.join)
+
+
+#Making a new data frame
+drop<-c("New_location")
+left.join<-left.join[,!(names(left.join) %in% drop)]
+names(left.join)[length(names(left.join))]<-"New_location"
+
+with_new_location<-rbind(data_not_to_match,left.join)
+
+
+
+
+
+sum(is.na(with_new_location$New_location))
+
+d2<-data.frame(with_new_location$Location,with_new_location$New_location)
+unique(d2)
+
+
+# Finally thecleaned dataset is stored to the Cleaned_data_new
+Cleaned_data_new<-with_new_location
+
+
+```
+
+
+## Visualizations
+
+### Panel One
+- Overview of the dataset.
+- Indroducing the objective of designing this dashboard.
+- Providing the names of the developers.
+
+### Panel Two
+
+In here it's good if we provide a summary of job categories we are refering, through the dashboard we design. 
+
+```{r}
+# box plot for Job_Category 
+Jobs_frequency<-data.frame(table(Cleaned_data_new$Job_Category))
+
+
+Jobs_frequency$Var1 <- factor(Jobs_frequency$Var1,levels = Jobs_frequency$Var1[order(Jobs_frequency$Freq)])                              
+ggplot(Jobs_frequency, aes(Var1, Freq)) +                                   
+  geom_bar(stat = "identity")+labs(y="Frequency",x="Job Title")
+
+```
+
+Then, when the viewer click on his/her desired job category, he/she will directed to the companies and the locations of the relevant job category is available.
+For example, let's consider someone is interested in Data Engineering Jobs, then he/she can view the companies and locations where the Data Engineering Jobs are available.
+
+
+
+```{r,comment=NA}
+
+DS<-subset(Cleaned_data_new[,c(15,80)], Cleaned_data_new$Job_Category == "Data Science Jobs")%>% unique()
+
+DE<-subset(Cleaned_data_new[,c(15,80)], Cleaned_data_new$Job_Category == "Data Engineering Jobs")%>% unique()
+DE
+Data_Analyst<-subset(Cleaned_data_new[,c(15,80)], Cleaned_data_new$Job_Category == "Data Analyst Jobs")%>% unique()
+
+Stat_Programmer<-subset(Cleaned_data_new[,c(15,80)], Cleaned_data_new$Job_Category == "Statistica Programming Jobs")%>% unique()
+Stat_Programmer
+Actuarial<-subset(Cleaned_data_new[,c(15,80)], Cleaned_data_new$Job_Category == "Actuarial Jobs")%>% unique()
+Actuarial
+Other<-subset(Cleaned_data_new[,c(15,80)], Cleaned_data_new$Job_Category == "Other Jobs")%>% unique()
+
+
+```
+
+
+### Panel 3
+
+Job_Category vs Statistical Software requirement graph
+
+```{r,comment=NA}
+
+# Considered the statistical softwares as Python, R,SAS, SPSS, Matlab based on their order on column sum
+
+
+Cleaned_data_new$Statistical_software <- paste(Cleaned_data_new$Python,Cleaned_data_new$R,Cleaned_data_new$SAS,Cleaned_data_new$SPSS,Cleaned_data_new$MAtlab,sep = "::")
+
+unique(Cleaned_data_new$Statistical_software)
+
+d2 <- Cleaned_data_new$Statistical_software %>% table() %>% as.data.frame()
+names(d2) <- c('Statistical_software', 'Frequency')
+d2 <- d2[order(d2$Frequency, decreasing = F),]
+
+#Categorize the Statistical Software requirements as R & python, R,Pyhon &SAS ,No needing of Statstical software and others
+
+Cleaned_data_new$Statistical_software[Cleaned_data_new$Statistical_software=="1::1::0::0::0"] <-"Python & R"
+Cleaned_data_new$Statistical_software[Cleaned_data_new$Statistical_software=="0::0::0::0::0"] <-"No Statistical softwares"
+Cleaned_data_new$Statistical_software[Cleaned_data_new$Statistical_software=="1::0::0::0::0"] <-"Python"
+Cleaned_data_new$Statistical_software[Cleaned_data_new$Statistical_software=="1::1::1::0::0"] <-"Python,R & SAS"
+Cleaned_data_new$Statistical_software[Cleaned_data_new$Statistical_software=="0::1::0::0::0" |Cleaned_data_new$Statistical_software=="1::1::0::1::1"| Cleaned_data_new$Statistical_software=="1::0::0::0::1"| Cleaned_data_new$Statistical_software=="1::1::1::0::1" | Cleaned_data_new$Statistical_software=="1::1::0::1::0"| Cleaned_data_new$Statistical_software=="0::1::1::1::0"| Cleaned_data_new$Statistical_software=="0::1::0::1::0"| Cleaned_data_new$Statistical_software=="0::1::0::0::1"| Cleaned_data_new$Statistical_software=="0::1::1::0::1"| Cleaned_data_new$Statistical_software=="1::0::1::0::0"| Cleaned_data_new$Statistical_software=="1::1::1::1::1"| Cleaned_data_new$Statistical_software=="0::0::1::1::0"| Cleaned_data_new$Statistical_software=="1::1::1::1::0"| Cleaned_data_new$Statistical_software=="1::0::1::0::1"| Cleaned_data_new$Statistical_software=="0::0::0::1::0"| Cleaned_data_new$Statistical_software=="1::1::0::0::1"| Cleaned_data_new$Statistical_software=="0::1::1::1::1"| Cleaned_data_new$Statistical_software=="0::0::1::0::0"| Cleaned_data_new$Statistical_software=="0::1::1::0::0"| Cleaned_data_new$Statistical_software=="0::0::0::1::1"] <-"Other"
+
+unique(Cleaned_data_new$Statistical_software)
+
+d2 <- Cleaned_data_new$Statistical_software %>% table() %>% as.data.frame()
+names(d2) <- c('Statistical_software', 'Frequency')
+d2 <- d2[order(d2$Frequency, decreasing = F),]
+
+d2
+
+Tab2<-as.data.frame(table(Cleaned_data_new$Job_Category,Cleaned_data_new$Statistical_software ))
+names(Tab2)<-c("Job_Category","Statistical_Software","Frequency")
+
+
+
+
+ggplot(Tab2, aes(y=Frequency, x=Job_Category,fill=Statistical_Software)) + 
+  geom_bar(stat = "identity",width = 0.5)+coord_flip()
+
+
+
+
+```
+
+
+
+
+Job_Category vs Educational Qualifications_Category Graph
+
+```{r,comment=NA}
+#Two way table for Job_Category and Minimum Education Qualifications required
+
+Tab<-as.data.frame(table(Cleaned_data_new$Job_Category,Cleaned_data_new$Edu_Category ))
+names(Tab)<-c("Job_Category","Edu_Category","Frequency")
+new_tab<-Tab[order(Tab$Frequency,decreasing = F),]
+
+
+ggplot(new_tab, aes(y=Frequency, x=Job_Category,fill=Edu_Category)) + 
+  geom_bar(stat = "identity",width = 0.5)+coord_flip()
+
+```
+
+### Panel 4
+
+Word Cloud for Knowledge in column
+
+```{r,comment=NA,message=FALSE,warning=FALSE}
+Knowledge<-Cleaned_data_new$Knowledge_in
+sum(is.na.data.frame(Knowledge))
+Knowledge<-Knowledge[!is.na(Knowledge)] #removing NAs
+length(Knowledge)
+
+
+
+corpus<-Corpus(VectorSource(Knowledge))
+corpus[[1]][1]
+
+
+#Convert the text to lower
+
+corpus<-tm_map(corpus,content_transformer(tolower))
+
+#Remove numbers
+
+corpus<-tm_map(corpus,removeNumbers)
+
+#Remove punctuations
+
+corpus<-tm_map(corpus,removePunctuation)
+
+#Remove unwanted words
+
+corpus<-tm_map(corpus,removeWords,c("and","for","knowledge","etc","with","using","the","like","from","such","including","well","other","excellent"))
+
+tdm<-TermDocumentMatrix(corpus)
+m<-as.matrix(tdm)
+v<-sort(rowSums(m),decreasing = TRUE)
+length(v)
+d<-data.frame(word=names(v),freq=v)
+
+wordcloud(d$word,d$freq,random.order = FALSE,rot.per = 0.3,scale = c(4,0.365),colors = c("blue","green","red"),max.words = 450)
+
+
+```
+
+
+

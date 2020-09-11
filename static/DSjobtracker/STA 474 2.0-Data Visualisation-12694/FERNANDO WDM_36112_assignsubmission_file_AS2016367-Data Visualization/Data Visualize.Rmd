@@ -1,0 +1,363 @@
+---
+title: "Data Visualisation"
+author: "W.D.M FERNANDO"
+date: "2 September 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+###Figure 01
+
+```{r,include=FALSE}
+
+library(readxl)
+DSS<-read_excel("DSS.xlsx")
+str(DSS)
+unique(DSS$Consultant)
+DSS <- DSS[!is.na(DSS$Consultant),]
+DSS
+```
+
+```{r,include=FALSE}
+
+DSS[(is.na(DSS$Job_title)), ]
+DSS1 <- DSS[!(DSS$Consultant=="Thiyanga"),]
+DSS1
+
+```
+
+```{r,include=FALSE}
+library(tidyverse)
+Job_Titles <- str_to_lower(DSS1$Job_title)
+Job_Titles
+Job_Titles1 <- str_replace_all(Job_Titles,",", " ") 
+Job_Titles1 
+Job_Titles2 <- str_replace_all(Job_Titles1,"/", " ")  
+Job_Titles2 
+Job_Titles3 <- str_replace_all(Job_Titles2,"-", " ") 
+Job_Titles3 
+Job_Titles4 <- str_replace_all(Job_Titles3,"#", " ") 
+Job_Titles4 
+Job_Titles5 <- str_replace_all(Job_Titles4,"data scientist","Data Scientist")  
+Job_Titles5 
+Job_Titles6 <- str_replace_all(Job_Titles5,"Data Scientists","Data Scientist")  
+Job_Titles6
+Job_Titles7 <- str_replace_all(Job_Titles6,"analytics", " Analyst")  
+Job_Titles7
+Job_Titles8 <- str_replace_all(Job_Titles7,"data analyst", " Data Analyst")
+Job_Titles8
+Job_Titles9 <- str_replace_all(Job_Titles8,"data engineer", " Data Engineer")
+Job_Titles9
+```
+
+```{r,include=FALSE}
+A<-table(Job_Titles9)
+A
+```
+
+```{r,include=FALSE}
+AA<-as.data.frame(A)
+AA
+other<-filter(AA,Freq <=5)
+other
+str(other)
+```
+
+
+```{r,include=FALSE}
+a<-filter(AA,Freq==62)
+a
+b<-filter(AA,Freq==16)
+b
+c<-filter(AA,Freq==115)
+c
+d<-filter(AA,Freq==12)
+d
+e<-filter(AA,Freq==10)
+e
+
+```
+
+
+```{r,include=FALSE}
+D<-data.frame(Job_Type =c('Data Scientist','Data Analyst','Data Engineer','Senior Data Scientist','Junior Data Scientist','Other'),Frequency=c(115,62,16,10,12,173))
+
+```
+
+```{r,echo=FALSE}
+library(knitr)
+kable(D)
+library(ggplot2)
+ggplot(D,aes(x=Job_Type,y=Frequency)) +geom_bar(position="dodge",stat="identity",width = 0.75)+ggtitle("Bar Graph of Required Job Titles")+scale_x_discrete(
+    limits=c("Senior Data Scientist","Junior Data Scientist","Data Engineer","Data Analyst","Data Scientist","Other"),
+    labels=c("Senior Data Scientist","Junior Data Scientist","Data Engineer","Data Analyst","Data Scientist","Other") 
+    ) +coord_flip() 
+```
+
+**We can conclude that based on the above bar graph mostly required job title is 'Data Scientist'.**
+
+###Figure 02
+
+**Word Cloud of Job Titles**
+
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
+library(tidyverse)
+library(treemapify)
+library(readxl)
+library(ggplot2)
+library(reshape2)
+library(plyr)
+library(tm)
+library(SnowballC)
+library(wordcloud)
+library(wordcloud2)
+library(RColorBrewer)
+
+cnames<-data.frame(Job_Titles9)
+
+docs<-Corpus(VectorSource(cnames))
+for (j in seq(docs))
+{
+  docs[[j]] = gsub("(RT|via)((?:\\b\\W*@\\w+)+)", "", docs[[j]])
+  docs[[j]] = gsub("@\\w+", "", docs[[j]])
+  docs[[j]] = gsub("http\\w+", "", docs[[j]])
+  docs[[j]] = gsub("[ \t]{2,}", "", docs[[j]])
+  docs[[j]] = gsub("^\\s+|\\s+quot;", "", docs[[j]])
+  docs[[j]] = gsub("[^\x20-\x7E]", "", docs[[j]])
+}
+skipwords = c(stopwords("english"), "system","technology")
+
+kb.tf <- list(weighting = weightTf, stopwords  = skipwords,
+              removePunctuation = TRUE,
+              tolower = TRUE,
+              minWordLength = 4,
+              removeNumbers = TRUE, stripWhitespace = TRUE,
+              stemDocument= TRUE)
+docs <- tm_map(docs, PlainTextDocument) 
+tdm = TermDocumentMatrix(docs, control = kb.tf)
+tdm = as.matrix(tdm)
+word_freqs = sort(rowSums(tdm), decreasing=TRUE)
+dm = data.frame(word=names(word_freqs), freq=word_freqs)
+set.seed(1234)
+p <- ggplot(subset(dm, freq>10), aes(word, freq))
+p <-p+ geom_bar(stat="identity")
+p <-p+ theme(axis.text.x=element_text(angle=60, hjust=5))
+
+
+wordcloud2(dm, minRotation = -pi/20, maxRotation = -pi/20, minSize = 0.005,
+           rotateRatio = 0.5,ellipticity = 0.4, fontFamily = 'Segoe UI',size = 7,fontWeight = "bold",color = "random-light", backgroundColor = "rose")
+
+
+```
+
+**Above word cloud illustrates that 'Data Scientist','Data Analysit','Data Engineer',Senior Data Analyst','Junior Data Scientist' are the mostly required job tites.**
+
+###Figure 03
+
+```{r,include=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(readr)
+library(maps)
+library(viridis)
+```
+```{r,include=FALSE}
+library(tidyverse)
+Location <- DSS1[!is.na(DSS1$Location),]
+
+location1 <- str_replace_all(DSS1$Location,"Colombo", "SL") 
+location1
+location2 <- str_replace_all(location1,"San Fransico", "USA") 
+location2
+location3 <- str_replace_all(location2,"Montgomery Country", "USA") 
+location3
+location4 <- str_replace_all(location3,"new kensington", "USA") 
+location4
+location5 <- str_replace_all(location4,"Arlington", "USA") 
+location5
+location6 <- str_replace_all(location5,"Cambridge", "USA") 
+location6
+location7 <- str_replace_all(location6,"Boise", "USA") 
+location7
+location8 <- str_replace_all(location7,"Mclean", "USA") 
+location8
+location9 <- str_replace_all(location8,"Seattle", "USA") 
+location9
+location10 <- str_replace_all(location9,"Minneapolis", "USA") 
+location10
+location11 <- str_replace_all(location10,"Salt Lake City", "USA") 
+location11 
+location12 <- str_replace_all(location11,"Mountain View", "USA") 
+location12
+location13 <- str_replace_all(location12,"New York", "USA") 
+location13
+location14 <- str_replace_all(location13,"Washington", "USA") 
+location14
+location15 <- str_replace_all(location14,"Chicago", "USA") 
+location15
+location16 <- str_replace_all(location15,"San Mateo", "USA") 
+location16
+location17 <- str_replace_all(location16,"Chevy Chase", "USA") 
+location17
+location18 <- str_replace_all(location17,"Austin", "USA") 
+location18
+location19 <- str_replace_all(location18,"OR", "USA") 
+location19
+location20 <- str_replace_all(location19,"Boston", "USA") 
+location20
+location21 <- str_replace_all(location20,"sl", "SL") 
+location21
+location22 <- str_replace_all(location21,"Sri Lanka", "SL") 
+location22
+location23 <- str_replace_all(location22,"New Kensington", "USA") 
+location23
+location24 <- str_replace_all(location23,"Singaore", "Singapore") 
+location24
+location25 <- str_replace_all(location24,"US", "USA") 
+location25
+location26 <- str_replace_all(location25,"USAA", "USA") 
+location26
+location27 <- str_replace_all(location26,"NA", "USA") 
+location27
+location28 <- str_replace_all(location27,"Carfiff", "UK") 
+location28
+location29 <- str_replace_all(location28,"RO", "Romania") 
+location29
+location30 <- str_replace_all(location29,"England", "UK") 
+location30
+location31 <- str_replace_all(location30,"London", "UK") 
+location31
+location32 <- str_replace_all(location31,"IE", "Ireland") 
+location32
+location33 <- str_replace_all(location32,"ES", "Spain") 
+location33
+location34 <- str_replace_all(location33,"NC", "USA") 
+location34
+location35 <- str_replace_all(location34,"Colorado", "USA") 
+location35
+location36 <- str_replace_all(location35,"California", "USA") 
+location36
+```
+
+```{r,echo=FALSE}
+library(knitr)
+kable(table(location36))
+```
+```{r,include=FALSE}
+Location<-data.frame(table(location36))
+Location
+Direction<-data.frame(long=c(9.1021,133.775136,-51.92528,-106.346771,104.195397,9.9167,19.503304,78.96288,-8.24389,12.56738,138.252924,37.906193,101.975766,174.885971,121.774017,24.96676,105.318756,-3.188267,103.819836,79.861244,-3.703790,-3.435973,55.296249,97),lat=c(18.2812,-25.274398,-14.235004,56.130366,35.86166,51.5167,47.162494,20.593684,53.41291,41.87194,36.204824,-0.023559,4.210484,-40.900557,12.879721,45.943161,61.52401,55.953251,1.352083,6.927079,40.416775,55.378051,25.276987,38))
+Direction
+```
+
+```{r,echo=FALSE,message=FALSE}
+Location1<-cbind(Location,Direction)
+
+attach(Location1)
+world <- map_data("world")
+mybreaks <- c(1, 10, 30, 50,105)
+ggplot() +
+  geom_polygon(data = world, aes(x=long, y = lat, group = group), fill="#DAA520", alpha=0.5,colour = "grey50") +
+  geom_point(data=Location, aes(x=long, y=lat,size=Freq, color=Freq),stroke=F, alpha=2.5) +
+  scale_size_continuous(name="Freq", trans="log", range=c(1,8),breaks=mybreaks, labels = c("0-2","3-10", "11-30", "29-50", "51-105")) +
+  scale_color_viridis_c(option="inferno",name="Freq", trans="log",breaks=mybreaks, labels = c("0-2","3-10", "11-30", "29-50", "51-105")) +
+  theme_void() + 
+  guides( colour = guide_legend()) +
+  labs(caption = "World Map of Company Locations") +
+  theme(
+    legend.position = "top",
+    text = element_text(color = "#22211d"),
+    plot.background = element_rect(fill = "#DAA520", color = "black"), 
+    panel.background = element_rect(fill = "#ffffff", color = "black"), 
+    legend.background = element_rect(fill = "#ffffff", color = "black")
+  )
+```
+
+**We can colclude that based on the above world map its ilustrates that most of the company locations are situated in USA,Sri Lanka,India,Australia,Singapore,China and Canada.**
+
+###Figure 04
+
+###Multiple Bar Chart of Software Languages
+
+```{r,include=FALSE}
+library(tidyverse)
+D <- str_to_lower(DSS1$R)
+D1<- str_replace_all(D,"1", "Yes") 
+D2<- str_replace_all(D1,"0", "No")
+
+R<-na.omit(D2)
+table(R)
+
+
+
+E <- str_to_lower(DSS1$Python)
+E1<- str_replace_all(E,"1", "Yes") 
+E2<- str_replace_all(E1,"0", "No")
+Python<-na.omit(E2)
+table(Python)
+
+
+F <- str_to_lower(DSS1$SQL)
+F1<- str_replace_all(F,"1", "Yes") 
+F2<- str_replace_all(F1,"0", "No")
+SQL<-na.omit(F2)
+table(SQL)
+
+G <- str_to_lower(DSS1$`C++`)
+G1<- str_replace_all(G,"1", "Yes") 
+G2<- str_replace_all(G1,"0", "No")
+`C++`<-na.omit(G2)
+table(`C++`)
+
+I <- str_to_lower(DSS1$C)
+I1<- str_replace_all(I,"1", "Yes") 
+I2<- str_replace_all(I1,"0", "No")
+C<-na.omit(I2)
+table(C)
+
+J <- str_to_lower(DSS1$`C#`)
+J1<- str_replace_all(J,"1", "Yes") 
+J2<- str_replace_all(J1,"0", "No")
+`C#`<-na.omit(J2)
+table(`C#`)
+
+
+
+```
+
+```{r,include=FALSE}
+Software_Languages <- c(rep("R" , 2) , rep("Python" , 2) , rep("SQL" , 2) , rep("`C++`" , 2), rep("C" , 2),rep("C#" , 2))
+
+Status<-rep(c("Yes" , "No" ) , 6)
+
+Frequency<-c(213,197,285,138,241,166,16,346,6,358,2,360)
+
+data<-data.frame(Software_Languages,Status,Frequency)
+
+```
+
+```{r,echo=FALSE}
+library(ggplot2)
+
+ggplot(data, aes(fill=Status, y=Frequency, x=Software_Languages)) + 
+  geom_bar(position="dodge", stat="identity",width=0.8)+ggtitle("Status of Software Languages")
+
+```
+
+**Above multiple bar chart illustrates that mostly required software languages are 'R','Python' and 'SQL'.**
+
+
+
+##Flex Dashboard Content
+
+(01). **Panel 01** = Bar Graph of Required Job Titles / Figure 01
+
+(02). **Panel 02** = Word Cloud of Job Titles / Figure 02
+
+(03). **Panel 03** = World Map of Company Locations / Figure 03
+
+(04). **Panel 04** = Status of Software Languages / Figure 04 
+

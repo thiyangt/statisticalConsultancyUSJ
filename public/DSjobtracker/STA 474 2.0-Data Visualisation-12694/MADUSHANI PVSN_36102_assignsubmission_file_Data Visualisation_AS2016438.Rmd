@@ -1,0 +1,185 @@
+---
+title: "Data Visualisation"
+author: "P.V.S.N.Madushani"
+date: "9/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## <span style="color:blue;">**1. Exploratory Data Analysis**</span>
+
+Part 1 of this article provides an exploratory data analysis for the dataset "DataScientistQualificationSkills".
+
+```{r,message=FALSE,warning=FALSE,echo=FALSE}
+library(tidyverse)
+library(magrittr)
+library(sf)
+library(raster)
+library(dplyr)
+library(spData)
+library(tmap)
+library(leaflet)
+library(ggplot2)
+library(rworldmap)
+library(readxl)
+library(readr)
+library(e1071)
+library(mlbench)
+library(tm)
+library(SnowballC)
+library(wordcloud)
+library(RColorBrewer)
+library(maptools)
+library(tibble)
+library(ggthemes)
+```
+
+```{r,echo=FALSE}
+Data1<-read_excel("C:\\Users\\user\\Desktop\\CleanedDataset.xlsx")
+```
+
+
+```{r,message=FALSE,warning=FALSE,echo=FALSE}
+Job_Titles<-str_to_lower(Data1$Job_title)
+Job_Titles<-str_replace_all(Job_Titles,","," ")
+Data_Scientist<-Job_Titles[str_detect(Job_Titles,"([data]{4}\\s*[scientist]{7,9})")] %>% unique()
+Data_Engineer<-Job_Titles[str_detect(Job_Titles,"([data]{4}\\s*[engineer]{8})")]%>%unique()
+Data_Analyst<-Job_Titles[str_detect(Job_Titles,"([data]{4}\\s*[analyst]{7}|[analytics]{8,9})")]%>%unique()
+Others<-Job_Titles[!(Job_Titles%in%c(Data_Scientist,Data_Engineer,Data_Analyst))]
+```
+
+```{r,message=FALSE,warning=FALSE,echo=FALSE}
+Tbl<-data.frame(Job_Title=c("Data_Scientist","Data_Engineer","Data_Analyst","Others"),Count=c(sum(Job_Titles%in%Data_Scientist),sum(Job_Titles%in%Data_Engineer),sum(Job_Titles%in%Data_Analyst),sum(Job_Titles%in%Others)))
+```
+
+
+
+```{r,echo= FALSE}
+tibble1<-tibble(Job_Title=c("Data_Scientist","Data_Engineer","Data_Analyst","Others"),No_jobs=c(213,21,155,56))
+
+```
+
+##### <span style="color:brown;">**1.1 Analysis of Job Titles**</span>
+
+
+```{r,message=FALSE,warning=FALSE,echo=FALSE}
+attach(tibble1)
+suppressWarnings(require(RColorBrewer))
+mycolors<-brewer.pal(4,"Set1")
+names(mycolors)<-Job_Title
+ggplot(data =tibble1,aes(x=reorder(Job_Title,No_jobs),y=No_jobs,fill=Job_Title))+geom_bar(stat = "identity",width = 0.5)+geom_text(aes(label=No_jobs))+theme_minimal()+labs (title = "Figure 01: Bar Chart of Job Titles", x="Job Title",y="No of Jobs")+scale_colour_manual(values = mycolors)
+detach(tibble1)
+```
+
+
+
+Figure 01 shows that majority of job advertisements in the data set are related to the data scientist jobs. And also there is a higher amount of jobs related to the a
+Data Analyst jobs.
+
+##### <span style="color:brown;">**1.2Analysis of Software**</span>
+
+
+```{r,message=FALSE,warning=FALSE,echo=FALSE}
+Data2<-pivot_longer(Data1,c(7:19,25,26,31:33,35,36,38:40,53,56:58,62,63,65,66,70:74),"RequiredSoftwares","Status")
+Data3<-filter(Data2,value=="1")
+
+```
+
+```{r,message=FALSE,warning=FALSE,echo=FALSE}
+
+attach(Data3)
+counts<-Data3%>%group_by(RequiredSoftwares)%>%summarise(no_rows=length(RequiredSoftwares))
+arrange(counts,desc(counts$no_rows))
+barsoft<-tibble(Software=c("Python","SQL","R","Ms Excel","SAS","Other"),No_jobs=c(282,239,210,83,81,648))
+attach(barsoft)
+suppressWarnings(require(RColorBrewer))
+mycolors<-brewer.pal(4,"Set1")
+
+ggplot(data =barsoft,aes(x=reorder(Software,No_jobs),y=No_jobs,fill=Software))+geom_bar(stat = "identity")+geom_text(aes(label=No_jobs))+theme_minimal()+labs (title = "Figure 02: Bar Chart of Required Sofwares",x="Software",y="No of Jobs")+coord_flip()+scale_colour_manual(values = mycolors)
+detach(Data3)
+
+```
+
+
+
+Figure 02 shows the highly required software for statistical jobs. Most required software are Python,SQL and R. Also there are 648 jobs which required other software which do not specify here. 
+
+
+**Figure 03: Word Cloud for Other Option**
+
+```{r,message=FALSE,warning=FALSE,echo=FALSE}
+Data4<-filter(counts,no_rows<80)
+set.seed(100)
+wordcloud(words = Data4$RequiredSoftwares,freq = Data4$no_rows,random.order = FALSE,rot.per = 0.30,colors = brewer.pal(10,"Dark2"))
+```
+
+Above Word Cloud shows the software under other option of figure 02.By seeing this figure we can say that **Tableau** and **Cloud Storage** are the most required software in the other option of figure 02.
+
+##### <span style="color:brown;">**1.3 Analysis of Countries**</span>
+
+
+```{r,message=FALSE,warning=FALSE,echo=FALSE}
+attach(Data1)
+cn<-Data1%>%group_by(Location)%>%summarise(no_rows=length(Location))
+arrange(cn,desc(cn$no_rows))
+```
+
+```{r,echo=FALSE}
+attach(cn)
+cn2<-filter(cn,no_rows>19)
+detach(cn)
+attach(cn2)
+suppressWarnings(require(RColorBrewer))
+mycolors<-brewer.pal(4,"Set1")
+
+ggplot(data =cn2,aes(x=reorder(Location,no_rows),y=no_rows,fill=Location))+geom_bar(stat = "identity")+geom_text(aes(label=no_rows))+theme_minimal()+labs (title = "Figure 04:Composition of Statistical Jobs by Country",x="Country",y="No of Jobs")+coord_flip()+scale_colour_manual(values = mycolors)
+detach(cn2)
+```
+
+Figure 04 shows the eight countries which have highest number of statistical jobs. According to figure 04, majority of the statistical jobs in the sample belongs to USA and considerable number of jobs are in India and Sri Lanka.
+
+```{r,message=FALSE,warning=FALSE,echo=FALSE}
+map.world<-map_data(map = "world")
+gg<-ggplot()
+gg<-gg+geom_map(data = map.world,map = map.world,aes(map_id=region,x=long,y=lat),fill="light blue",colour="white",size=0.25)
+gg
+
+
+```
+
+
+## <span style="color:blue;">**2. Flex Dashboard Design**</span>
+
+##### <span style="color:brown;">**Panel 1: Overview**</span>
+
+**Data Description :** This dataset contains information on 429 statistical job advertisements. The included variables are Job title, Company, Country, required software knowledge and other skills and knowledge, salary, education qualification and experience.
+
+**Developers :** Names of stat-special batch 2015/16 of USJ
+
+**Composition of jobs by countries :** Figure 04
+
+
+##### <span style="color:brown;">**Panel 2: World Map**</span>
+
+
+##### <span style="color:brown;">**Panel 3: Software Analysis**</span>
+
+Figure 02, Figure 03
+
+##### <span style="color:brown;">**Panel 4: Analysis of jobs**</span>
+
+Figure 01
+
+Figure 01 shows the main three jobs in the dataset. We can develop the dashboard as when we click on a bar it shows the word cloud of knowledge in of that job.
+
+##### <span style="color:brown;">**Panel 5: Distributions**</span>
+
+1. Boxplots of salary by job title
+2. Boxplot of salary by Education Qualification
+
+
+
+

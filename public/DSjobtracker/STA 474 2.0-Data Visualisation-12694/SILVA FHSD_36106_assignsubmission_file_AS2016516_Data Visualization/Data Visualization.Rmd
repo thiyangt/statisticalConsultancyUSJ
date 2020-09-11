@@ -1,0 +1,847 @@
+---
+title: "Data Analysis"
+author: "Shashini Silva"
+date: "September 3, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Further Data cleaning
+
+I was further engaged in data cleaning So I have mentioned the r codes that I used for further analysis including the last week codes.
+
+In last week I had some issues with the educational qualification grouping. This week I addressed that to an extent.
+
+Also that day Chammika gave us an idea to use a left join to fill the location. With that idea I cleaned that column.
+
+### Last week code
+
+```{r,comment=NA,message=FALSE,warning=FALSE,echo=TRUE,results='hide'}
+
+
+
+#Removing Duplicates
+
+
+
+library(readxl)
+library(tidyverse)
+library(dplyr)
+library(ggrepel)
+
+Data<-read_excel("Book1.xlsx")
+dim(Data)#There are 550 rows and 108 variables
+
+#Removing the empty rows
+sum(is.na(Data$Consultant))#There are 115 rows
+Data<-Data[!is.na(Data$Consultant),]
+
+#Number of not valid URLs
+sum(is.na(Data$URL))#There are 2 entries with no URL s
+
+Data<-Data[!is.na(Data$URL),]#There are 433 rows with a URL
+dim(Data)
+
+#Number of unique URLS
+length(unique(Data$URL)) #There are 357 unique URLs
+
+#Counting the number of times each URL has been mentioned
+a<-as.data.frame(table(Data$URL))
+
+
+#Extracting all the rows with non repeated URLs
+non_repeated<-a[a$Freq==1,]
+length(non_repeated$Var1)# there are 328 non repeated URLs
+
+#repeated URLS
+
+repeated_URLS<-a[!a$Freq==1,]
+length(repeated_URLS$Var1)# there are 29  repeated URLs
+repeated_URLS$Freq
+
+#Writing a function to find the multiplicated URLS for the same vacancy
+
+duplicate<-function()
+{
+  val<-c()
+  for(i in 1:length(repeated_URLS$Freq))
+  {
+    #Extracting the repeated URLs from the main data sheet
+    result<-Data[ Data$URL%in% repeated_URLS$Var1[[i]],] 
+    
+    #Concatanation of Job Title and company
+    new_variable<-paste(result$Job_title,result$Company,sep="::")
+    num<-length(unique(new_variable))
+    if(num==repeated_URLS$Freq[[i]])
+    {
+      #Assigning zero if all are different within a URL
+      val[i]<-0
+    }
+    
+    else
+    {
+      #Assigning one if all are not different within a URL
+      val[i]<-1
+    }
+    
+  }
+  return(val)
+}
+
+dup_or_not<-duplicate()
+dup_or_not
+
+#Making a new data frame for duplicate status and repeated URLS
+
+df1<-data.frame(repeated_URLS,dup_or_not)
+
+#Making a data frame with duplicated URLS
+
+df2<-data.frame(df1$Var1[dup_or_not==1],df1$Freq[dup_or_not==1])#All these have only two duplicates
+colnames(df2)<-c("dup_URL","number of times")
+df2
+
+
+#Making a data frame of column numbers and column headers
+
+data.frame(1:108,colnames(Data))
+
+#Making a new data frame to get the NA count in each row
+Skills<-Data[,c(1:107)]
+
+#Replacing all 0 s in Skills columns as NA s
+Skills[Skills == 0] <- NA
+
+#Counting the number of NA s for a duplicated vacancy and gonna remove the one with greater number of NAS s
+
+result1<-Skills[ Skills$URL%in% df2$dup_URL[[1]],] 
+a<-rowSums(is.na(result1))
+result1<-data.frame(result1,a)
+row1<-result1[which(result1$a==max(result1$a)),]
+
+
+result2<-Skills[ Skills$URL%in% df2$dup_URL[[2]],] 
+b<-rowSums(is.na(result2))
+result2<-data.frame(result2,b)
+row2<-result2[which(result2$b==max(result2$b)),]
+
+result3<-Skills[ Skills$URL%in% df2$dup_URL[[3]],] 
+c<-rowSums(is.na(result3))
+result3<-data.frame(result3,c)
+row3<-result3[which(result3$c==max(result3$c)),]
+
+result4<-Skills[ Skills$URL%in% df2$dup_URL[[4]],] 
+d<-rowSums(is.na(result4))
+result4<-data.frame(result4,d)
+row4<-result4[which(result4$d==max(result4$d)),]
+
+result5<-Skills[ Skills$URL%in% df2$dup_URL[[5]],] 
+e<-rowSums(is.na(result5))
+result5<-data.frame(result5,e)
+row5<-result5[which(result5$e==max(result5$e)),]
+
+#The ID numbers of the rows which must be removed
+
+remove_these<-c(row1$ID,row2$ID,row3$ID,row4$ID,row5$ID)
+remove_these
+#cleaned data set
+
+
+Cleaned_Data<-Data[!Data$ID%in%remove_these,]
+dim(Cleaned_Data)
+
+
+
+#Getting Job categories
+
+CDJ<-Cleaned_Data
+#To find unique Job titles
+
+unique(CDJ$Job_title) #There are 190
+
+#to find whether we have any missing values in Job title column
+sum(is.na(CDJ$Job_title))#There are no NA for the job title
+
+#Converting all the job titles to lower case letters
+
+Adjusted_Job_titles<-str_to_lower(CDJ$Job_title)
+
+#Removing the symbols
+
+Adjusted_Job_titles<-str_replace_all(Adjusted_Job_titles,","," ")
+Adjusted_Job_titles<-str_replace_all(Adjusted_Job_titles,"-"," ")
+Adjusted_Job_titles<-str_replace_all(Adjusted_Job_titles,"/"," ")
+
+#Finding Data science Jobs
+
+Data_Science_Jobs<-Adjusted_Job_titles[str_detect(Adjusted_Job_titles,"(([data]{4})\\s*([scientist]{7,10}))|(([data]{4})\\s*(.*?)\\s*([scientist]{7,10}))")]%>% unique()
+length(Data_Science_Jobs)# There are 62 Data science Jobs
+
+#Finding Non Data science Jobs
+
+non_Data_Science_Jobs<-Adjusted_Job_titles[!str_detect(Adjusted_Job_titles,"([data]{4})\\s*([scientist]{7,10})")]%>% unique()
+length(non_Data_Science_Jobs)
+
+#Finding Data analyst Jobs
+
+Analyst_Jobs<-non_Data_Science_Jobs[str_detect(non_Data_Science_Jobs,"(([data]{4}|[statistical]{10,11})\\s*([analytics]{7,10}))|(([data]{4}|[statistical]{10,11})\\s*(.*?)\\s*([analytics]{7,10}))")]%>% unique()
+length(Analyst_Jobs)# There are 48 Data Analyst Jobs
+
+
+
+#Finding Non Data analyst and Scientist Jobs
+
+other1<-Adjusted_Job_titles[!(Adjusted_Job_titles%in%c(Data_Science_Jobs,Analyst_Jobs))]%>%unique()
+
+#Finding Data Engineering Jobs
+
+data_Engineer_Jobs<-other1[str_detect(other1,"([data]{4})\\s*([engineerings]{6,15})")]%>% unique()
+length(data_Engineer_Jobs)# There are 5 Data Engineering Jobs
+
+#Finding jobs which are not Data scientists,Data analysts,data Engineer jobs
+
+other2<-Adjusted_Job_titles[!(Adjusted_Job_titles%in%c(Data_Science_Jobs,Analyst_Jobs,data_Engineer_Jobs))]%>%unique()
+
+#Finding actuarial Jobs
+actualrial_Jobs<-other2[str_detect(other2,"([actuarial]{8,9})\\s*")]%>% unique()
+length(actualrial_Jobs)# There are 6 Actuarial Jobs
+
+#Finding jobs which are not Data scientists,Data analysts,data Engineer jobs,actuarial jobs
+
+other3<-Adjusted_Job_titles[!(Adjusted_Job_titles%in%c(Data_Science_Jobs,Analyst_Jobs,data_Engineer_Jobs,actualrial_Jobs))]%>%unique()
+length(other3)
+
+#Finding statistical Programmers
+Programmer_Jobs<-other3[str_detect(other3,"([Programmer]{8,9})\\s*")]%>% unique()
+length(Programmer_Jobs)# There are 5 Statistical Progranmmer jobs
+
+#Finding jobs which are not Data scientists,Data analysts,data Engineer jobs,actuarial jobs,Programmer jobs
+
+other4<-Adjusted_Job_titles[!(Adjusted_Job_titles%in%c(Data_Science_Jobs,Analyst_Jobs,data_Engineer_Jobs,actualrial_Jobs,Programmer_Jobs))]%>%unique()
+length(other4)
+other4
+
+
+
+
+#Categorizing job category and adding a new column.
+
+
+#Making a new data frame with Cleaned Data and adjusted job title
+new_data<-data.frame(Cleaned_Data,Adjusted_Job_titles)
+str(new_data)
+
+
+#Giving a category name for each job category
+A1 <- new_data[new_data$Adjusted_Job_titles%in% Data_Science_Jobs,] %>% mutate(Job_Category= rep("Data Scientist Job", nrow(.)))
+dim(A1)
+
+A2 <- new_data[new_data$Adjusted_Job_titles%in% Analyst_Jobs,] %>% mutate(Job_Category= rep("Data analyst Job", nrow(.)))
+dim(A2)
+
+A3 <- new_data[new_data$Adjusted_Job_titles%in% actualrial_Jobs,] %>% mutate(Job_Category= rep("Actuarial Job", nrow(.)))
+dim(A3)
+
+A4 <- new_data[new_data$Adjusted_Job_titles%in% data_Engineer_Jobs,] %>% mutate(Job_Category= rep("Data Engineer Job", nrow(.)))
+dim(A4)
+
+A5 <- new_data[new_data$Adjusted_Job_titles%in% Programmer_Jobs,] %>% mutate(Job_Category= rep("statistical Programmer Job", nrow(.)))
+dim(A5)
+
+A6 <- new_data[new_data$Adjusted_Job_titles%in% other4,] %>% mutate(Job_Category= rep("Other", nrow(.)))
+dim(A6)
+
+
+#Inserting the Job categorical variable into our data frame
+main<-rbind(A1,A2,A3,A4,A5,A6)
+main<-main[with(main,order(main$ID)),]
+str(data.frame(main$Job_title,main$Job_Category))
+
+drop<-c("Adjusted_Job_titles")
+Cleaned_data_2<-main[,!(names(main) %in% drop)]
+
+
+
+#Now I have added a new column and in there every job is categorized to Data science,Data Analyst,Data Engineer,Actuarial,Statistical Programmer or other.
+
+#Cleaning the softwares and skills columns
+
+#In my excel sheet all the blanks in software and skills columns have been taken as NAs. So I am going to rename them as zero. 
+
+#Then I will only keep the softwares or skils which have been demanded by at least 5 vacancies.
+
+
+#Making a data frame only with softwares and skills
+Software_skills<-Cleaned_data_2[,c(7:93,100:105)]
+#Number of NA values
+sum(is.na(Software_skills))
+#Making all NA a zero
+Software_skills[is.na(Software_skills)]<-0
+
+
+str(Software_skills)
+
+#Taking column wise sums
+count<-colSums(Software_skills)
+count_df<-data.frame(colnames(Software_skills),count)
+dim(count_df)
+colnames(count_df)<-c("SOftware/Skill","Count")
+cols_neglected<-count_df[which(count_df$Count<5),]
+
+#Taking the columns which the software or the skil is demanded by less than 5 vacancies
+cols_neglected<-count_df[which(count_df$Count<5),]
+dim(cols_neglected)#There are 31
+neglect_col_names<-cols_neglected$`SOftware/Skill`
+neglect_col_names
+
+
+Cleaned_data_3<-Cleaned_data_2[,!(names(Cleaned_data_2) %in% neglect_col_names)]
+dim(Cleaned_data_3)
+str(Cleaned_data_3)
+
+
+part<-as.data.frame(Cleaned_data_3[,c(7:66,73:74)])
+part[is.na(part)] <- 0
+sum(is.na(part))
+
+#Going to remove the softwares in Cleaned_data_3 and attach the cleaned softwares
+
+inter<-Cleaned_data_3[,!(names(Cleaned_data_3) %in% colnames(part))]
+
+Cleaned_data_4<-data.frame(inter,part)
+dim(Cleaned_data_4)
+str(Cleaned_data_4)
+
+
+
+#Now all the softwares and skills are cleaned.
+
+#Replacing Not assigned values as NA
+
+
+
+Not_assigned<-c("Not_mentioned","Not_define","NA","not mention","not_mentioned","not mentioned")
+Cleaned_data_4[Cleaned_data_4=="Not_define"]<-NA
+Cleaned_data_4[Cleaned_data_4=="Not_mentioned"]<-NA
+Cleaned_data_4[Cleaned_data_4=="NA"]<-NA
+Cleaned_data_4[Cleaned_data_4=="not mention"]<-NA
+Cleaned_data_4[Cleaned_data_4=="not mention"]<-NA
+Cleaned_data_4[Cleaned_data_4=="not_mentioned"]<-NA
+Cleaned_data_4[Cleaned_data_4=="not mentioned"]<-NA
+```
+
+### Ammended Last week Educational Qualification
+
+```{r,comment=NA,warning=FALSE,message=FALSE,echo=TRUE,results='hide'}
+
+## Educational Qualifications
+
+#I decided to find the jobs where it needs at least Bachelor degree
+
+
+#Converting all the Educational qualifications to lower case letters
+
+
+Adjusted_Education<-Cleaned_data_4$Educational_qualifications
+
+#Removing the symbols
+
+Adjusted_Education<-gsub("[[:punct:]]", " ",Adjusted_Education)
+
+Adjusted_Education<-str_to_lower(Adjusted_Education)
+
+
+
+
+#Job is not metioned in the column
+
+Not_defined<-Adjusted_Education[str_detect(Adjusted_Education,"(NA)|(not mentioned)")]
+length(Not_defined)
+
+Defined_jobs<-Adjusted_Education[!Adjusted_Education%in%Not_defined]
+length(Defined_jobs)
+
+#Jobs with minimum education qualification is Bachelor degree Vacancies
+
+
+Bachelor_Jobs<-Defined_jobs[str_detect(Defined_jobs,"(bsc\\s*|bs\\s*)|(bachelor\\s*|bachelors\\s*)")]
+length(Bachelor_Jobs)
+
+non_bach<-Defined_jobs[!str_detect(Defined_jobs,"(bsc\\s*|bs\\s*)|(bachelor\\s*|bachelors\\s*)")]
+length(non_bach)
+#Finding jobs with minimum educational qualification is a MSc
+Master_Jobs<-non_bach[str_detect(non_bach,"(master)|(ms)|(masters)")]
+length(Master_Jobs)
+
+#finding other category
+
+non_msc<-non_bach[!str_detect(non_bach,"(master)|(ms)|(masters)")]
+length(non_msc)
+
+phd_jobs<-non_msc[str_detect(non_msc,"(phd)|(ph.)")]
+length(phd_jobs)
+
+other<-non_msc[!str_detect(non_msc,"(phd)|(ph.)")]
+length(other)
+
+#Now I am going to make a new grouping variable for Education
+
+edu<-data.frame(Cleaned_data_4,Adjusted_Education)
+length(edu$Adjusted_Education)
+
+
+B1 <- edu[edu$Adjusted_Education%in% Not_defined,] %>% mutate(Edu_Category= rep("NA", nrow(.)))
+dim(B1)
+
+B2 <- edu[edu$Adjusted_Education%in% Bachelor_Jobs,] %>% mutate(Edu_Category= rep("Min_Bsc", nrow(.)))
+dim(B2)
+
+B3 <- edu[edu$Adjusted_Education%in% Master_Jobs,] %>% mutate(Edu_Category= rep("min_Master", nrow(.)))
+dim(B3)
+
+B4 <- edu[edu$Adjusted_Education%in% phd_jobs,] %>% mutate(Edu_Category= rep("Phd", nrow(.)))
+dim(B4)
+
+B5 <- edu[edu$Adjusted_Education%in% other,] %>% mutate(Edu_Category= rep("other", nrow(.)))
+dim(B5)
+
+new_edu<-rbind(B1,B2,B3,B4,B5)
+dim(new_edu)
+new_edu<-new_edu[with(new_edu,order(new_edu$ID)),]
+
+
+drop<-c("Adjusted_Education")
+Cleaned_data_5<-new_edu[,!(names(new_edu) %in% drop)]
+dim(Cleaned_data_5)
+
+
+
+
+str(Cleaned_data_5)
+```
+
+
+
+### This week Cleaning
+
+```{r,comment=NA,message=FALSE,warning=FALSE,results='hide'}
+
+#Cleaning Location column
+
+loc<-Cleaned_data_5$Location
+
+unique(loc)
+length(unique(loc))#53 unique locations
+
+loc<- str_replace_all(loc, "SL", "Sri Lanka")
+loc<- str_replace_all(loc, "England","United Kingdom" )
+loc<- str_replace_all(loc, "USA", "United States")
+loc<- str_replace_all(loc, "US", "United States")
+loc<- str_replace_all(loc, "UK", "United Kingdom")
+loc<-str_to_lower(loc)
+length(loc)
+
+
+#Extracting an external list of countries
+country_name_data<-read_excel("Countries.xlsx")
+country_name_data<-str_to_lower(country_name_data$Country)
+
+#Extracting the countries which we have in our of the external list
+country_list<-loc[loc%in%country_name_data]
+length(country_list)
+#There are 370 entries with a country in it already
+unique(country_list)
+length(unique(country_list))
+#There are 20 unique countries in our data set which are already filled
+
+
+#Extracting the list of locations which is not a country in our list
+not_country<-loc[!loc%in%country_name_data]
+length(not_country)#there are 58 entries which are not inside the country list
+unique(not_country)
+length(unique(not_country))
+#There are 30 unique locations we havnt still identified
+
+
+#Making an external list of cities and countries
+city_country<-read.csv("worldcities.csv",header = TRUE)
+city<-str_to_lower(city_country$city)
+country<-str_to_lower(city_country$country)
+city_country<-data.frame(city,country)
+
+
+#Making a table to match the un identified locations to a country in our data set
+city_country_study<-city_country[city_country$city%in%not_country,]
+
+colnames(city_country_study)<-c("New_location","Country")
+city_country_study<-city_country_study[!duplicated(city_country_study[,c("New_location")]),]
+
+#Making a new data frame with column loc
+new_data_with_loc<-data.frame(Cleaned_data_5,loc)
+colnames(new_data_with_loc)<-c(colnames(Cleaned_data_5),"New_location")
+
+#Data we do not need to match
+data_not_to_match<-new_data_with_loc[new_data_with_loc$New_location%in%country_list,]
+dim(data_not_to_match)
+
+#Data we need to match
+new_data_to_match<-new_data_with_loc[new_data_with_loc$New_location%in%not_country,]
+dim(new_data_to_match)
+colnames(new_data_to_match)
+
+#Joining the country to the data with unidentified location
+left.join<-left_join(new_data_to_match,city_country_study)
+dim(left.join)
+colnames(left.join)
+
+#Making a new data frame
+drop<-c("New_location")
+left.join<-left.join[,!(names(left.join) %in% drop)]
+names(left.join)[length(names(left.join))]<-"New_location"
+colnames(left.join)
+with_new_location<-rbind(data_not_to_match,left.join)
+
+#Final
+with_new_location<-with_new_location[with(with_new_location,order(with_new_location$ID)),]
+
+
+sum(is.na(with_new_location$New_location))
+
+d2<-data.frame(with_new_location$Location,with_new_location$New_location)
+d2[is.na(d2$with_new_location.New_location),]
+
+Cleaned_data_6<-with_new_location
+attach(Cleaned_data_6)
+colnames(Cleaned_data_6)
+
+write.csv(Cleaned_data_6,"Final.csv")
+
+```
+
+## Panel 01 - Welcome to our Statistic Job Tracker
+
+Brief Introduction about the data set,and our developers and the objectives of the dashboard.
+
+
+## Panel 02 - What are the job opportunities for a statistician?
+
+### Plot of Jobs in statistic Field
+
+
+```{r,comment=NA,message=FALSE,warning=FALSE}
+
+library(ggplot2)
+
+#Analysing Job categories
+
+tab1<-as.data.frame(table(Cleaned_data_6$Job_Category))
+colnames(tab1)
+
+
+
+# Draw plot
+ggplot(tab1, aes(x=tab1$Var1, y=tab1$Freq)) + 
+  geom_bar(stat="identity", width=.5) + 
+  labs(title="Figure:01 Jobs for Statisticians" 
+       
+       ) + 
+  theme(axis.text.x = element_text(angle=65, vjust=0.6))+xlab("Job Category")+ylab("Frequency")
+
+
+
+
+```
+
+
+## Panel 03 - What are the softwares and skills demanded by industry from a statistician?  
+
+### Analysing softwares
+
+```{r,comment=NA,message=FALSE,warning=FALSE}
+
+tab5<-data.frame(colSums(Cleaned_data_6[,17:78]))
+tab5<-data.frame(colnames(Cleaned_data_6[,17:78]),tab5$colSums.Cleaned_data_6...17.78..)
+
+dim(tab5)
+colnames(tab5)<-c("Software_Skill","Freq")
+tab5<-tab5[with(tab5,order(tab5$Freq)),]
+
+
+ggplot(tab5, aes( x=reorder(Software_Skill,-Freq),y=Freq )) + 
+  geom_bar(position="dodge", stat="identity") +
+  
+  
+  
+  
+  theme(axis.text.x = element_text(angle=65, vjust=0.6)) +
+  xlab("Software or the skill")+ylab("Frequency")+ggtitle("Figure:02 Popular Softwares and skills for statisticians")
+```
+
+## Linking softwares with job titles
+
+In the panel I want to link the softwares and the job categories. When we touch the software bars I want to link another chart what are the job categories we need that software
+
+```{r,comment=NA,message=FALSE,warning=FALSE}
+
+tab3<-aggregate(Cleaned_data_6$R, by=list(Category=Cleaned_data_6$Job_Category), FUN=sum)
+colnames(tab3)
+
+ggplot(tab3, aes( y=x, x=Category)) + 
+  geom_bar(position="dodge", stat="identity") +ggtitle("Figure:03 R")+
+  
+  
+  
+
+  theme(axis.text.x = element_text(angle=65, vjust=0.6)) +
+  xlab("Job category")+ylab("Frequency")
+
+tab4<-aggregate(Cleaned_data_6$Python, by=list(Category=Cleaned_data_6$Job_Category), FUN=sum)
+colnames(tab4)
+
+ggplot(tab4, aes( y=x, x=Category)) + 
+  geom_bar(position="dodge", stat="identity") +ggtitle("Figure:04 Python")+
+ 
+  
+  
+  
+  theme(axis.text.x = element_text(angle=65, vjust=0.6)) +
+  xlab("Job category")+ylab("Frequency")
+
+```
+
+
+
+
+## Panel 04 - What are the Educational Qualifications demanded by the industry from a statistician?
+
+
+### Analysing Educational Qualifications
+
+```{r,comment=NA,message=FALSE,warning=FALSE}
+#Analysing educational qualifications
+
+Cleaned_data_6[Cleaned_data_6=="NA"]<-NA
+
+cleaned_edu<-Cleaned_data_6$Edu_Category[!is.na(Cleaned_data_6$Edu_Category)]
+
+tab6<-as.data.frame(table(cleaned_edu))
+
+ggplot(tab6, aes( y=Freq, x=cleaned_edu)) + 
+  geom_bar(position="dodge", stat="identity") +
+ 
+  
+  
+  
+  theme(axis.text.x = element_text(angle=65, vjust=0.6)) +
+  xlab("Education category") + ylab("Frequency") +ggtitle("Figure:04 Educational Qualifications")
+
+
+
+
+```
+
+### Linking education category and Fields
+
+```{r,comment=NA,message=FALSE,warning=FALSE}
+
+field<-Cleaned_data_6$Educational_qualifications[Edu_Category=="Min_Bsc"]
+
+
+sum(is.na.data.frame(field))
+
+
+library(tm)
+library(wordcloud)
+
+corpus2<-Corpus(VectorSource(field))
+corpus2[[1]][1]
+
+
+#Convert the text to lower
+
+corpus2<-tm_map(corpus2,content_transformer(tolower))
+
+#Remove numbers
+
+corpus2<-tm_map(corpus2,removeNumbers)
+
+#Remove punctuations
+
+corpus2<-tm_map(corpus2,removePunctuation)
+
+#Remove unwanted words
+
+corpus2<-tm_map(corpus2,removeWords,c("relevant","science","field","bachelors","in","'s","degree","related","bsc","bsc","resarch","bachelor","more","master","well","and","other","prefer","for","knowledge","with","expeirience","statistical","deep","advanced","the","skills","such","strong","big","including","basic","language","time","text","andor","etc","working","large","using","ability","from","like"))
+
+tdm2<-TermDocumentMatrix(corpus2)
+m2<-as.matrix(tdm2)
+v2<-sort(rowSums(m2),decreasing = TRUE)
+length(v2)
+d<-data.frame(word=names(v2),freq=v2)
+d<-d[c(1:2,4:length(d$word)),]
+
+wordcloud(d$word,d$freq,random.order = FALSE,rot.per = 0.3,scale = c(4,0.5),max.words = 220,main="Fields for candidates with minimum Bachelor degree")
+
+```
+
+### Linking educational Qualifications and softwares
+
+
+```{r,comment=NA,message=FALSE,warning=FALSE}
+
+tab7<-Cleaned_data_6[Edu_Category=="min_Master",]
+
+
+tab7<-data.frame(colSums(Cleaned_data_6[,17:78]))
+tab7<-data.frame(colnames(Cleaned_data_6[,17:78]),tab7$colSums.Cleaned_data_6...17.78..)
+
+dim(tab7)
+colnames(tab7)<-c("Software_Skill","Freq")
+tab7<-tab5[with(tab7,order(tab7$Freq)),]
+
+
+ggplot(tab7, aes( x=reorder(Software_Skill,-Freq),y=Freq )) + 
+  geom_bar(position="dodge", stat="identity") +ggtitle("Figure:05 Softwares needed for minimum Master Education Qualifications") +
+  
+  
+  
+  
+  theme(axis.text.x = element_text(angle=65, vjust=0.6)) +
+  xlab("Software or the skill")+ylab("Frequency")
+```
+
+## Panel 05 - What is the country wise distribution of statistical Jobs?
+
+###Countrywise analysis
+
+```{r,comment=NA,message=FALSE,warning=FALSE}
+
+library(maps)
+library(viridis)
+library(mapproj)
+
+#drawing a world map
+
+data<-map_data("world")
+world.cities$country.etc<-str_to_lower(world.cities$country.etc)
+datall<-world.cities %>% filter(country.etc%in%Cleaned_data_6$New_location)
+head(datall,5)
+
+#Frequency table of advertistments in Countries
+
+fcountry<-as.data.frame(table(Cleaned_data_6$New_location))
+fcountry<-fcountry[fcountry$Freq>=1,]
+dim(fcountry)
+colnames(fcountry)<-c("country.etc","Frequency")
+data_joined<-left_join(datall,fcountry)
+data_joined<-data_joined[!duplicated(data_joined[,c("country.etc")]),]
+
+
+ggplot() +
+  geom_polygon(data = data, aes(x=long, y = lat, group = group), fill="grey", alpha=0.3) +
+  geom_point( data=data_joined, aes(x=long, y=lat,color=Frequency),size=4) +
+  scale_size_continuous(range=c(1,12)) +
+  scale_color_viridis(trans="log") +geom_text_repel(data=data_joined %>% arrange(Frequency),aes(x=long,y=lat,label=country.etc))+
+  theme_void() + coord_map()
+
+```
+
+### Linking countries and job categories
+
+```{r,comment=NA,message=FALSE,warning=FALSE}
+unique(Cleaned_data_6$New_location)
+
+tab7<-Cleaned_data_6[Cleaned_data_6$New_location=="united states",]
+tab8<-as.data.frame(table(tab7$Job_Category))
+tab8
+
+ggplot(tab8, aes( x=reorder(Var1,-Freq),y=Freq )) + 
+  geom_bar(position="dodge", stat="identity") +ggtitle("Figure:06 Job types in United States") +
+  
+  
+  
+  
+  theme(axis.text.x = element_text(angle=65, vjust=0.6)) +
+  xlab("Job category")+ylab("Frequency")
+
+
+tab9<-Cleaned_data_6[Cleaned_data_6$New_location=="united kingdom",]
+tab10<-as.data.frame(table(tab9$Job_Category))
+tab10
+
+ggplot(tab10, aes( x=reorder(Var1,-Freq),y=Freq )) + 
+  geom_bar(position="dodge", stat="identity") +ggtitle("Figure:07 Job types in United Kingdom") +
+  
+  
+  
+  
+  theme(axis.text.x = element_text(angle=65, vjust=0.6)) +
+  xlab("Job category")+ylab("Frequency")
+
+
+tab11<-Cleaned_data_6[Cleaned_data_6$New_location=="australia",]
+tab12<-as.data.frame(table(tab11$Job_Category))
+tab12
+
+ggplot(tab12, aes( x=reorder(Var1,-Freq),y=Freq )) + 
+  geom_bar(position="dodge", stat="identity") +ggtitle("Figure:08 Job types in Australia") +
+  
+  
+  
+  
+  theme(axis.text.x = element_text(angle=65, vjust=0.6)) +
+  xlab("Job category")+ylab("Frequency")
+
+```
+
+
+
+
+## Panel 06 - What are the areas a statistician must posess knowledge in?
+
+
+### Word cloud for knowledge in
+
+```{r,comment=NA,message=FALSE,warning=FALSE}
+
+Knowledge<-Cleaned_data_6$Knowledge_in
+sum(is.na.data.frame(Knowledge))
+Knowledge<-Knowledge[!is.na(Knowledge)]
+length(Knowledge)
+
+library(tm)
+library(wordcloud)
+
+corpus<-Corpus(VectorSource(Knowledge))
+corpus[[1]][1]
+
+
+#Convert the text to lower
+
+corpus<-tm_map(corpus,content_transformer(tolower))
+
+#Remove numbers
+
+corpus<-tm_map(corpus,removeNumbers)
+
+#Remove punctuations
+
+corpus<-tm_map(corpus,removePunctuation)
+
+#Remove unwanted words
+
+corpus<-tm_map(corpus,removeWords,c("well","and","other","prefer","for","knowledge","with","expeirience","statistical","deep","advanced","the","skills","such","strong","big","including","basic","language","time","text","andor","etc","working","large","using","ability","from","like"))
+
+tdm<-TermDocumentMatrix(corpus)
+m<-as.matrix(tdm)
+v<-sort(rowSums(m),decreasing = TRUE)
+length(v)
+d<-data.frame(word=names(v),freq=v)
+d<-d[d$freq>1,]
+dim(d)
+wordcloud(d$word,d$freq,random.order = FALSE,rot.per = 0.3,scale = c(4,0.5),max.words = 220)
+
+```

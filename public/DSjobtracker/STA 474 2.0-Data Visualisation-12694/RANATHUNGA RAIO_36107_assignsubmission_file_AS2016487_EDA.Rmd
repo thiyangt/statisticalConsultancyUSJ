@@ -1,0 +1,191 @@
+---
+title: "EDA"
+author: "Oshadi Ranathunga"
+date: "9/1/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(magrittr)
+library(sf)
+library(raster)
+library(dplyr)
+library(spData)
+library(leaflet)
+library(ggplot2)
+library(readxl)
+```
+
+
+```{r}
+Data<-read_excel("DataScientistQualificationSkills.xlsx")
+```
+
+
+```{r}
+Data<-Data[!(is.na(Data$Consultant)),]
+```
+
+
+```{r}
+Data<-Data[!(is.na(Data$Company)),]
+```
+
+
+```{r}
+Data<-Data%>%dplyr::na_if("Not_define")
+Data<-Data%>%dplyr::na_if("Not_mentioned")
+Data<-Data%>%dplyr::na_if("Not-mentioned")
+Data<-Data%>%dplyr::na_if("Not mentioned")
+Data<-Data%>%dplyr::na_if("Competitive")
+```
+
+
+```{r}
+Data<-distinct(Data,Job_title,Company,URL,.keep_all = TRUE)
+```
+
+
+```{r}
+Data$`English proficiency`[Data$`English proficiency`=="Required"]<-1
+Data$`English proficiency`[Data$`English proficiency`=="Highly required"]<-1
+Data$`English proficiency`[Data$`English proficiency`=="A College English Test (CET) 6 certificate is highly preferred"]<-1
+Data$`English proficiency`[Data$`English proficiency`=="A College English Test (CET) 6 certificate is highly preferred."]<-1
+Data$`English proficiency`[Data$`English proficiency`=="https://g.co/kgs/jnMs86"]<-NA
+Data$`English proficiency`[Data$`English proficiency`=="https://g.co/kgs/oZMmBq"]<-NA
+Data$`English proficiency`[Data$`English proficiency`=="Excellent"]<-1
+Data$`English proficiency`[Data$`English proficiency`=="Excellent Communication"]<-1
+Data$`English proficiency`[Data$`English proficiency`=="Good Knowlegde"]<-1
+```
+
+```{r}
+Data$Location<-gsub("SL","Sri Lanka",Data$Location)
+Data$Location<-gsub("Colombo","Sri Lanka",Data$Location)
+Data$Location<-gsub("Washington","USA",Data$Location)
+Data$Location<-gsub("US","USA",Data$Location)
+Data$Location<-gsub("Boston","USA",Data$Location)
+Data$Location<-gsub("San Fransico","USA",Data$Location)
+Data$Location<-gsub("California","USA",Data$Location)
+Data$Location<-gsub("Austin","USA",Data$Location)
+Data$Location<-gsub("Cambridge","UK",Data$Location)
+Data$Location<-gsub("Chevy Chase","USA",Data$Location)
+Data$Location<-gsub("Singaore","Singapore",Data$Location)
+Data$Location<-gsub("Boston","USA",Data$Location)
+Data$Location<-gsub("London","UK",Data$Location)
+Data$Location<-gsub("New York","USA",Data$Location)
+Data$Location<-gsub("New Kensington","USA",Data$Location)
+Data$Location<-gsub("San Mateo","USA",Data$Location)
+Data$Location<-gsub("Montgomery Country","USA",Data$Location)
+Data$Location<-gsub("Mclean","USA",Data$Location)
+Data$Location<-gsub("Mountain View","Canada",Data$Location)
+Data$Location<-gsub("NC","USA",Data$Location)
+Data$Location<-gsub("Carfiff","USA",Data$Location)
+Data$Location<-gsub("Arlington","Texas",Data$Location)
+Data$Location<-gsub("Chicago","USA",Data$Location)
+Data$Location<-gsub("Salt Lake City","Utah",Data$Location)
+Data$Location<-gsub("Boise","USA",Data$Location)
+Data$Location<-gsub("Minneapolis","USA",Data$Location)
+Data$Location<-gsub("England","UK",Data$Location)
+Data$Location<-gsub("USAA","USA",Data$Location)
+
+unique(Data$Location)
+rename(Data,"Country"=Location)
+```
+
+```{r}
+Data1<-pivot_longer(Data,c(7:19,25,26,31:33,35,36,38:40,53,56:58,62,63,65,66,70:74),"RequiredSoftwares","Status")
+Data2<-filter(Data1,value=="1")
+```
+
+
+```{r}
+unique(Data2$RequiredSoftwares)
+table(Data2$RequiredSoftwares)
+```
+
+```{r}
+attach(Data2)
+counts<-Data2%>%group_by(RequiredSoftwares)%>%summarise(no_rows=length(RequiredSoftwares))
+counts
+arrange(counts,desc(counts$no_rows))
+sum(counts$no_rows)
+barsoft<-tibble(Software=c("Python","SQL","R","Ms Excel","SAS","Other"),No_of_jobs=c(282,239,210,83,81,648))
+barsoft
+ggplot(data =barsoft,aes(x=reorder(Software,No_of_jobs),y=No_of_jobs))+geom_bar(stat = "identity",fill="red")+geom_text(aes(label=No_of_jobs))+theme_minimal()
+
+```
+# <span style="color:darkblue;">Figure 1</span>
+
+```{r}
+detach(Data2)
+library(readr)
+library(e1071)
+library(mlbench)
+library(tm)
+library(SnowballC)
+library(wordcloud)
+library(RColorBrewer)
+```
+
+```{r}
+Data3<-filter(counts,no_rows<80)
+set.seed(100)
+wordcloud(words = Data3$RequiredSoftwares,freq = Data3$no_rows,random.order = FALSE,rot.per = 0.30,colors = brewer.pal(10,"Dark2"))
+```
+# <span style="color:darkblue;">Figure 2</span>
+
+
+```{r}
+Job_Titles<-str_to_lower(Data$Job_title)
+Job_Titles<-str_replace_all(Job_Titles,","," ")
+Job_Titles%>%head()
+DS<-Job_Titles[str_detect(Job_Titles,"([data]{3}\\s*[scientist]{7,9})")] %>% unique()
+DE<-Job_Titles[str_detect(Job_Titles,"([data]{3}\\s*[engineer]{8})")]%>%unique()
+DA<-Job_Titles[str_detect(Job_Titles,"([data]{3}\\s*[analyst]{7}|[analytics]{8,9})")]%>%unique()
+Others<-Job_Titles[!(Job_Titles%in%c(DS,DE,DA))]
+Data
+```
+
+```{r}
+Tbl<-data.frame(Job_Title=c("DS","DE","DA","Others"),Count=c(sum(Job_Titles%in%DS),sum(Job_Titles%in%DE),sum(Job_Titles%in%DA),sum(Job_Titles%in%Others)))
+Tbl
+```
+
+```{r}
+barsoft2<-tibble(Job_Title=c("DS","DE","DA","Others"),No_of_jobs=c(213,21,155,56))
+barsoft2
+ggplot(data =barsoft2,aes(x=reorder(Job_Title,No_of_jobs),y=No_of_jobs))+geom_bar(stat = "identity",fill="green")+geom_text(aes(label=No_of_jobs))+theme_minimal()
+```
+# <span style="color:darkblue;">Figure 3</span>
+
+```{r}
+Data4<-pivot_longer(Data,c(21:24,27:30,34,41:52,54,55,59:61,64,67:69,75:93,100:105),"KnowledgeAndSkills","Status")
+Data5<-filter(Data4,value=="1")
+```
+
+```{r}
+unique(Data5$KnowledgeAndSkills)
+
+```
+
+```{r}
+attach(Data5)
+counts2<-Data5%>%group_by(KnowledgeAndSkills)%>%summarise(no_rows2=length(KnowledgeAndSkills))
+arrange(counts2,desc(counts2$no_rows2))
+
+```
+
+
+
+
+
+
+
+
+
+

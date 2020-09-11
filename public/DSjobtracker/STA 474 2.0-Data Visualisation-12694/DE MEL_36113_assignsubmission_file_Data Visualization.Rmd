@@ -1,0 +1,152 @@
+---
+title: "Data Visualization"
+author: "V P C De Mel_AS2016337"
+date: "September 4, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r , comment=NA ,message=FALSE}
+library(tidyverse)
+library(dslabs)
+library(magrittr)
+library(stringr)
+library(stringi)
+library(readxl)
+tidy_dataset <- read.csv("D:/4th year 2nd sem/Statitical Consaltancy/data visualization/tidy_dataset.csv")
+# this is the main tidy data set 
+data_set1 <- read.csv("D:/4th year 2nd sem/Statitical Consaltancy/data visualization/data_set1.csv")
+# select required softwares and skills columns and assign the new data set as data_set1
+```
+
+```{r , comment=NA}
+DS_jobs = tidy_dataset$Job_title[grep("data scientist|data science",tidy_dataset$Job_title)] # Find data scientist jobs
+DA_jobs = tidy_dataset$Job_title[grep("data analyst",tidy_dataset$Job_title)] # Find data analyst jobs
+
+DE_jobs = tidy_dataset$Job_title[grep("data engineer",tidy_dataset$Job_title)] #Find data engineer jobs
+ML_jobs = tidy_dataset$Job_title[grep("machine learning",tidy_dataset$Job_title)] # Find jobs that specified the term "Machine Learning"
+
+STA_jobs = tidy_dataset$Job_title[grep("statistician",tidy_dataset$Job_title)] # Find statistician jobs
+
+Programmer = tidy_dataset$Job_title[grep("programmer",tidy_dataset$Job_title)] # Find programmer jobs
+
+job_categories = data.frame(jobs = c("Data_Scientist","Data_Analyst","Data_Engineer","ML.jobs","Statistician","Programmer") ,count = c(length(DS_jobs),length(DA_jobs),length(DE_jobs),length(ML_jobs),length(STA_jobs),length(Programmer)))
+
+job_categories 
+
+```
+
+```{r,comment=NA ,fig.cap="Figure 1 : Bar chart of job categories"}
+ggplot(data=job_categories, aes(x=jobs, y=count , col=jobs , fill = jobs)) +
+  geom_col()
+```
+
+Figure 1 shows that there are 213 jobs that specified the tern data scientist/ data science in the data set.
+
+
+```{r,comment=NA , message=FALSE , fig.cap="Figure 2 : word cloud for job titles"}
+library(wordcloud)
+library(wordcloud2)
+library(RColorBrewer)
+library(tm)
+
+#Create a vector containing only the text
+text <- tidy_dataset$Job_title
+# Create a corpus  
+docs <- Corpus(VectorSource(text))
+
+dtm <- TermDocumentMatrix(docs) 
+matrix <- as.matrix(dtm) 
+words <- sort(rowSums(matrix),decreasing=TRUE) 
+df <- data.frame(word = names(words),freq=words)
+
+wordcloud(words = df$word, freq = df$freq, min.freq = 1,max.words=200, random.order=FALSE, rot.per=0.35,colors=brewer.pal(8, "Dark2"))
+```
+
+In Figure 2, the word cloud also shows that the term "data scientist" is highlighted
+
+
+```{r,comment=NA , message=FALSE}
+SF = mapply(sum,data_set1[,-1]) %>% as_tibble() %>% cbind(required_softwares_or_skils = c(names(data_set1)[-1])) %>% .[,c(2,1)]  
+dat <- arrange(SF, desc(value)) %>%
+  mutate(rank = 1:nrow(SF)) 
+Most_required_Softwares = dat[,c(1,2)] %>% setNames(c("required_softwares","count")) %>%
+  filter(required_softwares %in% c("Python", "SQL", "R","Ms Excel","SAS","Tableau"))
+Most_required_Softwares #Find most required sowtwares
+
+```
+
+```{r,comment=NA,fig.cap="Figure 3 : Bar chart of most required softwares"}
+ggplot(data=Most_required_Softwares, aes(x=required_softwares, y=count , col=required_softwares , fill = required_softwares)) +
+  geom_col()
+```
+
+Above graph shows that python is the highest required software.
+
+
+```{r,comment=NA , message=FALSE}
+Most_required_Skills = dat[,c(1,2)] %>% setNames(c("required_skills","count")) %>%
+  filter(required_skills %in% c("Communication", "Data_visualization","BigData", "Problem_Solving","Presentation_Skills","Data_mining"))
+Most_required_Skills
+
+```
+
+```{r,comment=NA,fig.cap="Figure 4 : Bar chart of most required skills"}
+ggplot(data=Most_required_Skills, aes(x=required_skills, y=count , col=required_skills , fill = required_skills)) +
+  geom_col()
+```
+
+According to Figure 4 the most required skill is the communication skill.
+
+
+```{r , echo=FALSE}
+tidy_dataset$Educational_qualifications = str_replace(tidy_dataset$Educational_qualifications,"Not_define|Not_mentioned|Not-mentioned|not needed|not mentioned|not_mentioned","NA")
+```
+
+```{r,comment=NA, warning=FALSE, fig.cap="Figure 5 : Word cloud for the location"}
+text1 <- tidy_dataset$Location
+ 
+docs1 <- Corpus(VectorSource(text1))
+
+dtm1 <- TermDocumentMatrix(docs1) 
+matrix1 <- as.matrix(dtm1) 
+words1 <- sort(rowSums(matrix1),decreasing=TRUE) 
+df1 <- data.frame(word = names(words1),freq=words1)
+
+wordcloud(words = df1$word, freq = df1$freq, min.freq = 1,max.words=200, random.order=FALSE, rot.per=0.35,colors=brewer.pal(15, "Dark2"))
+```
+
+The most number of jobs were found in india according to the above word cloud
+
+
+```{r,comment=NA , warning=FALSE}
+Avg_exp_ds = tidy_dataset %>% filter(Job_title == DS_jobs) %>% as.data.frame() %>% select(Experience) %>% .[ ,1] %>% as.numeric() %>% mean(na.rm =TRUE) 
+Avg_exp_da = tidy_dataset %>% filter(Job_title == DA_jobs) %>% as.data.frame() %>% select(Experience) %>% .[ ,1] %>% as.numeric() %>% mean(na.rm =TRUE) 
+Avg_exp_de = tidy_dataset %>% filter(Job_title == DE_jobs) %>% as.data.frame() %>% select(Experience) %>% .[ ,1] %>% as.numeric() %>% mean(na.rm =TRUE) 
+Avg_exp_ml = tidy_dataset %>% filter(Job_title == ML_jobs) %>% as.data.frame() %>% select(Experience) %>% .[ ,1] %>% as.numeric() %>% mean(na.rm =TRUE) 
+Avg_exp_sta = tidy_dataset %>% filter(Job_title == STA_jobs) %>% as.data.frame() %>% select(Experience) %>% .[ ,1] %>% as.numeric() %>% mean(na.rm =TRUE) 
+Avg_exp_pro = tidy_dataset %>% filter(Job_title == Programmer) %>% as.data.frame() %>% select(Experience) %>% .[ ,1] %>% as.numeric() %>% mean(na.rm =TRUE) 
+```
+
+
+```{r,comment=NA}
+Avg_exp = data.frame(jobs = c("Data_Scientist","Data_Analyst","Data_Engineer","ML.jobs","Statistician","Programmer"),count= c(Avg_exp_ds,Avg_exp_da,Avg_exp_de,Avg_exp_ml,Avg_exp_sta,Avg_exp_pro))
+Avg_exp
+  
+```
+
+```{r,fig.cap="Figure 6 :Average experiences of job categories"}
+Avg_exp %>% ggplot(aes(x = jobs, y = count , fill = jobs)) + geom_col() + ggtitle("Average experiences of job categories")
+```
+
+
+
+
+
+
+
+
+

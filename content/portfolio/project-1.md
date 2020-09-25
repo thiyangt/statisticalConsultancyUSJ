@@ -28,7 +28,10 @@ library(DSjobtracker)
 
 #### Data Wrangling
 
-[Click here](/DSDataWrangling/dsjobtracker_Documentation.html)
+[Click here the dashboard](/DSDataWrangling/dsjobtracker_Documentation.html)
 
 #### Data Visualisation
+
+[Click here the dashboard](/DSjobtrackerVisualisation/DataViz.html)
+
 

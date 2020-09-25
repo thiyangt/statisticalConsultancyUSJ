@@ -13,6 +13,11 @@
   </url>
   
   <url>
+    <loc>/categories/data-visualisation/</loc>
+    <lastmod>2020-09-11T12:14:34+06:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/categories/design/</loc>
     <lastmod>2020-09-11T12:14:34+06:00</lastmod>
   </url>
@@ -24,6 +29,11 @@
   
   <url>
     <loc>/portfolio/</loc>
+    <lastmod>2020-09-11T12:14:34+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/reproducible-research/</loc>
     <lastmod>2020-09-11T12:14:34+06:00</lastmod>
   </url>
   

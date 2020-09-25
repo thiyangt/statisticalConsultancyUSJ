@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>reproducible research on SCS-USJ</title>
+    <link>/categories/reproducible-research/</link>
+    <description>Recent content in reproducible research on SCS-USJ</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-uk</language>
+    <lastBuildDate>Fri, 11 Sep 2020 12:14:34 +0600</lastBuildDate>
+    
+	<atom:link href="/categories/reproducible-research/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Data Science Job Tracker</title>
+      <link>/portfolio/project-1/</link>
+      <pubDate>Fri, 11 Sep 2020 12:14:34 +0600</pubDate>
+      
+      <guid>/portfolio/project-1/</guid>
+      <description>Data Click here</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -12,6 +12,15 @@
     
     
     <item>
+      <title>data visualisation</title>
+      <link>/categories/data-visualisation/</link>
+      <pubDate>Fri, 11 Sep 2020 12:14:34 +0600</pubDate>
+      
+      <guid>/categories/data-visualisation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>design</title>
       <link>/categories/design/</link>
       <pubDate>Fri, 11 Sep 2020 12:14:34 +0600</pubDate>
@@ -26,6 +35,15 @@
       <pubDate>Fri, 11 Sep 2020 12:14:34 +0600</pubDate>
       
       <guid>/categories/development/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>reproducible research</title>
+      <link>/categories/reproducible-research/</link>
+      <pubDate>Fri, 11 Sep 2020 12:14:34 +0600</pubDate>
+      
+      <guid>/categories/reproducible-research/</guid>
       <description></description>
     </item>
     

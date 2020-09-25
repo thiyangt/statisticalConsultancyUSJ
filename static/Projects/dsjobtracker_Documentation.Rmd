@@ -1,0 +1,170 @@
+---
+title: "DSjobtracker-Documentation"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(DSjobtracker)
+library(stringr)
+library(dslabs)
+library(magrittr)
+```
+
+Overview
+=====================================
+
+Row {data-height=650}
+-------------------------------------
+
+### Workflow
+![](overview1.png){}
+
+### Packages
+
+![](packages.png){}
+
+
+
+Row {data-height=350}
+-------------------------------------
+   
+### Datasets
+
+1. Untidy version of DSjobtracker(DSraw)
+
+2. World citities
+
+```{r}
+Cities_Table <- read.csv("worldcities.csv", header = TRUE, sep = ",")
+
+head(Cities_Table,10)
+```
+
+
+
+Untidy Version
+=====================================
+Column {data-width=650}
+-----------------------------------------------------------------------
+### Untidy version of the dataset
+```{r}
+head(DSraw)
+```
+
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+### Glimpse of untidy data
+```{r}
+tibble::glimpse(DSraw)
+```
+
+
+Data wrangling workflow
+=====================================
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+![](Flow_chart.png){}
+
+
+Data wrangling process step by step
+=====================================
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+###Untidy columns
+
+1. ID
+
+2. Consultant - To extract complete cases
+
+3. Software columns -R, Python, SAS etc.
+
+4. Job_title
+
+5. Experience
+
+6. Location
+
+7. Educational_qualifications
+
+Column {data-width=350}{.tabset .tabset-fade}
+-----------------------------------------------------------------------
+### ID
+
+![](ID.png){}
+
+
+### Consultant
+
+![](const.png){}
+
+
+###Softwares
+
+![](swft.png){}
+
+
+###Job_title
+
+![](job.png){}
+
+
+
+###Experience
+![](Exp.png){}
+
+
+
+###Location
+![](loc.png){}
+
+
+
+###Educational_qualifications
+![](Edu.png){}
+
+
+Tidy Version
+=====================================
+Column {data-width=650}
+-----------------------------------------------------------------------
+### Tidy version of the dataset
+```{r}
+head(DStidy)
+```
+
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+### Glimpse of Tidy data
+```{r}
+tibble::glimpse(DStidy)
+```
+
+# About
+
+Author: 
+
+Jayani Lakshika Piyadi Gamage
+
+Link to the Git-repository:
+
+https://github.com/thiyangt/DSjobtrackerDataWrangling
+
+
+## Data
+
+```r
+#install.packages("devtools")
+devtools::install_github("thiyangt/DSjobtracker")
+library(DSjobtracker)
+
+```
+

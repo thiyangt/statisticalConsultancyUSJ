@@ -1,0 +1,923 @@
+---
+title: "DSjobtracker"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+```
+
+# Locations
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Distribution of Job Advertisements
+
+```{r}
+#devtools::install_github("thiyangt/DSjobtracker")
+library(DSjobtracker)
+library(maps)
+library(viridis)
+library(mapproj)
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(ggrepel)
+library(plotly)
+library(R.utils)
+
+#Importing the data sets
+
+data("DStidy")
+data<-map_data("world")
+worlddata<-data.frame(world.cities)
+
+#Taking to same consistency
+
+worlddata[worlddata=="USA"]<-"United States"
+worlddata[worlddata=="UK"]<-"United Kingdom"
+
+
+#Making a frequency table of vacanvies for the countries
+
+
+summaries<-as.data.frame(table(DStidy$Job_Country))
+colnames(summaries)<-c("country.etc","Frequency")
+
+
+#Making to lower case
+
+summaries$country.etc<-str_to_lower(summaries$country.etc)
+worlddata$country.etc<-str_to_lower(worlddata$country.etc)
+
+
+#Filtering the needed countries
+
+datall<-worlddata %>% filter(country.etc%in%summaries$country.etc)
+
+#Joining the needed countries and Frequencies
+
+dup_data_joined<-left_join(datall,summaries)
+
+#Extracting a special row for a country in Canada
+special_row<-dup_data_joined[dup_data_joined$name=="Edmonton",]
+data_joined<-dup_data_joined[!duplicated(dup_data_joined[,c("country.etc")]),]
+
+#Removing the row for Canada and pasting the special row
+data_joined<-data_joined[-c(10),]
+data_joined<-rbind(data_joined,special_row)
+
+#Making the Countries to upper case letters
+data_joined$country.etc<-capitalize(data_joined$country.etc,collapse=" ")
+data_joined[data_joined=="Sri lanka"]<-"Sri Lanka"
+data_joined[data_joined=="United states"]<-"United States"
+data_joined[data_joined=="United kingdom"]<-"United Kingdom"
+data_joined[data_joined=="new zealand"]<-"New Zealand"
+data_joined[data_joined=="United arab emirates"]<-"United Arab Emirates"
+data_joined[data_joined=="New caledonia"]<-"New Caledonia"
+
+#Entering a new column with a text
+
+data_joined<-data_joined%>%
+  arrange(Frequency)%>%
+  mutate(name=factor(country.etc,unique(country.etc)))%>%
+  mutate(mytext=paste("Country: ",name,"\n","Number of Job Advertistments: ",Frequency,sep = ""))
+
+
+
+#Plotting the map
+plot<-data_joined%>%
+  ggplot() +
+  geom_polygon(data = data, aes(x=long, y = lat, group = group), fill="grey", alpha=0.9) +
+  geom_point( data=data_joined, aes(x=long, y=lat,color=Frequency, text=mytext),size=4) +
+   
+  scale_color_viridis() +geom_text_repel(data=data_joined %>% arrange(Frequency),aes(x=long,y=lat,label=country.etc),size=3)+
+  theme_void() + coord_map()
+ggplotly(plot,tooltip = "text")
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Composition of job advertisements by contries
+
+```{r}
+p <- ggplot(data_joined, aes(x = reorder(country.etc,Frequency), y = Frequency,text=paste("Number of Job Advertistments: ",Frequency)))+
+  geom_col( width = 0.7,fill="steelblue")+coord_flip()+ylab("Number of Job Advertistements")+xlab("Country")
+ggplotly(p,tooltip="text")
+```
+
+
+
+```{r, include=FALSE}
+#devtools::install_github("thiyangt/DSjobtracker")
+library(tidyverse)
+library(DSjobtracker)
+library(stringr)
+#library(dslabs)
+library(magrittr)
+library(quantmod)
+library(plotly)#Currency Converting purposes
+```
+
+```{r, include=FALSE}
+
+
+data("DStidy") 
+DStidy %>% head()
+str(DStidy)
+DStidy$Salary %>% unique() %>% view()
+
+DStidy$Salary %>% str_extract_all("\\$|\\£|�") %>% unlist()
+DStidy$Salary %>% str_extract_all("\\d+")%>% unlist() %>%  as.numeric()  %>%  max()
+
+
+Max_sal<- 
+  DStidy$Salary %>% 
+  str_remove_all(",") %>%  
+  str_extract_all("\\d+\\.?\\d{1,2}") %>% 
+  lapply(function(x){as.numeric(x)}) %>%
+  lapply(function(x){max(x)}) %>% unlist()
+Max_sal[Max_sal==-Inf] <- NA
+
+
+Currency <- 
+  DStidy$Salary %>% 
+  str_extract_all("\\$|[A-Z]{2,3}") %>%
+  lapply(function(x){return(x[1])}) %>%
+  unlist()
+Currency <- ifelse(str_detect(DStidy$Salary,"�" )& is.na(Currency), "£", Currency)
+Currency
+
+Max_sal %>% is.na() %>% sum()
+Currency %>% is.na() %>% sum()
+
+
+
+cbind(DStidy$Salary,Max_sal, Currency) %>% view()
+
+NewDF <- data.frame(ID= DStidy$ID, Salary=DStidy$Salary,Max_sal, Currency, Country=DStidy$Job_Country, Job_cat=DStidy$Job_Category,Edu_cat=DStidy$Edu_Category, Experience= DStidy$Experience_Category )
+NewDF[NewDF$Country%in%c("Sri Lanka"),"Currency"] <- "LKR"
+NewDF[NewDF$Country%in%c("India"),"Currency"] <- "INR"
+
+
+
+NewDF %>% filter(!is.na(Max_sal)) %>% select(!Salary)
+NewDF %>% filter(Max_sal<1000) %>% select(ID,Salary, Max_sal, Currency)
+
+#Convert Hourly wages to yearly wages
+H_ID <- NewDF %>% filter(Max_sal<1000,str_detect(Salary,"hour")) %>% select(ID)
+NewDF[NewDF$ID%in%H_ID$ID,"Max_sal"] <- NewDF[NewDF$ID%in%H_ID$ID,"Max_sal"]*8*26*12 #Working 8 hours per day 26 days per month for 12 months
+
+#Convert day wages to yearly wages
+D_ID <- NewDF %>% filter(str_detect(Salary,"day")) %>% select(ID, Salary)
+NewDF[NewDF$ID%in%D_ID$ID,"Max_sal"] <- NewDF[NewDF$ID%in%D_ID$ID,"Max_sal"]*26*12 #26 days per month for 12 months
+
+#Convert weekly wages to yearly wages
+W_ID <- NewDF %>% filter(Max_sal>=1000 & Max_sal<5000) %>% select(ID, Salary)
+NewDF[NewDF$ID%in%W_ID$ID,"Max_sal"] <- NewDF[NewDF$ID%in%W_ID$ID,"Max_sal"]*52 #52 weeks per year
+
+#Convert monthly wages to yearly wages
+M_ID <- NewDF %>% filter(Max_sal>=10000 & Max_sal<50000 & Currency=="INR") %>% select(ID, Salary)
+NewDF[NewDF$ID%in%M_ID$ID,"Max_sal"] <- NewDF[NewDF$ID%in%M_ID$ID,"Max_sal"]*12 #per year
+
+sum(!is.na(NewDF$Currency))
+sum(!is.na(NewDF$Max_sal))
+
+Required_DF <- NewDF %>% filter(!is.na(Max_sal))
+Required_DF %>% select(Country, Currency) %>% unique()
+# Required_DF$Currency <- replace(Required_DF$Currency,list = list("$","£" ), list("USD", "GBP"))
+
+from <- c("GBP", "INR", "LKR","USD")
+to <- c("USD", "USD", "USD", "USD")
+to2 <- c("LKR","LKR", "LKR", "LKR")
+
+To_USD <- getQuote(paste0(from, to, "=X"))
+To_LKR <- getQuote(paste0(from, to2, "=X"))
+
+Conversion_Table <- data.frame(From=from, LKR= To_LKR$Last, USD= To_USD$Last)
+Conversion_Table$LKR[is.na(Conversion_Table$LKR)] <- 1
+Conversion_Table
+
+Curr_N <- ifelse(Required_DF$Currency=="$", "USD", ifelse(Required_DF$Currency=="£", "GBP", Required_DF$Currency ))
+cbind(Curr_N, Required_DF$Currency) %>% unique() # Ao make sure all is converted right
+Required_DF <- Required_DF %>% mutate(Std_Currency=Curr_N)
+
+LKR_salary <- Required_DF$Max_sal*as.numeric(Required_DF$Std_Currency=="USD")*(Conversion_Table[from=="USD", "LKR"])+
+  Required_DF$Max_sal*as.numeric(Required_DF$Std_Currency=="LKR")*(Conversion_Table[from=="LKR", "LKR"])+
+  Required_DF$Max_sal*as.numeric(Required_DF$Std_Currency=="INR")*(Conversion_Table[from=="INR", "LKR"])+
+  Required_DF$Max_sal*as.numeric(Required_DF$Std_Currency=="GBP")*(Conversion_Table[from=="GBP", "LKR"])
+
+USD_salary <- Required_DF$Max_sal*as.numeric(Required_DF$Std_Currency=="USD")*(Conversion_Table[from=="USD", "USD"])+
+  Required_DF$Max_sal*as.numeric(Required_DF$Std_Currency=="LKR")*(Conversion_Table[from=="LKR", "USD"])+
+  Required_DF$Max_sal*as.numeric(Required_DF$Std_Currency=="INR")*(Conversion_Table[from=="INR", "USD"])+
+  Required_DF$Max_sal*as.numeric(Required_DF$Std_Currency=="GBP")*(Conversion_Table[from=="GBP", "USD"])
+
+Required_DF <- Required_DF %>% mutate(LKR_salary, USD_salary) 
+
+```
+
+# Overview
+
+
+```{r,include=FALSE}
+
+library(tidyverse)
+library(DSjobtracker)
+library(stringr)
+library(dslabs)
+library(magrittr)
+
+data("DStidy")
+
+
+
+```
+
+
+
+Row {data-width=350}
+-----------------------------------------------------------------------
+
+### **Job Title**
+
+```{r}
+library(wordcloud)
+library(tm)
+library(ggplot2)
+library(RColorBrewer)
+#library(xlsx)
+cnames<-data.frame(DStidy$Job_title)
+
+docs<-Corpus(VectorSource(cnames))
+for (j in seq(docs))
+{
+  docs[[j]] = gsub("(RT|via)((?:\\b\\W*@\\w+)+)", "", docs[[j]])
+  docs[[j]] = gsub("@\\w+", "", docs[[j]])
+  docs[[j]] = gsub("http\\w+", "", docs[[j]])
+  docs[[j]] = gsub("[ \t]{2,}", "", docs[[j]])
+  docs[[j]] = gsub("^\\s+|\\s+quot;", "", docs[[j]])
+  docs[[j]] = gsub("[^\x20-\x7E]", "", docs[[j]])
+}
+skipwords = c(stopwords("english"), "system","technology")
+
+kb.tf <- list(weighting = weightTf, stopwords  = skipwords,
+              removePunctuation = TRUE,
+              tolower = TRUE,
+              minWordLength = 4,
+              removeNumbers = TRUE, stripWhitespace = TRUE,
+              stemDocument= TRUE)
+docs <- tm_map(docs, PlainTextDocument) 
+tdm = TermDocumentMatrix(docs, control = kb.tf)
+tdm = as.matrix(tdm)
+word_freqs = sort(rowSums(tdm), decreasing=TRUE)
+dm = data.frame(word=names(word_freqs), freq=word_freqs)
+set.seed(12345)
+p <- ggplot(subset(dm, freq>10), aes(word, freq))
+p <-p+ geom_bar(stat="identity")
+p <-p+ theme(axis.text.x=element_text(angle=45, hjust=1))
+
+wordcloud(dm$word, dm$freq, random.order=FALSE,min.freq=3, scale=c(8,2,0.2,0.05),max.words=400,colors = "black",rot.per = 0)
+```
+
+
+
+### **Company Locations**
+
+```{r}
+library(wordcloud)
+library(tm)
+library(ggplot2)
+library(RColorBrewer)
+#library(xlsx)
+
+location1 <- str_replace_all(DStidy$Location,"Colombo", "SL") 
+
+location2 <- str_replace_all(location1,"San Francisco", "USA") 
+location3 <- str_replace_all(location2,"Montgomery Country", "USA") 
+
+location4 <- str_replace_all(location3,"New Kensington", "USA") 
+
+location5 <- str_replace_all(location4,"Arlington", "USA") 
+location6 <- str_replace_all(location5,"Cambridge", "USA") 
+
+location7 <- str_replace_all(location6,"Boise", "USA") 
+
+location8 <- str_replace_all(location7,"Mclean", "USA") 
+
+location9 <- str_replace_all(location8,"Seattle", "USA") 
+
+location10 <- str_replace_all(location9,"Minneapolis", "USA") 
+
+location11 <- str_replace_all(location10,"Salt Lake City", "USA") 
+ 
+location12 <- str_replace_all(location11,"Mountain View", "USA") 
+
+location13 <- str_replace_all(location12,"New York", "USA") 
+
+location14 <- str_replace_all(location13,"Washington", "USA") 
+
+location15 <- str_replace_all(location14,"Chicago", "USA") 
+
+location16 <- str_replace_all(location15,"San Mateo", "USA") 
+
+location17 <- str_replace_all(location16,"Chevy Chase", "USA") 
+
+location18 <- str_replace_all(location17,"Austin", "USA") 
+
+location19 <- str_replace_all(location18,"OR", "USA") 
+
+location20 <- str_replace_all(location19,"Boston", "USA") 
+
+location21 <- str_replace_all(location20,"US", "USA") 
+
+location22 <- str_replace_all(location21,"USAA", "USA") 
+
+location23 <- str_replace_all(location22,"SL", "Sri Lanka") 
+location24 <- str_replace_all(location23,"London", "England") 
+location25 <- str_replace_all(location24,"GB", "England") 
+location26 <- str_replace_all(location25,"California", "USA")
+
+location27 <- str_replace_all(location26,"Colorado", "USA")
+
+cnames<-data.frame(location27)
+
+
+
+docs<-Corpus(VectorSource(cnames))
+for (j in seq(docs))
+{
+  docs[[j]] = gsub("(RT|via)((?:\\b\\W*@\\w+)+)", "", docs[[j]])
+  docs[[j]] = gsub("@\\w+", "", docs[[j]])
+  docs[[j]] = gsub("http\\w+", "", docs[[j]])
+  docs[[j]] = gsub("[ \t]{2,}", "", docs[[j]])
+  docs[[j]] = gsub("^\\s+|\\s+quot;", "", docs[[j]])
+  docs[[j]] = gsub("[^\x20-\x7E]", "", docs[[j]])
+}
+skipwords = c(stopwords("english"), "system","technology")
+
+kb.tf <- list(weighting = weightTf, stopwords  = skipwords,
+              removePunctuation = TRUE,
+              tolower = TRUE,
+              minWordLength = 4,
+              removeNumbers = TRUE, stripWhitespace = TRUE,
+              stemDocument= TRUE)
+docs <- tm_map(docs, PlainTextDocument) 
+tdm = TermDocumentMatrix(docs, control = kb.tf)
+tdm = as.matrix(tdm)
+word_freqs = sort(rowSums(tdm), decreasing=TRUE)
+dm = data.frame(word=names(word_freqs), freq=word_freqs)
+set.seed(12345)
+p <- ggplot(subset(dm, freq>10), aes(word, freq))
+p <-p+ geom_bar(stat="identity")
+p <-p+ theme(axis.text.x=element_text(angle=45, hjust=1))
+
+wordcloud(dm$word, dm$freq, random.order=FALSE,min.freq=2, scale=c(7,1.5,0.2,0.05),max.words=400,colors = "black",rot.per = 0)
+
+```
+
+row {data-width=350}
+-----------------------------------------------------------------------
+
+### **Education Qualifications**
+
+```{r}
+library(wordcloud)
+library(tm)
+library(ggplot2)
+library(RColorBrewer)
+#library(xlsx)
+cnames<-data.frame(DStidy$Educational_qualifications)
+
+docs<-Corpus(VectorSource(cnames))
+for (j in seq(docs))
+{
+  docs[[j]] = gsub("(RT|via)((?:\\b\\W*@\\w+)+)", "", docs[[j]])
+  docs[[j]] = gsub("@\\w+", "", docs[[j]])
+  docs[[j]] = gsub("http\\w+", "", docs[[j]])
+  docs[[j]] = gsub("[ \t]{2,}", "", docs[[j]])
+  docs[[j]] = gsub("^\\s+|\\s+quot;", "", docs[[j]])
+  docs[[j]] = gsub("[^\x20-\x7E]", "", docs[[j]])
+}
+skipwords = c(stopwords("english"), "system","technology")
+
+kb.tf <- list(weighting = weightTf, stopwords  = skipwords,
+              removePunctuation = TRUE,
+              tolower = TRUE,
+              minWordLength = 4,
+              removeNumbers = TRUE, stripWhitespace = TRUE,
+              stemDocument= TRUE)
+docs <- tm_map(docs, PlainTextDocument) 
+tdm = TermDocumentMatrix(docs, control = kb.tf)
+tdm = as.matrix(tdm)
+word_freqs = sort(rowSums(tdm), decreasing=TRUE)
+dm = data.frame(word=names(word_freqs), freq=word_freqs)
+set.seed(12345)
+p <- ggplot(subset(dm, freq>10), aes(word, freq))
+p <-p+ geom_bar(stat="identity")
+p <-p+ theme(axis.text.x=element_text(angle=45, hjust=1))
+
+wordcloud(dm$word, dm$freq, random.order=FALSE,min.freq=20, scale=c(6,1.5),max.words=500,colors = "black",rot.per = 0)
+
+```
+
+
+### **Knowledge Base**
+
+```{r}
+library(wordcloud)
+library(tm)
+library(ggplot2)
+library(RColorBrewer)
+#library(xlsx)
+cnames<-data.frame(DStidy$Knowledge_in)
+
+docs<-Corpus(VectorSource(cnames))
+for (j in seq(docs))
+{
+  docs[[j]] = gsub("(RT|via)((?:\\b\\W*@\\w+)+)", "", docs[[j]])
+  docs[[j]] = gsub("@\\w+", "", docs[[j]])
+  docs[[j]] = gsub("http\\w+", "", docs[[j]])
+  docs[[j]] = gsub("[ \t]{2,}", "", docs[[j]])
+  docs[[j]] = gsub("^\\s+|\\s+quot;", "", docs[[j]])
+  docs[[j]] = gsub("[^\x20-\x7E]", "", docs[[j]])
+}
+skipwords = c(stopwords("english"), "system","technology")
+
+kb.tf <- list(weighting = weightTf, stopwords  = skipwords,
+              removePunctuation = TRUE,
+              tolower = TRUE,
+              minWordLength = 4,
+              removeNumbers = TRUE, stripWhitespace = TRUE,
+              stemDocument= TRUE)
+docs <- tm_map(docs, PlainTextDocument) 
+tdm = TermDocumentMatrix(docs, control = kb.tf)
+tdm = as.matrix(tdm)
+word_freqs = sort(rowSums(tdm), decreasing=TRUE)
+dm = data.frame(word=names(word_freqs), freq=word_freqs)
+set.seed(12345)
+p <- ggplot(subset(dm, freq>10), aes(word, freq))
+p <-p+ geom_bar(stat="identity")
+p <-p+ theme(axis.text.x=element_text(angle=45, hjust=1))
+
+wordcloud(dm$word, dm$freq, random.order=FALSE,min.freq=10, scale=c(6,1,0.2,0.05),max.words=500,colors = "black",rot.per = 0)
+
+```
+
+
+
+# Salary - LKR
+
+Row
+-----------------------------------------------------------------------
+
+### Chart A: Salary Distribtion
+```{r fig.height=3, fig.width=8}
+
+ggplotly(Required_DF %>%  ggplot(aes(LKR_salary))+geom_histogram()+labs(x= paste("Salary in LKR"), y= "Frequency"))
+
+# hist(d_salary, main = paste("Distribution of Salaries in", d))
+
+```
+
+### Chart B: Violin plot of Experience and Salary
+
+```{r}
+
+ggplotly(Required_DF%>% ggplot(aes(x=reorder(Experience,Experience,
+                     function(x)-length(x)) , y= LKR_salary ))+geom_violin()+labs(y= paste("Salary in LKR"), x= "Experience")+ theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1)))
+
+```
+
+Row
+-----------------------------------------------------------------------
+
+
+
+### Chart C: Violin plot of Salary and Job Category
+
+```{r}
+
+ggplotly(Required_DF %>% ggplot(aes(x=reorder(Job_cat,Job_cat,
+                     function(x)-length(x)) , y= LKR_salary))+geom_violin()+ theme(axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))+labs(y= paste("Salary in LKR"), x= "Job Category"))
+
+```
+
+### Chart D: Violin plot of Salary and Country
+
+```{r}
+
+ggplotly(Required_DF %>% ggplot(aes(x=reorder(Country,Country,
+                     function(x)-length(x)) , y= LKR_salary))+geom_violin()+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+labs(y= paste("Salary in LKR"), x= "Country"))
+
+```
+
+
+# Salary - USD
+
+Row 
+-----------------------------------------------------------------------
+
+### Chart A: Salary Distribtion
+
+```{r fig.height=3, fig.width=8}
+
+ggplotly(Required_DF %>%  ggplot(aes(USD_salary))+geom_histogram()+labs(x= paste("Salary in USD"), y= "Frequency"))
+# hist(d_salary, main = paste("Distribution of Salaries in", d))
+
+```
+
+### Chart B: Violin plot of Experience and Salary
+
+```{r}
+
+ggplotly(Required_DF%>% ggplot(aes(x=reorder(Experience,Experience,
+                     function(x)-length(x)) , y= USD_salary ))+geom_violin()+labs(y= paste("Salary in USD"), x= "Experience")+ theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1)))
+
+```
+
+Row
+-----------------------------------------------------------------------
+
+
+
+### Chart C: Violin plot of Salary and Job Category
+
+```{r}
+
+ggplotly(Required_DF %>% ggplot(aes(x=reorder(Job_cat,Job_cat,
+                     function(x)-length(x)) , y= USD_salary))+geom_violin()+ theme(axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))+labs(y= paste("Salary in USD"), x= "Job Category"))
+
+```
+
+### Chart D: Violin plot of Salary and Country
+
+```{r}
+
+ggplotly(Required_DF %>% ggplot(aes(x=reorder(Country,Country,
+                     function(x)-length(x)) , y= USD_salary))+geom_violin()+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+labs(y= paste("Salary in USD"), x= "Country"))
+
+```
+
+
+# English Profeciency
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+```{r,echo=FALSE, message=FALSE, warning=FALSE}
+library(devtools)
+devtools::install_github("thiyangt/DSjobtracker")
+library(DSjobtracker)
+JobData<-DSjobtracker::DStidy
+#JobData
+```
+```{r}
+library(dplyr)
+library(tidyverse)
+attach(JobData)
+JobData$English_proficiency[JobData$English_proficiency == "Not_define"] <- "Not_Mentioned"
+JobData$English_proficiency[JobData$English_proficiency == "Not_mentioned"] <- "Not_Mentioned"
+JobData$English_proficiency[JobData$English_proficiency == 0] <- "Not_Mentioned"
+JobData$English_proficiency[JobData$English_proficiency == 1] <- "Required"
+
+JobData$English_proficiency[is.na(JobData$English_proficiency)] <- "Not_Mentioned"
+JobData$English_proficiency[JobData$English_proficiency == "https://g.co/kgs/oZMmBq"] <- "Not_Mentioned"
+JobData$English_proficiency[JobData$English_proficiency == "https://g.co/kgs/jnMs86"] <- "Not_Mentioned"
+JobData$English_proficiency[JobData$English_proficiency == "NA"] <- "Not_Mentioned"
+JobData$English_proficiency[JobData$English_proficiency == "Good Knowlegde"] <- "Required"
+JobData$English_proficiency[JobData$English_proficiency == "Excellent"] <- "Required"
+JobData$English_proficiency[JobData$English_proficiency == "Excellent Communication"] <- "Required"
+JobData$English_proficiency[JobData$English_proficiency == "A College English Test (CET) 6 certificate is highly preferred"] <- "Required"
+JobData$English_proficiency[JobData$English_proficiency == "A College English Test (CET) 6 certificate is highly preferred."] <- "Required"
+JobData$English_proficiency[JobData$English_proficiency == "Highly required"] <- "Required"
+JobData$English_proficiency[JobData$English_proficiency == "Required"] <- "Required"
+#JobData
+#attach(JobData)
+#ggplot(JobData) + geom_bar(aes(x = English_proficiency))
+
+```
+### Chart A
+
+```{r}
+library(plotly)
+library(dplyr)
+library(tidyverse)
+attach(JobData)
+JobData$English_proficiency[JobData$English_proficiency == "Not_define"] <- "Not_Mentioned"
+JobData$English_proficiency[JobData$English_proficiency == "Not_mentioned"] <- "Not_Mentioned"
+JobData$English_proficiency[JobData$English_proficiency == 0] <- "Not_Mentioned"
+JobData$English_proficiency[JobData$English_proficiency == 1] <- "Required"
+
+JobData$English_proficiency[is.na(JobData$English_proficiency)] <- "Not_Mentioned"
+JobData$English_proficiency[JobData$English_proficiency == "https://g.co/kgs/oZMmBq"] <- "Not_Mentioned"
+JobData$English_proficiency[JobData$English_proficiency == "https://g.co/kgs/jnMs86"] <- "Not_Mentioned"
+JobData$English_proficiency[JobData$English_proficiency == "NA"] <- "Not_Mentioned"
+JobData$English_proficiency[JobData$English_proficiency == "Good Knowlegde"] <- "Required"
+JobData$English_proficiency[JobData$English_proficiency == "Excellent"] <- "Required"
+JobData$English_proficiency[JobData$English_proficiency == "Excellent Communication"] <- "Required"
+JobData$English_proficiency[JobData$English_proficiency == "A College English Test (CET) 6 certificate is highly preferred"] <- "Required"
+JobData$English_proficiency[JobData$English_proficiency == "A College English Test (CET) 6 certificate is highly preferred."] <- "Required"
+JobData$English_proficiency[JobData$English_proficiency == "Highly required"] <- "Required"
+JobData$English_proficiency[JobData$English_proficiency == "Required"] <- "Required"
+
+JobData %>% plot_ly(x= English_proficiency, color = JobData$English_proficiency) %>% layout(title= "English Profeciency of Jobs")
+
+```
+
+
+# Knowledge and Skills
+
+
+ 
+```{r message=FALSE, warning=FALSE, comment=NA}
+library(DSjobtracker)
+library(tidyverse)
+library(magrittr)
+library(plotly)
+library(gganimate)
+library(ggplot2)
+library(ggpubr)
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Barchart for Knowledge and Skills
+
+```{r}
+Data<-pivot_longer(DStidy,c(20:22,28,29,49,50,52,80,81,83,84,87:91,100:104),"Knowledge_and_Skills","Status")%>%
+  filter(value=="1")%>%
+  count(Knowledge_and_Skills)%>%
+  mutate(Knowledge_and_Skills=fct_reorder(Knowledge_and_Skills, n))
+p1<-ggplot(data = Data,aes(x=Knowledge_and_Skills,y=n))+geom_bar(stat="identity",fill="blue")+labs(x="Knowledge and Skills",y="Number of jobs")+theme(axis.text.x = element_text(angle=90,hjust=1,vjust=0.5))
+ggplotly(p1)
+
+```
+
+
+
+
+Column {data-width=350}{.tabset .tabset-fade}
+-----------------------------------------------------------------------
+
+### Knowledge by Job category
+
+```{r}
+DStidynew<-
+  pivot_longer(DStidy,c(20,28,29,50,52,80,81,83,84,87:90,102:104),"Required_Knowledge","Status")%>%
+  filter(value=="1")%>%group_by(Job_Category,Required_Knowledge)%>%
+  count()
+p2<-ggdotchart(DStidynew,x="Required_Knowledge",y="n",color = "Job_Category",palette = c("#00AFBB","#E7B800","#FC4E07","#FF1493","#7FFFD4"),sorting = "asc",sort.by.groups=TRUE,add="segments",add.params = list(color="lightgray",size=2),dot.size = 4,ggtheme = theme_pubclean())+font("x.text",size=8,vjust=0.5)+labs(x="Required Knowledge ",y="Count")
+ggplotly(p2)%>%layout(legend=list(orientation="h",x=0.4,y=4))
+
+```
+
+
+
+
+### Skills by Job Category
+
+```{r}
+DStidynew2<-
+  pivot_longer(DStidy,c(21,22,49,91,100,101),"Skills","Status")%>%
+  filter(value=="1")%>%group_by(Job_Category,Skills)%>%
+  count()
+library(viridis)
+p4<-ggplot(DStidynew2,aes(fill=Job_Category,y=n,x=Skills))+geom_bar(position="dodge",stat="identity")+scale_fill_viridis(discrete=T)+ylab("Count")+theme(axis.text.x = element_text(angle=90,hjust=0.2,vjust=0.3))
+ggplotly(p4)%>%layout(legend=list(orientation="h",x=0.4,y=4))
+
+```
+
+
+
+# Experience
+
+
+```{r, message=FALSE, warning=FALSE, comment=NA,echo=FALSE}
+library(gapminder)
+library(tidyverse)
+library(magrittr)
+library(plotly)
+library(gganimate)
+library(ggplot2)
+library(devtools)
+library(DSjobtracker)
+Data<-DSjobtracker::DStidy
+```
+
+```{r, message=FALSE, warning=FALSE, comment=NA,echo=FALSE}
+attach(Data)
+```
+
+
+Column {data-width=700}
+-----------------------------------------------------------------------
+### Number of jobs by Experience Catergories
+
+```{r, message=FALSE, warning=FALSE, comment=NA,echo=FALSE}
+Data %>% 
+  plot_ly(x = ~Experience_Category , color = Data$Experience_Category)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Column {data-width=300}{.tabset .tabset-fade}
+-----------------------------------------------------------------------
+
+
+
+### Distribution of Minimum Experience by Education Catergory
+
+```{r}
+p1 <- plot_ly(Data, x = Data$Edu_Category, y = Data$Minimum_Years_of_experience)
+
+p2 <- p1 %>% add_boxplot(color=~Edu_Category)
+p2
+```
+
+```{r}
+attach(Data)
+count1<-Data%>%group_by(Edu_Category)%>%summarise(no_row=length(Edu_Category))
+count1
+detach(Data)
+```
+
+```{r}
+Data_Min_Bsc<-filter(Data,Edu_Category=="Min_Bsc")
+attach(Data_Min_Bsc)
+Data_Min_Bsc
+count<-Data_Min_Bsc%>%group_by(Experience_Category)%>%summarise(no_row=length(Experience_Category))
+count
+detach(Data_Min_Bsc)
+
+```
+
+
+
+```{r}
+Data_Min_Master<-filter(Data,Edu_Category=="Min_Master")
+attach(Data_Min_Master)
+count2<-Data_Min_Master%>%group_by(Experience_Category)%>%summarise(no_row=length(Experience_Category))
+count2
+detach(Data_Min_Master)
+```
+
+
+```{r}
+Data_Other<-filter(Data,Edu_Category=="Other")
+attach(Data_Other)
+count3<-Data_Other%>%group_by(Experience_Category)%>%summarise(no_row=length(Experience_Category))
+count3
+detach(Data_Other)
+```
+
+```{r}
+Data_Phd<-filter(Data,Edu_Category=="Phd")
+attach(Data_Phd)
+count4<-Data_Phd%>%group_by(Experience_Category)%>%summarise(no_row=length(Experience_Category))
+count4
+detach(Data_Phd)
+```
+
+
+```{r}
+Data_Some_Degree<-filter(Data,Edu_Category=="Some Degree")
+attach(Data_Some_Degree)
+count5<-Data_Some_Degree%>%group_by(Experience_Category)%>%summarise(no_row=length(Experience_Category))
+count5
+detach(Data_Some_Degree)
+```
+
+
+
+### Education
+
+```{r, message=FALSE, warning=FALSE, comment=NA,echo=FALSE}
+Experience<-c('Less than two years','Between two & five years','Between five & ten years','More than ten years')
+Phd<-c(15,3,0,0)
+Min_Master<-c(52,5,1,0)
+Min_Bsc<-c(119,25,4,1)
+Some_Degree<-c(73,2,16,0)
+Other<-c(23,1,0,1)
+data<-data.frame(Experience,Min_Bsc,Min_Master,Other,Phd,Some_Degree)
+
+fig<-plot_ly(data,x=~Experience,y= ~Phd,type='bar',name = 'Phd')
+fig<-fig%>%add_trace(y=Min_Master,name='Minimum Master')
+fig<-fig%>%add_trace(y=Min_Bsc,name='Minimum Bsc')
+fig<-fig%>%add_trace(y=Some_Degree,name='Some Degree')
+fig<-fig%>%add_trace(y=Other,name='Other')
+fig<-fig%>%layout(yaxis=list(title='Number Of Jobs'),barmode='group')
+fig
+```
+
+```{r}
+attach(Data)
+counts1<-Data%>%group_by(Job_Category)%>%summarise(no_row=length(Experience_Category))
+counts1
+detach(Data)
+```
+
+
+```{r}
+Data_Data_Analyst<-filter(Data,Job_Category=="Data Analyst")
+attach(Data_Data_Analyst)
+counts2<-Data_Data_Analyst%>%group_by(Experience_Category)%>%summarise(no_row=length(Experience_Category))
+counts2
+detach(Data_Data_Analyst)
+
+```
+
+```{r}
+Data_Data_Science<-filter(Data,Job_Category=="Data Science")
+attach(Data_Data_Science)
+counts3<-Data_Data_Science%>%group_by(Experience_Category)%>%summarise(no_row=length(Experience_Category))
+counts3
+detach(Data_Data_Science)
+
+```
+
+```{r}
+Data_Data_Engineering<-filter(Data,Job_Category=="Data Engineering")
+attach(Data_Data_Engineering)
+counts4<-Data_Data_Engineering%>%group_by(Experience_Category)%>%summarise(no_row=length(Experience_Category))
+counts4
+detach(Data_Data_Engineering)
+
+```
+
+
+```{r}
+Data_DSE<-filter(Data,Job_Category=="Data Science and Data Engineering")
+attach(Data_DSE)
+counts5<-Data_DSE%>%group_by(Experience_Category)%>%summarise(no_row=length(Experience_Category))
+counts5
+detach(Data_DSE)
+
+```
+
+
+### Job Category
+
+```{r}
+Experience_category<-c('Less than two years','Between two & five years','Between five & ten years','More than ten years')
+DS<-c(174,31,6,1)
+DA<-c(146,20,2,1)
+DE<-c(19,4,0,0)
+DDSE<-c(7,1,0,0)
+data<-data.frame(Experience_category,DS,DA,DE,DDSE)
+
+fig2<-plot_ly(data,x=~Experience_category,y= ~DS,type='bar',name = 'Data Science')
+fig2<-fig2%>%add_trace(y=DA,name='Data Analyst')
+fig2<-fig2%>%add_trace(y=DE,name='Data Engineering')
+fig2<-fig2%>%add_trace(y=DDSE,name='Data Science & Engineering')
+fig2<-fig2%>%layout(yaxis=list(title='Number Of Jobs'),barmode='group')
+fig2
+```
+
+
+
+
+
+
+
+# About
+
+## Out team
+
+Project coordinator: Dr Thiyanga S. Talagala
+
+Location: Shashini Silva
+
+Overview: Malshan Fernando
+
+Salary - LKR: Chammika De Mel
+
+Salary - USD: Chammika De Mel
+
+English Proficiency - Piumika
+
+Knowledge and Skills - N N Madushani
+
+Experience - P V S N Madushani
+
+Final dashboard: Thiyanga Talagala

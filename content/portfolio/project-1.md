@@ -32,6 +32,6 @@ library(DSjobtracker)
 
 #### Data Visualisation
 
-[Click here the dashboard](/DSjobtrackerVisualisation/DataViz.html)
+[Click here the dashboard](/DSjobtrackerVisualisation/scsdashboard.html)
 
 

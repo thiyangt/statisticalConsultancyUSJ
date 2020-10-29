@@ -902,9 +902,6 @@ fig2
 
 # About
 
-## Out team
-
-Project coordinator: Dr Thiyanga S. Talagala
 
 Location: Shashini Silva
 
@@ -919,5 +916,3 @@ English Proficiency - Piumika
 Knowledge and Skills - N N Madushani
 
 Experience - P V S N Madushani
-
-Final dashboard: Thiyanga Talagala

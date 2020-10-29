@@ -896,14 +896,11 @@ fig2
 
 
 
-
-
-
-
 # About
 
 
 Location: Shashini Silva
+
 
 Overview: Malshan Fernando
 
@@ -916,3 +913,5 @@ English Proficiency - Piumika
 Knowledge and Skills - N N Madushani
 
 Experience - P V S N Madushani
+
+Project coordinator: Dr Thiyanga S Talagala

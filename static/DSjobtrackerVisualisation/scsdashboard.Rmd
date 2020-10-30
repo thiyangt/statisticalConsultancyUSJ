@@ -469,7 +469,7 @@ wordcloud(dm$word, dm$freq, random.order=FALSE,min.freq=10, scale=c(6,1,0.2,0.05
 
 ```
 
-# Software - 1
+# Software and Skills
 
 
 
@@ -510,7 +510,7 @@ skills_long %>%
 
 
 
-# Software - 2
+# Software - 1
 
 ```{r, fig.width=10}
 not_software_columns <- c(
@@ -571,7 +571,7 @@ plot_data <- job_skill_data %>%
   facet_wrap(~ Job_Category,ncol=3)
 ```
 
-# Software - 3
+# Software - 2
 
 
 ```{r include=FALSE}
@@ -1180,3 +1180,5 @@ Software/ Software skills needed for each job category - Janith Wanniarachchie
 Statistical software/ Database software/ Query languages - Jayani Lakshika Piyadigamage
 
 Project coordinator: Dr Thiyanga S Talagala
+
+Product by Statistical Consultancy Service, 2020, Department of Statistics, University of Sri Jayewardenepura

@@ -16,7 +16,7 @@ Column {data-width=650}
 ### Distribution of Job Advertisements
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preserved3f65fd21cf75f0f
+preserve7200c0e6065a9f78
 
 Column {data-width=350}
 -----------------------------------------------------------------------
@@ -24,7 +24,7 @@ Column {data-width=350}
 ### Composition of job advertisements by contries
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preserve6ec0199c84a3410f
+preserveb2621d9880db9777
 
 
 
@@ -68,6 +68,60 @@ row {data-width=350}
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
 <img src="scsdashboard_files/figure-html/unnamed-chunk-9-1.png" width="576" data-figure-id=fig4 />
 
+# Software - 1
+
+
+
+<div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
+<img src="scsdashboard_files/figure-html/unnamed-chunk-10-1.png" width="576" data-figure-id=fig5 />
+
+
+
+# Software - 2
+
+<div class="knitr-options" data-fig-width="960" data-fig-height="460"></div>
+<img src="scsdashboard_files/figure-html/unnamed-chunk-11-1.png" width="960" data-figure-id=fig6 />
+
+# Software - 3
+
+
+
+
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+### Top Statistical Software
+
+
+
+
+
+
+
+<div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
+preserve9e34033d5561fb28
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+
+
+
+
+<div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
+
+
+
+### Database software and Query languages
+
+
+
+
+
+
+<div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
+preserve54a629f72c25753a
 
 
 # Salary - LKR
@@ -77,12 +131,12 @@ Row
 
 ### Chart A: Salary Distribtion
 <div class="knitr-options" data-fig-width="768" data-fig-height="288"></div>
-preserve1c132c9086ca8657
+preserve4128821cd2980da9
 
 ### Chart B: Violin plot of Experience and Salary
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preservedb16eec71fd6a7d8
+preservec02ac910d0836761
 
 Row
 -----------------------------------------------------------------------
@@ -92,12 +146,12 @@ Row
 ### Chart C: Violin plot of Salary and Job Category
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preserved2157801ac372eaf
+preserve06b5c2c19217465c
 
 ### Chart D: Violin plot of Salary and Country
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preserve388b87ec2c434449
+preserveb2f6104b44b5db19
 
 
 # Salary - USD
@@ -108,12 +162,12 @@ Row
 ### Chart A: Salary Distribtion
 
 <div class="knitr-options" data-fig-width="768" data-fig-height="288"></div>
-preserve58b70db4001a91c3
+preservec84e7d665f1aa6d5
 
 ### Chart B: Violin plot of Experience and Salary
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preserve1ae0ac475b79636a
+preservefb3ecab56c33240b
 
 Row
 -----------------------------------------------------------------------
@@ -123,26 +177,12 @@ Row
 ### Chart C: Violin plot of Salary and Job Category
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preserve17982cf28db54506
+preserve142477d1bc5fb92a
 
 ### Chart D: Violin plot of Salary and Country
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preserve7ec75af4a0203a94
-
-
-# English Profeciency
-
-Column {data-width=650}
------------------------------------------------------------------------
-<div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-
-<div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-
-### Chart A
-
-<div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preserve80ca9305c466129b
+preserve4db69c2464a9eea0
 
 
 # Knowledge and Skills
@@ -158,7 +198,7 @@ Column {data-width=650}
 ### Barchart for Knowledge and Skills
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preservefa97f9243d3bf041
+preserve340f3a78b0baea4c
 
 
 
@@ -169,7 +209,7 @@ Column {data-width=350}{.tabset .tabset-fade}
 ### Knowledge by Job category
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preserveceb3fe065e8e7fe8
+preserve8865e81e666273d3
 
 
 
@@ -177,7 +217,7 @@ preserveceb3fe065e8e7fe8
 ### Skills by Job Category
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preserve339ab440e62f6225
+preservef058d6f3f8b23263
 
 
 
@@ -196,7 +236,7 @@ Column {data-width=700}
 ### Number of jobs by Experience Catergories
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preservef929e6a10f59e918
+preservef4e030af76b57797
 
 
 
@@ -223,7 +263,7 @@ Column {data-width=300}{.tabset .tabset-fade}
 ### Distribution of Minimum Experience by Education Catergory
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preserved9d832df38b97aa0
+preservebf912f00020cf97a
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
 
@@ -374,7 +414,7 @@ preserved9d832df38b97aa0
 ### Education
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preserve1ca9f79fb072fb82
+preserve5b66a150530456ee
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
 
@@ -451,15 +491,42 @@ preserve1ca9f79fb072fb82
 ### Job Category
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preserve8b7a392fc744aeb4
+preservefe8452e7c3aa3779
+
+
+
+
+# English Profeciency
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+<div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
+
+<div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
+
+### Chart A
+
+<div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
+preserve5153f5efeb55652b
+
 
 
 
 # About
 
+## Data
+
+```r
+#install.packages("devtools")
+devtools::install_github("thiyangt/DSjobtracker")
+library(DSjobtracker)
+
+```
+
+
+## Our Team
 
 Location: Shashini Silva
-
 
 Overview: Malshan Fernando
 
@@ -472,5 +539,10 @@ English Proficiency - Piumika
 Knowledge and Skills - N N Madushani
 
 Experience - P V S N Madushani
+
+Software/ Software skills needed for each job category - Janith Wanniarachchie
+
+Statistical software/ Database software/ Query languages - Jayani Lakshika Piyadigamage
+
 
 Project coordinator: Dr Thiyanga S Talagala

@@ -469,6 +469,254 @@ wordcloud(dm$word, dm$freq, random.order=FALSE,min.freq=10, scale=c(6,1,0.2,0.05
 
 ```
 
+# Software and skills
+
+
+
+```{r,warning=FALSE,message=FALSE}
+library(tidyr)
+library(magrittr)
+library(dplyr)
+library(ggplot2)
+library(wordcloud2)
+library(viridis)
+library(forcats)
+
+theme_set(theme_minimal())
+
+skills_long <- DStidy %>%
+  select(c(R:Bahasa_Malaysia)) %>%
+  pivot_longer(c(R:Bahasa_Malaysia), values_to = "Value", names_to = "Name") %>%
+  mutate(Value = as.numeric(levels(Value))[Value]) %>%
+  group_by(Name) %>%
+  summarize(Total = sum(Value)) %>%
+  arrange(Total)
+
+skills_long %>%
+  mutate(Name = factor(Name, levels = .$Name)) %>%
+  top_n(20) %>%
+  ggplot(aes(x = Name, y = Total)) +
+  geom_bar(stat = "identity") +
+  geom_label(aes(label = Total),
+    nudge_y = -10, size = 3.25,
+    label.padding = unit(0.125, "lines")
+  ) +
+  coord_flip() +
+  labs(
+    title = "Top twenty skills required for data science jobs",
+    x = "Skill Required", y = "No of job vacancies"
+  )
+```
+
+
+
+# Software Skills needed for each Job Category
+
+```{r, fig.width=10}
+not_software_columns <- c(
+  "Presentation_Skills", "Data_visualization",
+  "Spreadsheets", "BigData",
+  "Communication", "BigData",
+  "Data_warehouse", "cloud_storage",
+  "Google_Cloud", "Machine_Learning",
+  "Computer_vision", "Deep_Learning", "RDBMS",
+  "web_design_and_development_tools", "AI",
+  "Natural_Language_Processing(NLP)",
+  "graphics_and_design_skills", "Data_marketing",
+  "SEO", "Content_Management",
+  "Data_Pipelines", "MPP_Platforms", "agile_execution",
+  "Data_management", "Data_mining", "Data_science",
+  "Web_Analytic_tools", "IOT",
+  "Numerical_Analysis", "Finance_Knowledge", "Economic",
+  "Investment_Knowledge", "Problem_Solving",
+  "Korean_language", "Team_Handling",
+  "Debtor_reconcilation", "Payroll_management",
+  "Bayesian", "Optimization", "Bahasa_Malaysia"
+)
+# radar plot with job category and skills in a radar
+job_skill_data <- DStidy %>% 
+  select(R:Bahasa_Malaysia,Job_Category) %>% 
+  filter(Job_Category != "Unimportant") %>% 
+  pivot_longer(c(R:Bahasa_Malaysia),names_to="Name",values_to = "Value") %>%
+  mutate(Value = as.numeric(levels(Value))[Value]) %>%
+  group_by(Job_Category,Name) %>% 
+  summarize(Total = sum(Value)) %>% 
+  ungroup() %>% 
+  filter(Total > 0) %>% 
+  mutate(logTotal = log(Total)) %>%
+  ungroup()
+
+common_skills <- job_skill_data %>% 
+  count(Name) %>% 
+  filter(n == 3 & !(Name %in% not_software_columns)) %>% 
+  .$Name
+
+plot_data <- job_skill_data %>% 
+  filter(Name %in% common_skills) %>% 
+  mutate(Name = as.numeric(factor(Name,labels = common_skills)))
+
+  plot_data %>% 
+  ggplot(aes(x = Name,y = logTotal,fill = Job_Category,color = Job_Category))+
+  geom_area(size = 0,position = position_dodge(width=0.9),alpha=0.1) + 
+  geom_point(size=0.5) +
+  geom_segment(aes(xend = Name,yend = logTotal,alpha = logTotal),
+               y = 0,size = 1.25)+
+  scale_x_continuous(labels = common_skills,breaks = 1:length(common_skills)) +
+  theme(axis.text.y = element_blank(),
+        legend.position = "none") + 
+  labs(x = NULL,
+       y = NULL) +
+  scale_fill_brewer(palette = "Set1",type = "qual") + 
+  coord_polar() + 
+  facet_wrap(~ Job_Category,ncol=3)
+```
+
+# Statistical software/ Database software/ Query languages
+
+
+```{r include=FALSE}
+library(flexdashboard)
+library(DSjobtracker)
+library(ggplot2)
+library(plotly)
+library(tidyverse)
+library(magrittr)
+library(packrat)
+library(here)
+library(viridis)
+```
+
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+### Top Statistical Software
+
+```{r, comment=NA, warning=FALSE, include=FALSE}
+data(DStidy)
+head(DStidy)
+```
+
+```{r, comment=NA, warning=FALSE, include=FALSE}
+DStidy$Statistical_software <- paste(DStidy$R,DStidy$SAS,DStidy$SPSS,DStidy$Python,DStidy$MAtlab,sep = "::")
+
+unique(DStidy$Statistical_software)
+
+d1 <- DStidy$Statistical_software %>% table() %>% as.data.frame()
+names(d1) <- c('Statistical_software', 'Frequency')
+d1 <- d1[order(d1$Frequency, decreasing = T),]
+
+d1
+```
+
+```{r, comment=NA, warning=FALSE, include=FALSE}
+DStidy$Statistical_software[DStidy$Statistical_software=="1::0::0::1::0"] <-"R & Python"
+DStidy$Statistical_software[DStidy$Statistical_software=="0::0::0::0::0"] <-"No Statistical softwares"
+DStidy$Statistical_software[DStidy$Statistical_software=="0::0::0::1::0"] <-"Python only"
+DStidy$Statistical_software[DStidy$Statistical_software=="1::1::0::1::0"] <-"R, SAS & Python only "
+
+DStidy$Statistical_software[DStidy$Statistical_software=="0::1::0::0::0"] <-"SAS only"
+
+DStidy$Statistical_software[DStidy$Statistical_software=="1::0::0::0::0"] <-"R only"
+
+DStidy$Statistical_software[DStidy$Statistical_software=="1::0::0::1::1" | DStidy$Statistical_software=="0::1::1::0::0"| DStidy$Statistical_software=="1::1::1::1::0"| DStidy$Statistical_software=="1::1::1::1::1"| DStidy$Statistical_software=="1::1::0::0::0"| DStidy$Statistical_software=="1::0::1::0::0"| DStidy$Statistical_software=="0::1::0::1::0"| DStidy$Statistical_software=="1::1::1::0::1"| DStidy$Statistical_software=="1::0::1::1::1"| DStidy$Statistical_software=="1::0::1::1::0"| DStidy$Statistical_software=="1::1::1::0::0"| DStidy$Statistical_software=="1::1::0::1::1"| DStidy$Statistical_software=="1::1::0::0::1"| DStidy$Statistical_software=="0::1::0::1::1"| DStidy$Statistical_software=="0::0::1::0::0"| DStidy$Statistical_software=="1::0::0::0::1"| DStidy$Statistical_software=="0::0::0::1::1"] <-"Other Statistical software"
+
+unique(DStidy$Statistical_software)
+
+d1 <- DStidy$Statistical_software %>% table() %>% as.data.frame()
+names(d1) <- c('Statistical_software', 'Frequency')
+d1 <- d1[order(d1$Frequency, decreasing = T),]
+
+d1
+
+```
+
+```{r}
+d1 <- DStidy$Statistical_software %>% table() %>% as.data.frame()
+names(d1) <- c('Statistical_software', 'Frequency')
+d1 <- d1[order(d1$Frequency, decreasing = T),]
+
+
+plot1 <- ggplot(d1, aes(x= reorder(Statistical_software, Frequency), y=Frequency))+ labs(y="Number of advertisements", x="") + geom_bar(stat = "identity", width = 0.5, fill ="#FC4E07") +coord_flip()
+
+ggplotly(plot1)
+```
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+```{r, comment=NA, warning=FALSE, include=FALSE}
+DStidy$Programming_software <- paste(DStidy$Spark,DStidy$Scala,DStidy$Java,DStidy$C,DStidy$C.,DStidy$C..,DStidy$pyspark,sep = "::")
+
+
+
+d2 <- DStidy$Programming_software%>% table() %>% as.data.frame()
+names(d2) <- c('Programming_software', 'Frequency')
+d2 <- d2[order(d2$Frequency, decreasing = T),]
+
+d2
+```
+
+```{r, comment=NA, warning=FALSE, include=FALSE}
+DStidy$Programming_software[DStidy$Programming_software=="0::0::0::0::0::0::0"] <-"No programming software"
+DStidy$Programming_software[DStidy$Programming_software=="1::0::0::0::0::0::0"] <-"Spark only"
+DStidy$Programming_software[DStidy$Programming_software=="0::0::1::0::0::0::0"] <-"Java only"
+DStidy$Programming_software[DStidy$Programming_software=="0::1::0::0::0::0::0"] <- "Scala only" 
+DStidy$Programming_software[DStidy$Programming_software=="0::0::0::0::0::1::0"| DStidy$Programming_software=="1::1::0::0::0::0::0" | DStidy$Programming_software=="0::0::0::0::0::0::1"| DStidy$Programming_software=="0::0::0::1::0::0::0"| DStidy$Programming_software=="0::1::1::0::0::1::0"| DStidy$Programming_software=="1::0::1::0::0::0::0"| DStidy$Programming_software=="1::1::1::0::0::0::0"| DStidy$Programming_software=="0::0::1::0::0::1::0"| DStidy$Programming_software=="0::1::1::0::0::0::0"| DStidy$Programming_software=="0::0::1::1::0::0::0"| DStidy$Programming_software=="1::0::1::1::0::1::0"| DStidy$Programming_software=="0::0::0::1::0::0::1"|DStidy$Programming_software=="0::0::1::0::1::0::0"|DStidy$Programming_software=="0::0::1::1::0::1::0"|DStidy$Programming_software=="0::1::0::0::0::1::0"|DStidy$Programming_software=="1::0::1::0::0::0::1"|DStidy$Programming_software=="1::0::1::0::0::1::0"|DStidy$Programming_software=="1::1::0::0::0::0::1"|DStidy$Programming_software=="1::1::1::0::0::1::0"|DStidy$Programming_software=="1::1::1::0::1::0::0"] <-"Other programmimg software"
+
+d2 <- DStidy$Programming_software%>% table() %>% as.data.frame()
+names(d2) <- c('Programming_software', 'Frequency')
+d2 <- d2[order(d2$Frequency, decreasing = T),]
+
+d2
+
+```
+
+```{r}
+plot2 <- ggplot(d2, aes(x= reorder(Programming_software, Frequency), y=Frequency))+ labs(y="Number of advertisements", x="") + geom_bar(stat = "identity", width = 0.5, fill ="#009E73") +coord_flip()
+
+#ggplotly(plot2)
+```
+
+
+### Database software and Query languages
+
+```{r, comment=NA, warning=FALSE, include=FALSE}
+DStidy$database_softwares_and_query_languages <- paste(DStidy$OLE_DB,DStidy$SQL,DStidy$NoSQL,DStidy$MySQL,DStidy$RDBMS,DStidy$MongoDB,DStidy$Hadoop,sep = "::")
+
+unique(DStidy$database_softwares_and_query_languages)
+
+d3 <- DStidy$database_softwares_and_query_languages%>% table() %>% as.data.frame()
+names(d3) <- c('database_softwares_and_query_languages', 'Frequency')
+d3 <- d3[order(d3$Frequency, decreasing = T),]
+
+d3
+```
+
+```{r, comment= NA, warning=FALSE, include=FALSE}
+DStidy$database_softwares_and_query_languages[DStidy$database_softwares_and_query_languages=="0::0::0::0::0::0::0"] <-"No database software and/or query language"
+DStidy$database_softwares_and_query_languages[DStidy$database_softwares_and_query_languages=="0::1::0::0::0::0::0"] <-"SQL only"
+DStidy$database_softwares_and_query_languages[DStidy$database_softwares_and_query_languages=="0::1::0::1::0::0::0"] <-"SQL & MySQL only"
+DStidy$database_softwares_and_query_languages[DStidy$database_softwares_and_query_languages=="0::1::0::0::0::0::1"] <-"SQL & Handoop only"
+DStidy$database_softwares_and_query_languages[DStidy$database_softwares_and_query_languages=="0::1::1::0::0::0::0"] <-"SQL & NoSQL only"
+
+DStidy$database_softwares_and_query_languages[DStidy$database_softwares_and_query_languages=="0::0::0::1::0::0::0" | DStidy$database_softwares_and_query_languages=="0::0::0::0::0::0::1"| DStidy$database_softwares_and_query_languages=="0::1::0::1::0::0::1" | DStidy$database_softwares_and_query_languages=="0::0::0::0::1::0::0"| DStidy$database_softwares_and_query_languages=="0::1::0::0::0::1::0"| DStidy$database_softwares_and_query_languages=="0::1::0::0::0::1::1"| DStidy$database_softwares_and_query_languages=="0::1::0::0::1::0::1"| DStidy$database_softwares_and_query_languages=="1::1::0::0::0::0::0"| DStidy$database_softwares_and_query_languages=="0::0::1::0::0::0::0"| DStidy$database_softwares_and_query_languages=="0::0::1::0::1::0::1"| DStidy$database_softwares_and_query_languages=="0::1::0::0::1::0::0"| DStidy$database_softwares_and_query_languages=="0::1::1::0::0::0::1"| DStidy$database_softwares_and_query_languages=="0::1::1::0::1::0::0"|DStidy$database_softwares_and_query_languages=="0::1::1::0::1::0::1"|DStidy$database_softwares_and_query_languages=="0::1::1::1::0::0::0"| DStidy$database_softwares_and_query_languages=="0::1::0::1::1::0::1"| DStidy$database_softwares_and_query_languages=="0::1::0::1::1::0::0"| DStidy$database_softwares_and_query_languages=="0::0::0::0::0::1::1"] <-"Other"
+
+unique(DStidy$database_softwares_and_query_languages)
+
+d3 <- DStidy$database_softwares_and_query_languages %>% table() %>% as.data.frame()
+names(d3) <- c('database_softwares_and_query_languages', 'Frequency')
+d3 <- d3[order(d3$Frequency, decreasing = T),]
+
+d3
+```
+
+
+```{r}
+plot3 <- ggplot(d3, aes(x= reorder(database_softwares_and_query_languages, Frequency), y=Frequency))+ labs(y="Number of advertisements", x="") + geom_bar(stat = "identity", width = 0.5, fill ="#56B4E9") +coord_flip()
+
+ggplotly(plot3)
+```
 
 
 # Salary - LKR
@@ -896,6 +1144,9 @@ fig2
 
 
 
+
+
+
 # About
 
 
@@ -913,5 +1164,10 @@ English Proficiency - Piumika
 Knowledge and Skills - N N Madushani
 
 Experience - P V S N Madushani
+
+Software/ Software skills needed for each job category - Janith Wanniarachchie
+
+Statistical software/ Database software/ Query languages - Jayani Lakshika Piyadigamage
+
 
 Project coordinator: Dr Thiyanga S Talagala

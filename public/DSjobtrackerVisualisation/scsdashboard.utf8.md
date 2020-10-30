@@ -16,7 +16,7 @@ Column {data-width=650}
 ### Distribution of Job Advertisements
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preserve7200c0e6065a9f78
+preserveeb11417bbe2351fc
 
 Column {data-width=350}
 -----------------------------------------------------------------------
@@ -24,7 +24,7 @@ Column {data-width=350}
 ### Composition of job advertisements by contries
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preserveb2621d9880db9777
+preservec71230fc89a210ce
 
 
 
@@ -100,7 +100,7 @@ Column {data-width=500}
 
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preserve9e34033d5561fb28
+preservecb60c440efea4e67
 
 Column {data-width=500}
 -----------------------------------------------------------------------
@@ -121,7 +121,7 @@ Column {data-width=500}
 
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preserve54a629f72c25753a
+preserved3740227f9dae0f5
 
 
 # Salary - LKR
@@ -131,12 +131,12 @@ Row
 
 ### Chart A: Salary Distribtion
 <div class="knitr-options" data-fig-width="768" data-fig-height="288"></div>
-preserve4128821cd2980da9
+preserve97f3afb8e6cc4018
 
 ### Chart B: Violin plot of Experience and Salary
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preservec02ac910d0836761
+preserve2e646637ddd69a20
 
 Row
 -----------------------------------------------------------------------
@@ -146,12 +146,12 @@ Row
 ### Chart C: Violin plot of Salary and Job Category
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preserve06b5c2c19217465c
+preserve0a41135ae97679dc
 
 ### Chart D: Violin plot of Salary and Country
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preserveb2f6104b44b5db19
+preserve6f78d60e0671a2fa
 
 
 # Salary - USD
@@ -162,12 +162,12 @@ Row
 ### Chart A: Salary Distribtion
 
 <div class="knitr-options" data-fig-width="768" data-fig-height="288"></div>
-preservec84e7d665f1aa6d5
+preserve3e146444059af5b9
 
 ### Chart B: Violin plot of Experience and Salary
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preservefb3ecab56c33240b
+preservef78e0919fd25b98f
 
 Row
 -----------------------------------------------------------------------
@@ -177,12 +177,12 @@ Row
 ### Chart C: Violin plot of Salary and Job Category
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preserve142477d1bc5fb92a
+preservef7f32166a939f08c
 
 ### Chart D: Violin plot of Salary and Country
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preserve4db69c2464a9eea0
+preserve5362faf96e0a62d9
 
 
 # Knowledge and Skills
@@ -198,7 +198,7 @@ Column {data-width=650}
 ### Barchart for Knowledge and Skills
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preserve340f3a78b0baea4c
+preservea96f402888771272
 
 
 
@@ -209,7 +209,7 @@ Column {data-width=350}{.tabset .tabset-fade}
 ### Knowledge by Job category
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preserve8865e81e666273d3
+preservebd4a512b42e717af
 
 
 
@@ -217,7 +217,7 @@ preserve8865e81e666273d3
 ### Skills by Job Category
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preservef058d6f3f8b23263
+preserve105e5c8a9e3b6ef8
 
 
 
@@ -236,7 +236,7 @@ Column {data-width=700}
 ### Number of jobs by Experience Catergories
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preservef4e030af76b57797
+preservecb37f61efeca04e9
 
 
 
@@ -263,7 +263,7 @@ Column {data-width=300}{.tabset .tabset-fade}
 ### Distribution of Minimum Experience by Education Catergory
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preservebf912f00020cf97a
+preserveefca9b4c485456c5
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
 
@@ -414,7 +414,7 @@ preservebf912f00020cf97a
 ### Education
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preserve5b66a150530456ee
+preserve3bc694905b8094fa
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
 
@@ -491,7 +491,7 @@ preserve5b66a150530456ee
 ### Job Category
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preservefe8452e7c3aa3779
+preserve1ec4036333036763
 
 
 
@@ -507,7 +507,7 @@ Column {data-width=650}
 ### Chart A
 
 <div class="knitr-options" data-fig-width="576" data-fig-height="460"></div>
-preserve5153f5efeb55652b
+preservee5812f39b9b0ef38
 
 
 

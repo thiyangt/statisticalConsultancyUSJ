@@ -104,7 +104,7 @@ ggplotly(plot,tooltip = "text")
 Column {data-width=350}
 -----------------------------------------------------------------------
 
-### Composition of job advertisements by contries
+### Composition of job advertisements by countries
 
 ```{r}
 p <- ggplot(data_joined, aes(x = reorder(country.etc,Frequency), y = Frequency,text=paste("Number of Job Advertistments: ",Frequency)))+

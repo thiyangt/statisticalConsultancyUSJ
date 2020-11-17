@@ -9,6 +9,9 @@ title: About
 The Department of Statistics offers a free consulting service to students, academics, researchers, businesses and industry. Under the supervision of lecturers, final year B.Sc. Hons (Statistics) degree students provide assistance. You are encouraged to get-in-touch with SCS-USJ early in your research. Early engagement with a statistician can help you make the best decisions about design and methodology. It would be wise to talk to a consultant before you collect any data.
 
 
+> NOTICE: We are not currently accepting applications. Applications have now closed for 2020.
+
+
 #### Terms and conditions
 
 
@@ -48,3 +51,6 @@ The following measures are in place regarding consultations:
 > [University staff and students](/application/scs_application_university_staff_students.pdf)
 
 > [Industry](/application/scs_application_industry.pdf)
+
+
+> NOTICE: We are not currently accepting applications. Applications have now closed for 2020.

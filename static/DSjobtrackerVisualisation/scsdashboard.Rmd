@@ -1080,7 +1080,7 @@ fig2
 
 
 
-# English Profeciency
+# English Proficiency
 
 Column {data-width=650}
 -----------------------------------------------------------------------

@@ -12,7 +12,7 @@ title:
 
 ## Getting started with DSjobtracker
 
-[More info...]https://thiyangt.github.io/DSjobtracker/articles/DSjobtracker.html
+[More information...](https://thiyangt.github.io/DSjobtracker/articles/DSjobtracker.html)
 
 
 

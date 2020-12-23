@@ -10,9 +10,10 @@ project_url:
 title: 
 ---
 
-#### Project Requirements
+## Getting started with DSjobtracker
+
+[More info...]https://thiyangt.github.io/DSjobtracker/articles/DSjobtracker.html
 
 
 
-#### Project Details
 

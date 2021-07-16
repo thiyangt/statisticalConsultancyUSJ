@@ -52,4 +52,4 @@ The following measures are in place regarding consultations:
 > [Industry](/application/scs_application_industry.pdf)
 
 
-> NOTICE: We are not currently accepting applications. APPLICATIONS FOR THE 2021 PROGRAMME WILL REOPEN IN JULY 2021.
+

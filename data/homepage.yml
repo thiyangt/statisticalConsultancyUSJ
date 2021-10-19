@@ -24,11 +24,11 @@ skill:
       progress : "100%"
       color : "#9473e6"
       
-    - title : "R Commander/ Minitab"
+    - title : "Tableau"
       progress : "100%"
       color : "#bdecf6"
       
-    - title : "R Commander/ SPSS"
+    - title : "R Commander"
       progress : "100%"
       color : "#ffbcaa"
 

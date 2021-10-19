@@ -1,0 +1,370 @@
+---
+title: "Sampling"
+author: "Shashini Silva"
+date: "August 16, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Sample
+
+
+You may have come across the instances where you tried to make conclusions about a Population.Some of you might have already faced this problem in your Researches, experiments etc.If you consider the whole population for your study and if the  population size is large, it will be very hard and will take lot of time and money as we have to collect data from every element in the population.In these instances we draw a sample from the population such that it will be **representative** of the populataion. The process which we draw a sample from a populaion is known as **Sampling**.
+
+![](E:\University\Fourth year\Consultancy\Assignment\PandS.PNG)
+
+Sample is a subset of the population which the observations are taken for the purpose of drawing conclusions about a population.
+\
+
+Below are few instances where you need to take a sample of size **n** from a population of size **N**.
+
+* Conducting a survey to calculate the mean expenses for breakfast of a university student in a hostel.
+* Conducting a research to see whether the effect of a certain drug depends on the gender.
+* Conducting a study on average time a Sri Lankan patient being hospitalized for a certain    illness 
+\
+\
+  
+
+There are two kinds of sampling methods
+
+```{r, echo=FALSE}
+library(DiagrammeR)
+
+grViz("digraph flowchart {
+      # node definitions with substituted label text
+      node [fontname = Helvetica, shape = rectangle]        
+      tab1 [label = '@@1']
+      tab2 [label = '@@2']
+      tab3 [label = '@@3']
+      
+
+      # edge definitions with the node IDs
+      tab1 -> tab2;
+      tab1 -> tab3;
+      
+      }
+
+      [1]: 'Sampling'
+      [2]: 'Probability Samping'
+      [3]: 'Non - Probability Sampling'
+      
+      ")
+```
+
+## 1. Probability Sampling
+
+This is also known as **Random Sampling**. In this type of sampling, every element in the population has a non zero probability to get included in the sample. A sample which is chosen randomly is desired to be an unbiased representation of the Population.The most common Random samping techniques are follows
+
+* Simple Random Sampling
+* Systematic Sampling
+* Stratified Random sampling
+* ClusterSampling 
+\
+\
+
+### 1.1 Simple Random Sampling 
+
+In simple random sampling, we select a sample comprising of **n** units from a **homogeneous** population of **N** units where each element of the sample has an **equal non zero probability** to get selected in to the sample. The sample thus obtained is known as an **Simple random sample**.
+\
+
+Below is a sketch of a homogeneous sample.
+\
+![](E:\University\Fourth year\Consultancy\Assignment\homo.PNG){width=50%}
+\
+\
+There are two ways of selecting a simple random sample
+
+1. With Replacement
+  
+Sampling units are chosen in a way that same unit can be included more than once in the sample.In here a unit once chosen to the sample is placed back in the population.
+  
+2. Without replacement 
+  
+Sampling units are chosen in a way that same unit can not be included more than once in the sample.In here a unit once chosen to the sample is not placed back in the population.
+
+\
+In both the above cases, the probability *p* that a unit in the population is selected at any draw is
+$$
+p = \frac{n}{N}
+$$
+\
+\begin{aligned}
+n &=\text{Sample size}\\
+N&= \text{Size of the population}
+\end{aligned}
+\
+
+<span style = "color:blue">Instances where you have to apply simple random sampling</span>
+
+
+* Selecting 20 out of 150 female nurses to treat in a certain ward.
+* Selecting 50 out of 200 college boys in a section to check the books.
+\
+\
+\
+  
+  
+<span style = "color:blue">How to draw a Simple Random Sample</span> 
+ 
+
+There are two main commonly used methods
+\
+
+
+**1. Lottery method**
+\
+
+![](E:\University\Fourth year\Consultancy\Assignment\Lottery_method.PNG)
+\
+
+
+\
+  
+  Under this method every element in the population of size N is assigned a number from 1 to N. And the numbers are written on seperate pieces of paper which are identical in size and shape. These slips are then folded and they are mixed up in a jar.
+
+  Then  number of slips which is required to form the desired sample size is selected blindfold one at a time. Then the elements with the selected numbers are chosen to the sample.
+ \
+ \
+
+
+
+**2. Random number table method**
+
+ We can use random number tables to form a simple random sample by following below steps
+\
+\
+![](E:\University\Fourth year\Consultancy\Assignment\Random_number_table.PNG)
+\
+\
+
+
+
+a) Say we need to select 30 students to form a sample out of 300 students. First we assign each student with a number frm 1 to 300.
+
+b) Note that in the population we have only three digit numbers assigned to the students. So we will use only the first three digits of a random number in the above table.
+
+c) First we close our eyes and point at a number. Assume that you pointed at 50349. The number represented by the first 3 digits of 50349 is 503 and we do  not have an element in our population with that number.Then we go to the next number which is 85676. Same scenario is applied to this number. Then we go to the other number which is 02429. There is an element in our population assigned with 24 which is denoted by first three digits of that number. So we take that element to our sample.
+
+d) We continue step c until we get our total sample. The first elements will be 024,206,204,279,100,197,049,082,153,196,164,005,259,158
+
+
+<span style = "color:red">Note</span>
+
+When we continue this procedure we get the random number 27932. So as mentioned above, we have an element with 279, so we can select that element to our sample.But note earlier we chose the element with 279 by referring the random number 27993. If you are taking the sample with replacement, you can consider 279 again. But if it is without replacement, skip that number and go to the other number and continue.
+
+
+**Rather than using conventional methods, we can use R software to get a sample from a population.**
+
+Say we need to get a sample of 30 students out of 170 students. First assign each student with a number from 1 to 170.And use the following command to get 30 random numbers out of those 170 numbers.
+
+```{r,comment=NA}
+sample(1:170,30)
+```
+So we select the students with the above numbers to our sample.
+\
+\
+
+<span style = "color:blue">Advantages of using Simple Random Sampling</span>
+
+
+
+* This method is free from bias because every element in the population has an equal probability to get selected in the sample.
+* As the name suggests, the method is very easy to handle.
+* This method is very useful in problems involving in Inferential Statistics
+\
+\
+
+<span style = "color:blue">Disadvantages of using Simple Random Sampling</span>
+
+
+* In here if the randomly selected units in the sample are far away from each other it will be hard, time consuming and costly to reach them for the study.
+* You need a complete list of the elements in the population to select your sample randomly. It is not always easy to get the total list of the population.
+* This method of sampling can not be applied when the population is heterogeneous.
+\
+\
+\
+
+### 1.2 Stratified Random Sampling
+
+In some cases you may have noticed the population is heterogeneous.Below is a sketch of a heterogeneous population.
+
+![](E:\University\Fourth year\Consultancy\Assignment\hetero.PNG){width=50%}
+
+
+
+
+In these cases if we do simple random sampling, then the variance of the estimators will be very large.
+\
+
+If we select a simple random sample and say we only got the individuals denoted by red colour in our sample. Then we can not capture the variations shown by the other group.
+\
+
+So to mitigate this problem we divide the population into *non overlapping groups*, called strata such that each stratum is **homogeneous** which means the units in each stratum are similar as possible. When forming the required sample,from each stratum a simple random sample is drawn. That is why this design is known as **Stratified random sampling**. By following this way the sample will be more representative of the population.
+\
+\
+
+<span style = "color:blue">Instances where we use Stratified random Sampling</span>
+
+
+* Selecting individuals to test about a newly introduced milk powder by considering the age groups of the consumers.
+
+* Conducting a study on library usage among the students at a university. This has to be done under stratified sampling because we have to incorporate all the variations shown by each faculty.
+\
+\
+
+<span style = "color:blue">Proportional Allocation Procedure for stratified Random Sampling</span>
+
+
+This is one of the commonly used allocation method used when drawing a stratified random sample. Let's see an example.
+
+Say a company needs to evaluate their employees about how satisfied they are with their job. Department of Human Resources in the company has decided to take a sample of 100 out of the 1000 employees. But they have different income levels.Say they have divided the employees according to their income level into five different non overlapping categories.
+```{r, echo=FALSE,warning=FALSE}
+library(kableExtra)
+a<-c("Very low","Low","Neutral","High","Very High")
+b<-c(180,253,304,195,68)
+dt<-data.frame(a,b)
+colnames(dt)<-c("Income Category","Number of employees in each category")
+dt %>%
+  kable() %>%
+  kable_styling(full_width=F)
+```
+
+In Proportional method the number of units drawn from each statum to the sample is denoted by the following expression
+
+$$
+n_i = \frac{N_i*n}{N}
+$$
+\begin{aligned}
+\text{$n_i$} &= \text{Number of elements selected from $i^{th}$ stratum to the sample where i = 1,2,3,...,k}\\
+\text{$N_i$} &=\text{Number of elements in the $i^{th}$ stratum where i = 1,2,3,...,k }\\
+N &=\text{Size of the population}\\
+n &= \text{Sample size}
+\end{aligned}
+
+So the results will be as follows
+
+```{r, echo=FALSE}
+library(kableExtra)
+a<-c("Very low","Low","Neutral","High","Very High")
+b<-c(180,253,304,195,68)
+c<-round(b*100/1000)
+dt<-data.frame(a,b,c)
+colnames(dt)<-c("Income Category","Number of employees in each category","Number of employees selected from each stratum to the sample")
+dt %>%
+  kable() %>%
+  kable_styling(full_width=F)
+```
+where 18+25+30+20+7 = 100
+
+\
+
+Above table shows how many employees from each category must be taken for the survey and these employees can be selected by using Simple random sampling within the stratum.
+
+\
+\
+
+<span style = "color:blue"> Advantages of using Stratified Random Sampling</span>
+
+ 
+
+* This method ensures that the sample is more representative of the population.
+* Simple random sampling within the stratum ensures that every element within the stratum has an equal probability to get selected in to the sample.
+* This ensures all the variations shown by the heterogeneous population is captured well.
+
+\
+\
+
+<span style = "color:blue"> Disadvantages of using Stratified Random Sampling</span>
+
+* In here we need a total list of the population to do stratified sampling.
+* In some cases it will be costly and time consuming to categorize every element in the population to different groups.
+
+\
+\
+
+Some other types of allocation methods for Stratified random samping are
+
+* Equal allocation
+* Neymann allocation
+* Optimum allocation
+\
+\
+\
+
+## 2. Non Probability Sampling 
+
+This is also known as non random sampling. The main types of non probability samping methods are
+
+* Convinience Sampling
+* Judgement Sampling
+* Quota Sampling
+\
+
+
+### 2.1 Convinience Sampling
+
+A researcher may do the sampling such that it is easy for him or her to reach the sample.In convinience sampling we collect information from individuals of the population who are conviniently available to provide it.
+
+eg: A researcher who is conducting a research on pregnant mothers may select pregnant mothers in his village for his convinience.
+\
+
+
+![](E:\University\Fourth year\Consultancy\Assignment\Convinience_sampling.PNG){width=50%}
+
+\
+
+In the above diagram the researcher has selected the individuals who are closer to him. Due to this sampling method he could not capture the variations shown by the individuals who are are denoted by purple colour and brown colour.
+\
+\
+
+<span style = "color:blue">Advantages of using Convinience Sampling </span>
+
+
+* This method saves the time and money of the researcher in collecting data.
+* It will be easy for the reseracher to reach the sample in any urgent cases.
+
+\
+\
+
+<span style = "color:blue">Disadvantages of using Convinience Sampling </span>
+
+
+* Convinience sampling will not give you a representative sample. Hence the conclusions may not be valid for the population.
+* This method will not capture any subgroups in the population.
+\
+\
+
+
+
+\
+
+### 2.2 Judgement Sampling
+
+In this sampling method Researcher chooses the elements which are most appropriate for his study. He chooses his sample based on his judgement. The reseracher's knowledge on the individuals and the study directly affect this sampling method.
+
+eg: Selecting the best performing 4 students by refering their past marks to send them into a Quiz competition out of the whole class.
+
+![](E:\University\Fourth year\Consultancy\Assignment\judge.PNG){width=50%}
+\
+
+In the above sketch the researcher has selected the sample as per his judgement.
+\
+\
+
+<span style = "color:blue">Advantages of using Judgement Sampling </span>
+
+
+* Less time consuming and inexpensive method.
+* Reseacher does not need any special knowledge in sampling methods in Statistics.
+\
+\
+
+<span style = "color:blue">Disadvantages of using Judgement Sampling </span>
+
+* The conclusions made can not be extended to the population since the sample is not representative of the population.
+* We can not avoid researcher's bias in selection of the sample.
+
+

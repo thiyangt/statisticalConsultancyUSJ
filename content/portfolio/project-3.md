@@ -7,7 +7,7 @@ description: Models For Sorption Isotherms
 draft: false
 image: images/portfolio/item-3.png
 project_url: 
-title: 
+title: Models For Sorption Isotherms
 ---
 
 

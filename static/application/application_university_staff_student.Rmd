@@ -1,0 +1,142 @@
+---
+output:
+  pdf_document:
+    keep_tex: yes
+header-includes:
+   - \usepackage{blkarray}
+   - \usepackage{amsmath}
+   - \usepackage{tikz}
+geometry: "left=3cm,right=3cm,top=2cm,bottom=2cm"
+classoption: a4paper
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, fig.align='center', echo=FALSE, out.height="20%", out.width="20%"}
+knitr::include_graphics("unilogo.png")
+```
+
+
+\begin{center}
+
+\textbf{Statistical Consulting Service}
+
+\textbf{Department of Statistics, Faculty of Applied Sciences} 
+
+\textbf{University of Sri Jayewardenepura}
+
+\textbf{STATISTICAL CONSULTING SERVICES REQUEST FORM}
+
+\end{center}
+
+\noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+
+Thank you for your interest in consulting services offered by the Department of Statistics, Faculty of Applied Sciences, University of Sri Jayewardenepura. Please complete and email this form to \textcolor{blue}{statistical.consultancy@sci.sjp.ac.lk}. After submitting this form, you will be contacted by one of our consultants via email.
+
+
+Application number (for office use only): \tikz \draw (0,0) rectangle (2in, 0.2in);
+
+Date (for office use only): \tikz \draw (0,0) rectangle (2in, 0.2in);
+
+\noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+
+\vspace{1cm}
+
+1. Name: Rev/ Mr/ Ms/Dr / Prof .....................................................................
+
+2. Client category: Academic staff $\square$  \hspace{0.5cm} Student $\square$ (Please put a tick (\checkmark) in the relevant cage.)
+
+3. Details:
+
+\begin{table}[!h]
+\center
+\begin{tabular}{p{7.5cm}|p{7.5cm}}
+\hline
+If academic staff & If student \\ \hline
+3.1 Faculty: .......... & 3.1 Faculty: ...............  \\ 
+3.2 Department: .......... & 3.2 Registration number: ......... \\ 
+3.3 Position: ......... & 3.3 Degree program \\ 
+3.4 Contact numbers: & \hspace{0.5cm} (a) Undergraduate: \\ 
+\hspace{0.8cm} Intercom:.......... & \hspace{0.8cm} Subject:............... \\ 
+\hspace{0.8cm} Mobile:.......... & \hspace{0.8cm} Department:........... \\ 
+3.5 E-mail address:  & \hspace{0.5cm} (b) Postgraduate: \\ 
+ & \hspace{0.8cm} Diploma/ Masters/ MPhil/ PhD \\ 
+ & \hspace{0.8cm} Specify: ............. \\ 
+  & 3.4 Contact number: ............  \\ 
+  & 3.4 E-mail address: ............  \\ \hline
+\end{tabular}
+\end{table}
+
+4. Briefly describe your research problem and your research objectives.
+
+
+
+\newpage
+
+5. Which of these topics most closely describes the area where you need advice? (Please tick (\checkmark)  all that apply)
+
+\begin{table}[!h]
+\center
+\begin{tabular}{l|l}
+\hline
+Questionnaire design & $\square$ \\ 
+Experimental design &  $\square$  \\ 
+Methods of sampling and data collection &   $\square$ \\
+Data wrangling &  $\square$\\
+Descriptive analysis of the data &  $\square$\\
+Parametric and nonparametric statistical inference &  $\square$\\
+Data modeling and model fitting &  $\square$ \\
+Time series analysis &  $\square$ \\
+Interpretation of the statistical outputs &  $\square$\\
+Statistical software &  $\square$\\
+Other (please specify) &  $\square$\\
+ &  \\
+ &  \\
+\hline
+\end{tabular}
+\end{table}
+
+  
+6. Describe data you have acquired or that you plan to acquire.
+
+\vspace{3cm}
+
+7. Please list any preferred days and/or times for our meetings.
+
+\vspace{1cm}
+
+## Agreement
+
+I/We agree to properly acknowledge the Statistical Consulting Service's contribution in any publication or research project that includes work related to this application. We also agree to send a copy of the acknowledgement to the Statistical Consulting Service-Department of Statistics, Faculty of Applied Sciences, University of Sri Jayewardenepura.
+
+\vspace{0.5cm}
+
+Date: ................... \hspace{2cm} Signature of the client: .......................
+
+\vspace{1cm}
+
+Name of the supervisor (if client is a student): ..........................
+
+\vspace{0.5cm}
+
+Signature of the supervisor:...................
+
+\noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+
+**For office use only**
+
+Service approved/ not approved.
+
+\hspace{2cm}
+....................
+
+
+Coordinator\newline
+Statistical Consulting Service\newline
+Department of Statistics\newline
+University of Sri Jayewardenepura
+
+
+

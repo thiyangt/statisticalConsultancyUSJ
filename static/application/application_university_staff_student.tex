@@ -42,7 +42,7 @@
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
-\usepackage[margin=1in]{geometry}
+\usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm]{geometry}
 \usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -62,6 +62,7 @@
 \setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 \usepackage{blkarray}
 \usepackage{amsmath}
+\usepackage{tikz}
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
@@ -78,7 +79,23 @@
 
 \textbf{University of Sri Jayewardenepura}
 
+\textbf{STATISTICAL CONSULTING SERVICES REQUEST FORM}
+
 \end{center}
+
+\noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+
+Thank you for your interest in consulting services offered by the
+Department of Statistics, Faculty of Applied Sciences, University of Sri
+Jayewardenepura. Please complete and email this form to
+\textcolor{blue}{statistical.consultancy@sci.sjp.ac.lk}. After
+submitting this form, you will be contacted by one of our consultants
+via email.
+
+Application number (for office use only): \tikz \draw (0,0) rectangle
+(2in, 0.2in);
+
+Date (for office use only): \tikz \draw (0,0) rectangle (2in, 0.2in);
 
 \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
 
@@ -91,9 +108,34 @@
   \ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots{}
 \item
   Client category: Academic staff \(\square\) \hspace{0.5cm} Student
-  \(\square\)
+  \(\square\) (Please put a tick (\checkmark) in the relevant cage.)
 \item
   Details:
+\end{enumerate}
+
+\begin{table}[!h]
+\center
+\begin{tabular}{p{7.5cm}|p{7.5cm}}
+\hline
+If academic staff & If student \\ \hline
+3.1 Faculty: .......... & 3.1 Faculty: ...............  \\ 
+3.2 Department: .......... & 3.2 Registration number: ......... \\ 
+3.3 Position: ......... & 3.3 Degree program \\ 
+3.4 Contact numbers: & \hspace{0.5cm} (a) Undergraduate: \\ 
+\hspace{0.8cm} Intercom:.......... & \hspace{0.8cm} Subject:............... \\ 
+\hspace{0.8cm} Mobile:.......... & \hspace{0.8cm} Department:........... \\ 
+3.5 E-mail address:  & \hspace{0.5cm} (b) Postgraduate: \\ 
+ & \hspace{0.8cm} Diploma/ Masters/ MPhil/ PhD \\ 
+ & \hspace{0.8cm} Specify: ............. \\ 
+  & 3.4 Contact number: ............  \\ 
+  & 3.4 E-mail address: ............  \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
 \item
   Briefly describe your research problem and your research objectives.
 \end{enumerate}
@@ -106,7 +148,7 @@
 \tightlist
 \item
   Which of these topics most closely describes the area where you need
-  advice?
+  advice? (Please tick (\checkmark) all that apply)
 \end{enumerate}
 
 \begin{table}[!h]
@@ -114,16 +156,18 @@
 \begin{tabular}{l|l}
 \hline
 Questionnaire design & $\square$ \\ 
-Experimental design &   \\ 
-Methods of sampling and data collection &   \\
-Data wrangling & \\
-Descriptive analysis of the data & \\
-Parametric and nonparametric statistical inference & \\
-Data modeling and model fitting &  \\
-Time series analysis &  \\
-Interpretation of the statistical outputs & \\
-Statistical software & \\
-Other (please specify) & \\
+Experimental design &  $\square$  \\ 
+Methods of sampling and data collection &   $\square$ \\
+Data wrangling &  $\square$\\
+Descriptive analysis of the data &  $\square$\\
+Parametric and nonparametric statistical inference &  $\square$\\
+Data modeling and model fitting &  $\square$ \\
+Time series analysis &  $\square$ \\
+Interpretation of the statistical outputs &  $\square$\\
+Statistical software &  $\square$\\
+Other (please specify) &  $\square$\\
+ &  \\
+ &  \\
 \hline
 \end{tabular}
 \end{table}
@@ -131,11 +175,22 @@ Other (please specify) & \\
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{5}
+\tightlist
 \item
   Describe data you have acquired or that you plan to acquire.
+\end{enumerate}
+
+\vspace{3cm}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{6}
+\tightlist
 \item
   Please list any preferred days and/or times for our meetings.
 \end{enumerate}
+
+\vspace{1cm}
 
 \hypertarget{agreement}{%
 \subsection{Agreement}\label{agreement}}
@@ -147,7 +202,7 @@ acknowledgement to the Statistical Consulting Service-Department of
 Statistics, Faculty of Applied Sciences, University of Sri
 Jayewardenepura.
 
-\vspace{1cm}
+\vspace{0.5cm}
 
 Date: \ldots\ldots\ldots\ldots\ldots\ldots. \hspace{2cm} Signature of
 the client: \ldots\ldots\ldots\ldots\ldots\ldots\ldots..
@@ -166,6 +221,8 @@ Signature of the supervisor:\ldots\ldots\ldots\ldots\ldots\ldots.
 \textbf{For office use only}
 
 Service approved/ not approved.
+
+\hspace{2cm}
 
 \ldots\ldots\ldots\ldots\ldots\ldots..
 

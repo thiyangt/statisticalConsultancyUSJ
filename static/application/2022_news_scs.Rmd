@@ -1,0 +1,57 @@
+---
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Statistical Consulting Service – University of Sri Jayewardenepura
+
+The Department of Statistics, Faculty of Applied Sciences, University of Sri Jayewardenepura provides a free statistical consulting service (SCS-USJ) to university researchers and industrial organizations. The service is provided subject to the availability of consultants. We provide assistance in areas such as:
+
+  1. Experimental design
+
+  2. Data visualization
+
+  3. Statistical modelling
+
+  4. Time series forecasting
+
+  5. Data analysis and interpretation of results
+
+  6. Assistance with statistical software and programming
+
+You are encouraged to get in touch with SCS-USJ early in your research. Early engagement with a statistician can help you make the best decisions about design and methodology. It would be wise to talk to a consultant before you collect any data.
+
+## Terms and conditions
+
+- Consultations are scheduled on a first-come-first-served basis.
+
+- Consultations are conducted by appointment only.
+
+- The service is provided subject to the availability of consultants. The SCS-USJ reserves the right to refuse service.
+
+- The consultant team does not act as the supervisor of any student.
+
+- Students are required to obtain approval from their supervisors before requesting consultancy services.
+
+- SCS-USJ reserves the right to discontinue any assistance, analysis, or meetings of student applicants without the input and regular contact and meetings with the research project supervisor(s).
+
+- It is the responsibility of the client to provide ample time for statistical consulting, and to inform the consultant of any deadlines.
+
+- The SCS-USJ team members are not responsible for writing final chapters/sections in dissertations/theses of research findings and results.
+
+## How to apply
+Please carefully read and review the terms and conditions before using the service.
+
+Fill in an application and send it to statistical.consultancy@sci.sjp.ac.lk.
+
+Choose the application that's right for you.
+
+> University staff and students - (link application)
+
+> Industry - (link application)
+ 
+For more information visit our website at: https://scs-fas-sjp.netlify.app/
+

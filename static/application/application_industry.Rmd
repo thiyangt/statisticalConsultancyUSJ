@@ -6,7 +6,7 @@ header-includes:
    - \usepackage{blkarray}
    - \usepackage{amsmath}
    - \usepackage{tikz}
-geometry: "left=3cm,right=3cm,top=2cm,bottom=2cm"
+geometry: "left=3cm,right=3cm,top=1.5cm,bottom=2cm"
 classoption: a4paper
 ---
 
@@ -46,28 +46,25 @@ Date (for office use only): \tikz \draw (0,0) rectangle (2in, 0.2in);
 
 1. Name: Rev/Mr/Ms/Dr/Prof .....................................................................
 
-2. Client category: Academic staff $\square$  \hspace{0.5cm} Student $\square$ (Please put a tick (\checkmark) in the relevant cage.)
+2. Employment details:
 
-3. Details:
+    2.1 Employment status: Employed/ Self employed/ Retired/ Unemployed (Please circle)
+    
+    2.2 Name of the employer: ...............
+    
+    2.3 Address: .............
+    
+    2.4 Work phone number: ............. Can you be contacted here? Yes/ No (Please circle)
 
-\begin{table}[!h]
-\center
-\begin{tabular}{p{7cm}|p{7.5cm}}
-\hline
-If academic staff & If student \\ \hline
-3.1 Faculty: .......... & 3.1 Faculty: ...............  \\ 
-3.2 Department: .......... & 3.2 Registration number: ......... \\ 
-3.3 Position: ......... & 3.3 Degree program \\ 
-3.4 Contact numbers: & \hspace{0.5cm} (a) Undergraduate: \\ 
-\hspace{0.8cm} Intercom:.......... & \hspace{0.8cm} Subject:............... \\ 
-\hspace{0.8cm} Mobile:.......... & \hspace{0.8cm} Department:........... \\ 
-3.5 E-mail address:  & \hspace{0.5cm} (b) Postgraduate (Please circle): \\ 
- & \hspace{0.8cm} Diploma/Masters/MPhil/PhD \\ 
- & \hspace{0.8cm} Specify: ............. \\ 
-  & 3.4 Contact number: ............  \\ 
-  & 3.4 E-mail address: ............  \\ \hline
-\end{tabular}
-\end{table}
+
+
+3. Contact information
+
+    3.1 Email: .....................
+    
+    3.2 Mobile number: ..................
+    
+    3.3 Other (please specify): ..............
 
 4. Briefly describe your research problem and your research objectives.
 

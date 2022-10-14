@@ -47,9 +47,9 @@ The following measures are in place regarding consultations:
  
  - Choose the application that's right for you.
 
-> [University staff and students](/application/scs_application_university_staff_students.pdf)
+> [University staff and students](/application/application_university_staff_student.pdf)
 
-> [Industry](/application/scs_application_industry.pdf)
+> [Industry](/application/application_industry.pdf)
 
 
 

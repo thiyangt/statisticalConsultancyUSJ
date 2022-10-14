@@ -2,39 +2,35 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>branding on SCS-USJ</title>
-    <link>/categories/branding/</link>
+    <link>https://scs-fas-sjp.netlify.app/categories/branding/</link>
     <description>Recent content in branding on SCS-USJ</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-uk</language>
-    <lastBuildDate>Sat, 27 Jun 2020 12:14:34 +0600</lastBuildDate>
-    
-	<atom:link href="/categories/branding/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sat, 27 Jun 2020 12:14:34 +0600</lastBuildDate><atom:link href="https://scs-fas-sjp.netlify.app/categories/branding/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title></title>
-      <link>/portfolio/project-2/</link>
+      <link>https://scs-fas-sjp.netlify.app/portfolio/project-2/</link>
       <pubDate>Sat, 27 Jun 2020 12:14:34 +0600</pubDate>
       
-      <guid>/portfolio/project-2/</guid>
+      <guid>https://scs-fas-sjp.netlify.app/portfolio/project-2/</guid>
       <description>Getting started with DSjobtracker More information&amp;hellip;</description>
     </item>
     
     <item>
       <title></title>
-      <link>/portfolio/project-7/</link>
+      <link>https://scs-fas-sjp.netlify.app/portfolio/project-7/</link>
       <pubDate>Sat, 27 Jun 2020 12:14:34 +0600</pubDate>
       
-      <guid>/portfolio/project-7/</guid>
+      <guid>https://scs-fas-sjp.netlify.app/portfolio/project-7/</guid>
       <description>Project Requirements Project Details </description>
     </item>
     
     <item>
       <title>R</title>
-      <link>/portfolio/project-9/</link>
+      <link>https://scs-fas-sjp.netlify.app/portfolio/project-9/</link>
       <pubDate>Thu, 25 Jun 2020 12:14:34 +0600</pubDate>
       
-      <guid>/portfolio/project-9/</guid>
+      <guid>https://scs-fas-sjp.netlify.app/portfolio/project-9/</guid>
       <description>Project Requirements Project Details </description>
     </item>
     

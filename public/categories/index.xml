@@ -2,62 +2,62 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on SCS-USJ</title>
-    <link>/categories/</link>
+    <link>https://scs-2020-2023.netlify.app/categories/</link>
     <description>Recent content in Categories on SCS-USJ</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-uk</language>
-    <lastBuildDate>Fri, 11 Sep 2020 12:14:34 +0600</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 11 Sep 2020 12:14:34 +0600</lastBuildDate><atom:link href="https://scs-2020-2023.netlify.app/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>data visualisation</title>
-      <link>/categories/data-visualisation/</link>
+      <link>https://scs-2020-2023.netlify.app/categories/data-visualisation/</link>
       <pubDate>Fri, 11 Sep 2020 12:14:34 +0600</pubDate>
       
-      <guid>/categories/data-visualisation/</guid>
+      <guid>https://scs-2020-2023.netlify.app/categories/data-visualisation/</guid>
       <description></description>
     </item>
     
     <item>
       <title>design</title>
-      <link>/categories/design/</link>
+      <link>https://scs-2020-2023.netlify.app/categories/design/</link>
       <pubDate>Fri, 11 Sep 2020 12:14:34 +0600</pubDate>
       
-      <guid>/categories/design/</guid>
+      <guid>https://scs-2020-2023.netlify.app/categories/design/</guid>
       <description></description>
     </item>
     
     <item>
       <title>development</title>
-      <link>/categories/development/</link>
+      <link>https://scs-2020-2023.netlify.app/categories/development/</link>
       <pubDate>Fri, 11 Sep 2020 12:14:34 +0600</pubDate>
       
-      <guid>/categories/development/</guid>
+      <guid>https://scs-2020-2023.netlify.app/categories/development/</guid>
       <description></description>
     </item>
     
     <item>
       <title>reproducible research</title>
-      <link>/categories/reproducible-research/</link>
+      <link>https://scs-2020-2023.netlify.app/categories/reproducible-research/</link>
       <pubDate>Fri, 11 Sep 2020 12:14:34 +0600</pubDate>
       
-      <guid>/categories/reproducible-research/</guid>
+      <guid>https://scs-2020-2023.netlify.app/categories/reproducible-research/</guid>
       <description></description>
     </item>
     
     <item>
       <title>branding</title>
-      <link>/categories/branding/</link>
+      <link>https://scs-2020-2023.netlify.app/categories/branding/</link>
       <pubDate>Sat, 27 Jun 2020 12:14:34 +0600</pubDate>
       
-      <guid>/categories/branding/</guid>
+      <guid>https://scs-2020-2023.netlify.app/categories/branding/</guid>
       <description></description>
     </item>
     
     <item>
       <title>illustration</title>
-      <link>/categories/illustration/</link>
+      <link>https://scs-2020-2023.netlify.app/categories/illustration/</link>
       <pubDate>Sat, 27 Jun 2020 12:14:34 +0600</pubDate>
       
-      <guid>/categories/illustration/</guid>
+      <guid>https://scs-2020-2023.netlify.app/categories/illustration/</guid>
       <description></description>
     </item>
     

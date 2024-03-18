@@ -2,62 +2,62 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Blog on SCS-USJ</title>
-    <link>/blog/</link>
+    <link>https://scs-2020-2023.netlify.app/blog/</link>
     <description>Recent content in Blog on SCS-USJ</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-uk</language>
-    <lastBuildDate>Fri, 26 Jun 2020 12:14:34 +0600</lastBuildDate><atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 26 Jun 2020 12:14:34 +0600</lastBuildDate><atom:link href="https://scs-2020-2023.netlify.app/blog/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>What is p-value?</title>
-      <link>/blog/post-1/</link>
+      <link>https://scs-2020-2023.netlify.app/blog/post-1/</link>
       <pubDate>Fri, 26 Jun 2020 12:14:34 +0600</pubDate>
       
-      <guid>/blog/post-1/</guid>
+      <guid>https://scs-2020-2023.netlify.app/blog/post-1/</guid>
       <description>Click here</description>
     </item>
     
     <item>
       <title>ANOVA</title>
-      <link>/blog/post-4/</link>
+      <link>https://scs-2020-2023.netlify.app/blog/post-4/</link>
       <pubDate>Sun, 12 May 2019 12:14:34 +0600</pubDate>
       
-      <guid>/blog/post-4/</guid>
+      <guid>https://scs-2020-2023.netlify.app/blog/post-4/</guid>
       <description>Click here</description>
     </item>
     
     <item>
       <title>Create maps using R</title>
-      <link>/blog/post-6/</link>
+      <link>https://scs-2020-2023.netlify.app/blog/post-6/</link>
       <pubDate>Sun, 12 May 2019 12:14:34 +0600</pubDate>
       
-      <guid>/blog/post-6/</guid>
+      <guid>https://scs-2020-2023.netlify.app/blog/post-6/</guid>
       <description>Click here</description>
     </item>
     
     <item>
       <title>Learn R</title>
-      <link>/blog/post-5/</link>
+      <link>https://scs-2020-2023.netlify.app/blog/post-5/</link>
       <pubDate>Sun, 12 May 2019 12:14:34 +0600</pubDate>
       
-      <guid>/blog/post-5/</guid>
+      <guid>https://scs-2020-2023.netlify.app/blog/post-5/</guid>
       <description>Click here</description>
     </item>
     
     <item>
       <title>Regression Analysis</title>
-      <link>/blog/post-3/</link>
+      <link>https://scs-2020-2023.netlify.app/blog/post-3/</link>
       <pubDate>Sun, 12 May 2019 12:14:34 +0600</pubDate>
       
-      <guid>/blog/post-3/</guid>
+      <guid>https://scs-2020-2023.netlify.app/blog/post-3/</guid>
       <description>Click here</description>
     </item>
     
     <item>
       <title>Sampling</title>
-      <link>/blog/post-2/</link>
+      <link>https://scs-2020-2023.netlify.app/blog/post-2/</link>
       <pubDate>Sun, 12 May 2019 12:14:34 +0600</pubDate>
       
-      <guid>/blog/post-2/</guid>
+      <guid>https://scs-2020-2023.netlify.app/blog/post-2/</guid>
       <description>Click here</description>
     </item>
     

@@ -2,85 +2,85 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://scs-fas-sjp.netlify.app/categories/</loc>
+    <loc>/categories/</loc>
     <lastmod>2020-09-11T12:14:34+06:00</lastmod>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/portfolio/project-1/</loc>
+    <loc>/portfolio/project-1/</loc>
     <lastmod>2020-09-11T12:14:34+06:00</lastmod>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/categories/data-visualisation/</loc>
+    <loc>/categories/data-visualisation/</loc>
     <lastmod>2020-09-11T12:14:34+06:00</lastmod>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/categories/design/</loc>
+    <loc>/categories/design/</loc>
     <lastmod>2020-09-11T12:14:34+06:00</lastmod>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/categories/development/</loc>
+    <loc>/categories/development/</loc>
     <lastmod>2020-09-11T12:14:34+06:00</lastmod>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/portfolio/</loc>
+    <loc>/portfolio/</loc>
     <lastmod>2020-09-11T12:14:34+06:00</lastmod>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/categories/reproducible-research/</loc>
+    <loc>/categories/reproducible-research/</loc>
     <lastmod>2020-09-11T12:14:34+06:00</lastmod>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/</loc>
+    <loc>/</loc>
     <lastmod>2020-09-11T12:14:34+06:00</lastmod>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/portfolio/project-2/</loc>
+    <loc>/portfolio/project-2/</loc>
     <lastmod>2020-06-27T12:14:34+06:00</lastmod>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/portfolio/project-4/</loc>
+    <loc>/portfolio/project-4/</loc>
     <lastmod>2020-06-27T12:14:34+06:00</lastmod>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/portfolio/project-5/</loc>
+    <loc>/portfolio/project-5/</loc>
     <lastmod>2020-06-27T12:14:34+06:00</lastmod>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/portfolio/project-6/</loc>
+    <loc>/portfolio/project-6/</loc>
     <lastmod>2020-06-27T12:14:34+06:00</lastmod>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/portfolio/project-7/</loc>
+    <loc>/portfolio/project-7/</loc>
     <lastmod>2020-06-27T12:14:34+06:00</lastmod>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/portfolio/project-8/</loc>
+    <loc>/portfolio/project-8/</loc>
     <lastmod>2020-06-27T12:14:34+06:00</lastmod>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/categories/branding/</loc>
+    <loc>/categories/branding/</loc>
     <lastmod>2020-06-27T12:14:34+06:00</lastmod>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/categories/illustration/</loc>
+    <loc>/categories/illustration/</loc>
     <lastmod>2020-06-27T12:14:34+06:00</lastmod>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/portfolio/project-3/</loc>
+    <loc>/portfolio/project-3/</loc>
     <lastmod>2020-06-27T12:14:34+06:00</lastmod>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/blog/</loc>
+    <loc>/blog/</loc>
     <lastmod>2020-06-26T12:14:34+06:00</lastmod>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/blog/post-1/</loc>
+    <loc>/blog/post-1/</loc>
     <lastmod>2020-06-26T12:14:34+06:00</lastmod>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/portfolio/project-9/</loc>
+    <loc>/portfolio/project-9/</loc>
     <lastmod>2020-06-25T12:14:34+06:00</lastmod>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/blog/post-4/</loc>
+    <loc>/blog/post-4/</loc>
     <lastmod>2019-05-12T12:14:34+06:00</lastmod>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/blog/post-6/</loc>
+    <loc>/blog/post-6/</loc>
     <lastmod>2019-05-12T12:14:34+06:00</lastmod>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/blog/post-5/</loc>
+    <loc>/blog/post-5/</loc>
     <lastmod>2019-05-12T12:14:34+06:00</lastmod>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/blog/post-3/</loc>
+    <loc>/blog/post-3/</loc>
     <lastmod>2019-05-12T12:14:34+06:00</lastmod>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/blog/post-2/</loc>
+    <loc>/blog/post-2/</loc>
     <lastmod>2019-05-12T12:14:34+06:00</lastmod>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/about/</loc>
+    <loc>/about/</loc>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/contact/</loc>
+    <loc>/contact/</loc>
   </url><url>
-    <loc>https://scs-fas-sjp.netlify.app/tags/</loc>
+    <loc>/tags/</loc>
   </url>
 </urlset>

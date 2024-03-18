@@ -6,6 +6,12 @@ draft: false
 title: About
 ---
 
+### This website showcases our Statistical Consultancy Service work from January 2020 to December 2023.
+
+
+
+### For the latest updates, please visit: https://science.sjp.ac.lk/sta/scs-usj/
+
 The Department of Statistics offers a free consulting service to students, academics, researchers, businesses and industry. Under the supervision of lecturers, final year B.Sc. Hons (Statistics) degree students provide assistance. You are encouraged to get-in-touch with SCS-USJ early in your research. Early engagement with a statistician can help you make the best decisions about design and methodology. It would be wise to talk to a consultant before you collect any data.
 
 

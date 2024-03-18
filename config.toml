@@ -1,5 +1,5 @@
 # default configuration
-baseURL = "https://scs-fas-sjp.netlify.app"
+baseURL = ""
 languageCode = "en-uk"
 summaryLength = "3"
 theme = "kross-hugo"
@@ -57,7 +57,7 @@ logo = ""
 theme_color = "#08306b"
 # contact info
 phone = "ttalagala@sjp.ac.lk"
-email = "Dr Thiyanga S. Talagala"
+email = "Dr Thiyanga S. Talagala (Former Coordinator: 2020-2023)"
 address = "Department of Statistics, Faculty of Applied Sciences, University of Sri Jayewardenepura, Nugegoda, 10250, Sri Lanka"
 # meta description
 author = ""
